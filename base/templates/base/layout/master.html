@@ -1,13 +1,28 @@
 <!doctype html>
 <html>
     <head>
-        <title>
-            Project Heisenberg
-        </title>
-    </head>
-    <body>
-        {% block content %}
+        {% load staticfiles %}
+        <title>unquote</title>
 
-        {% endblock %}
-    </body>
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css">
+
+        <script src="{{ STATIC_URL }}bower/webcomponentsjs/webcomponents.js"></script>
+
+        <link rel="import" href="{{ STATIC_URL }}bower/font-roboto/roboto.html">
+        <link rel="import" href="{{ STATIC_URL }}bower/core-header-panel/core-header-panel.html">
+        <link rel="import" href="{{ STATIC_URL }}bower/core-toolbar/core-toolbar.html">
+        <link rel="import" href="{{ STATIC_URL }}bower/paper-tabs/paper-tabs.html">
+        <link rel="import" href="{{ STATIC_URL }}bower/core-icons/core-icons.html">
+        <link rel="import" href="{{ STATIC_URL }}bower/sampler-scaffold/sampler-scaffold.html">
+        <link rel="import" href="{{ STATIC_URL }}bower/font-roboto/roboto.html">
+        <link rel="import" href="{{ STATIC_URL }}bower/core-item/core-item.html">
+        <link rel="import" href="{{ STATIC_URL }}bower/core-menu/core-submenu.html">
+        <link rel="import" href="{{ STATIC_URL }}bower/paper-icon-button/paper-icon-button.html">
+        <link rel="import" href="{{ STATIC_URL }}bower/paper-fab/paper-fab.html">
+    </head>
+<body>
+    {% block content %}{% endblock %}
+</body>
 </html>
