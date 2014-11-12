@@ -58,3 +58,6 @@ target/
 
 # Local settings
 ProjectHeisenberg/local_settings.py
+
+# Static
+/static/*
