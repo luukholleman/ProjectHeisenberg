@@ -61,3 +61,6 @@ ProjectHeisenberg/local_settings.py
 
 # Static
 /static/*
+
+# Database
+db.sqlite3
