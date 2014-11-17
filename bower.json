@@ -26,7 +26,8 @@
     "paper-fab": "polymer/paper-fab#~0.5.0",
     "paper-tabs": "polymer/paper-tabs#~0.5.0",
     "sampler-scaffold": "polymer/sampler-scaffold#~0.5.0",
-    "core-elements": "Polymer/core-elements#~0.5.1"
+    "core-elements": "Polymer/core-elements#~0.5.1",
+    "paper-elements": "Polymer/paper-elements#~0.5.1"
   },
   "resolutions": {
     "polymer": "^0.3.0",
