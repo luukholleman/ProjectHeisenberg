@@ -25,11 +25,13 @@
     "font-roboto": "polymer/font-roboto#~0.5.0",
     "paper-fab": "polymer/paper-fab#~0.5.0",
     "paper-tabs": "polymer/paper-tabs#~0.5.0",
-    "sampler-scaffold": "polymer/sampler-scaffold#~0.5.0"
+    "sampler-scaffold": "polymer/sampler-scaffold#~0.5.0",
+    "core-elements": "Polymer/core-elements#~0.5.1"
   },
   "resolutions": {
     "polymer": "^0.3.0",
     "platform": "^0.3.0",
-    "core-component-page": "^0.3.0"
+    "core-component-page": "^0.3.0",
+    "core-shared-lib": "~0.4.2"
   }
 }
