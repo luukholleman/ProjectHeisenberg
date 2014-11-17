@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
-from django.contrib.auth.models import User
 from base.views import HomepageTemplateView
+from rest_framework import routers
+
 router = routers.DefaultRouter()
 
 urlpatterns = patterns('',
