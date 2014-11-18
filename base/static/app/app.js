@@ -1,7 +1,5 @@
+angular.module('punktlich', ['punktlichDep']);
 
-var app = angular.module('punktlich', [
+angular.module('punktlichDep',  [
     'ngRoute',
-    'punktlichControllers'
 ]);
-
-var punktlichControllers = angular.module('punktlichControllers', []);

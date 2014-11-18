@@ -1,13 +1,9 @@
-app.config(['$routeProvider',
+angular.module('punktlichDep').config(['$routeProvider',
     function ($routeProvider) {
         $routeProvider.
             when('/login', {
                 templateUrl: 'templates/login.html',
-                controller: 'authenticationController'
-            }).
-            when('/register', {
-                templateUrl: 'templates/register.html',
-                controller: 'authenticationController'
+                controller: 'AuthenticationController'
             }).
             otherwise({
                 redirectTo: '/login'
