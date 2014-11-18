@@ -5,7 +5,6 @@ angular.module('punktlichDep').controller('AuthenticationController', function($
     };
 
     $scope.register = function (firstname, lastname, email, password, passwordRepeat) {
-      var service = RegistrationService();
-      service.register(firstname, lastname, email, password, passwordRepeat);
+      RegistrationService.register(firstname, lastname, email, password, passwordRepeat);
     };
 });
