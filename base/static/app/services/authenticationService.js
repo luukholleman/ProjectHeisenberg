@@ -1,5 +1,5 @@
-var authenticationService = angular.factory('authenticate', ['$window', function (win) {
+app.factory('authenticate', function (window) {
     return function (msg) {
-        win.alert(msg);
+        window.alert(msg);
     };
-}]);
+});

@@ -1,9 +1,13 @@
-var authenticationController = angular.module('authenticationController', []);
+var authenticationController = app.module('authenticationController', []);
 
-authenticationController.controller('authenticationController', ['$scope', 'authenticate', function($scope, authenticate) {
+authenticationController.controller('authenticationController', function($scope, authenticate, register) {
     $scope.punktlich = true;
 
     $scope.authenticate = function (){
       authenticate('login');
     };
-}]);
+
+    $scope.register = function () {
+      register();
+    };
+});
