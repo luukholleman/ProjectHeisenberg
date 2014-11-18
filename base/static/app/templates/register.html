@@ -1,1 +1,9 @@
-register
+<div vertical layout>
+    <input type="text" ng-model="firstname" />
+    <input type="text" ng-model="lastname" />
+    <input type="text" ng-model="email" />
+    <input type="text" ng-model="password" />
+    <input type="text" ng-model="passwordRepeat" />
+</div>
+<paper-button raised ng-click="register(firstname, lastname, email, password, passwordRepeat)">Register</paper-button>
+<paper-button raised>login</paper-button>
