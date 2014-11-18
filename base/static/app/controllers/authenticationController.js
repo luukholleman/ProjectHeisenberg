@@ -1,10 +1,13 @@
-angular.module('punktlichDep').controller('AuthenticationController', function($scope) {
+angular.module('punktlichDep').controller('AuthenticationController', function($scope, AuthenticationService) {
     $scope.punktlich = true;
+
     $scope.authenticate = function () {
-      authenticate('login');
+      AuthenticationService('login');
     };
 
     $scope.register = function () {
       register();
     };
+
+    $scope.authenticate();
 });
