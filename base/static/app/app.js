@@ -7,12 +7,12 @@ var app = angular.module('punktlich', [
             when('/login', {
                 templateUrl: 'partials/login.html',
                 controller: 'authenticationController'
-            }).
+            }.
             when('/register', {
                 templateUrl: 'partials/register.html',
                 controller: 'authenticationController'
             }).
             otherwise({
                 redirectTo: '/login'
-            });
+            }));
     }]);
