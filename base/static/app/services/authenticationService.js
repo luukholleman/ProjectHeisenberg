@@ -1,5 +1,9 @@
 angular.module('punktlichDep').factory('AuthenticationService', function ($window) {
-    return function (msg) {
-        $window.alert(msg);
+    function login(email, password) {
+        $window.alert(email +' '+password);
+    }
+
+    return{
+        login: login
     };
 });
