@@ -62,6 +62,7 @@ ProjectHeisenberg/local_settings.py
 # Static
 /static/*
 /base/static/bower/*
+!/base/static/bower/.gitkeep
 
 # Database
 db.sqlite3
