@@ -9,5 +9,6 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
-    (r'^', include('base.urls'))
+    url(r'^api/v1/', include('authentication.urls')),
+    url(r'^', include('base.urls')),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

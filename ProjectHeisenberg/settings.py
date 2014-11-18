@@ -26,6 +26,8 @@ TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = 'authentication.User'
+
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -44,6 +46,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'base',
+    'authentication',
 
     'rest_framework',
 )
@@ -101,6 +104,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATIC_ROOT = ''
+
 
 # Load local settings located in local_settings.py
 try:
