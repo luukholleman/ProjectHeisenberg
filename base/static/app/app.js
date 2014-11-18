@@ -5,14 +5,14 @@ var app = angular.module('punktlich', [
     function ($routeProvider) {
         $routeProvider.
             when('/login', {
-                templateUrl: 'partials/login.html',
+                templateUrl: 'templates/login.html',
                 controller: 'authenticationController'
-            }).
+            }.
             when('/register', {
-                templateUrl: 'partials/register.html',
+                templateUrl: 'templates/register.html',
                 controller: 'authenticationController'
             }).
             otherwise({
                 redirectTo: '/login'
-            });
+            }));
     }]);
