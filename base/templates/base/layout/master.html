@@ -17,7 +17,7 @@
     <script src="{{ STATIC_URL }}app/controllers/authenticationController.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}app/services/authenticationService.js" type="text/javascript"></script>
 </head>
-<body ng-app="punktlich" ng-controller="AuthenticationController">
-{% block content %}{% endblock %}
+<body ng-app="punktlich">
+<div ng-view=""></div>
 </body>
 </html>
