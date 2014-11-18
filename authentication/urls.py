@@ -8,4 +8,6 @@ router.register(r'users', UserViewSet)
 
 urlpatterns = [
     url(r'^', include(router.urls)),
+    # url(r'^login', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^login', 'rest_framework.authtoken.views.obtain_auth_token'),
 ]
