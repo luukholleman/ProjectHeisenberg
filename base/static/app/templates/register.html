@@ -1,9 +1,19 @@
 <div vertical layout>
-    <input type="text" ng-model="firstname" />
-    <input type="text" ng-model="lastname" />
-    <input type="text" ng-model="email" />
-    <input type="text" ng-model="password" />
-    <input type="text" ng-model="passwordRepeat" />
+    <paper-input-decorator floatingLabel label="Name">
+        <input is="core-input" type="text" ng-model="firstname" />
+    </paper-input-decorator>
+    <paper-input-decorator floatingLabel label="Surname">
+        <input is="core-input" type="text" ng-model="lastname" />
+    </paper-input-decorator>
+    <paper-input-decorator floatingLabel label="Email">
+        <input is="core-input" type="email" ng-model="email" />
+    </paper-input-decorator>
+    <paper-input-decorator floatingLabel label="Password">
+        <input is="core-input" type="password" ng-model="password" />
+    </paper-input-decorator>
+    <paper-input-decorator floatingLabel label="Repeat password">
+        <input is="core-input" type="password" ng-model="passwordRepeat" />
+    </paper-input-decorator>
 </div>
 <paper-button raised ng-click="register(firstname, lastname, email, password)">Register</paper-button>
 <paper-button raised>login</paper-button>
