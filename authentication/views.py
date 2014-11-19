@@ -6,7 +6,7 @@ from base.rest.permissions import AuthenticatedOrAnonReadAndCreate, IsSelf
 from authentication.serializers import UserSerializer
 
 
-@permission_classes((AuthenticatedOrAnonReadAndCreate,IsSelf))
+@permission_classes((AuthenticatedOrAnonReadAndCreate, IsSelf))
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer

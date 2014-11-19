@@ -4,11 +4,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'ProjectHeisenberg.views.base', name='base'),
-    # url(r'^blog/', include('blog.urls')),
+                       # Examples:
+                       # url(r'^$', 'ProjectHeisenberg.views.base', name='base'),
+                       # url(r'^blog/', include('blog.urls')),
 
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^api/v1/', include('authentication.urls')),
-    url(r'^', include('base.urls')),
+                       url(r'^admin/', include(admin.site.urls)),
+                       url(r'^api/v1/', include('authentication.urls')),
+                       url(r'^', include('base.urls')),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

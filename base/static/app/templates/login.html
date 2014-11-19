@@ -1,23 +1,19 @@
 <core-scaffold>
-
     <span tool>Title</span>
-
     <div class="content" vertical layout>
-        <paper-input
+        <paper-input-decorator
                 label="Email"
                 floatingLabel="true"
-                ng-model="email"></paper-input>
-        <paper-input
+                ng-model="email">
+        <input is="core-input" type="text" ng-model="firstname" />
+                </paper-input-decorator>
+        <paper-input-decorator
                 label="Password"
                 floatingLabel="true"
                 type="password"
-                ng-model="password"></paper-input>
-        <input
-                type="text"
-                ng-model="email"/>
-        <input
-                type="password"
-                ng-model="password"/>
+                ng-model="password">
+        <input is="core-input" type="text" ng-model="firstname" />
+        </paper-input-decorator>
         <paper-button
                 raised="true"
                 ng-click="login(email, password);">LOGIN
