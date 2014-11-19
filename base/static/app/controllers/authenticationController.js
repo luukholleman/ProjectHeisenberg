@@ -1,7 +1,4 @@
-angular.module('punktlichDep').controller('AuthenticationController', function ($scope, AuthenticationService, RegistrationService) {
-
-    $scope.errors = {};
-
+angular.module('punktlichDep').controller('AuthenticationController', function ($scope, AuthenticationService, RegistrationService, ValidationService) {
     $scope.isInvalid = function (element) {
         if ($scope.errors.length == 0)
             return false;
@@ -17,21 +14,15 @@ angular.module('punktlichDep').controller('AuthenticationController', function (
         AuthenticationService.login(email, password);
     };
 
-    $scope.register = function (user) {
-        // errors occured
-        console.log('Error :-(');
-        $scope.errors = errors;
-        var form = document.querySelector('#register-form');
-        console.log(form.querySelectorAll('paper-input-decorator'));
-        var elements = form.querySelectorAll('paper-input-decorator');
-        Array.prototype.forEach.call(elements, function (element) {
-            element.isInvalid = true;
-        });
-        
-        RegistrationService.register(user, function () {
-            console.log('User succesfully saved');
-        }, function (errors) {
+    $scope.register = function (form, user) {
+        var valid = ValidationService.validateClientSide(form);
 
-        });
+        if (valid) {
+            RegistrationService.register(user, function () {
+                console.log('User succesfully saved');
+            }, function (errors) {
+                ValidationService.showErrors(form, errors)
+            });
+        }
     };
 });
