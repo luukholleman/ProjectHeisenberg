@@ -9,21 +9,20 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email_address', 'first_name', 'last_name', 'password',)
+        fields = ('id', 'email', 'first_name', 'last_name', 'password',)
         write_only_fields = ('password',)
 
 
 class AuthTokenSerializer(BaseAuthTokenSerializer):
-    username = None
-    email_address = serializers.CharField()
+    email = serializers.CharField()
     password = serializers.CharField()
 
     def validate(self, attrs):
-        email_address = attrs.get('email_address')
+        email = attrs.get('email')
         password = attrs.get('password')
 
-        if email_address and password:
-            user = authenticate(username=email_address, password=password)
+        if email and password:
+            user = authenticate(username=email, password=password)
 
             if user:
                 if not user.is_active:
