@@ -9,5 +9,5 @@ router.register(r'users', UserViewSet)
 urlpatterns = [
     url(r'get-authenticated-user', AuthenticatedUser.as_view()),
     url(r'^', include(router.urls)),
-    url(r'^login', 'rest_framework.authtoken.views.obtain_auth_token'),
+    url(r'^login', 'authentication.views.obtain_auth_token'),
 ]
