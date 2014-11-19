@@ -1,6 +1,14 @@
 angular.module('punktlichDep').factory('RegistrationService', function (UserModel) {
-    function register(firstname, lastname, email, password, passwordRepeat) {
-        var user = UserModel.get({id:1});
+    function register(userData, success, error) {
+        var user = new UserModel(userData);
+
+        user.username = user.first_name + user.last_name;//@TODO: remove this
+
+        user.$save(function () {
+            success();
+        }, function (response) {
+            error(response.data);
+        });
     }
 
     return {
