@@ -1,19 +1,19 @@
-<div vertical layout>
-    <paper-input-decorator floatingLabel label="Name">
-        <input is="core-input" type="text" ng-model="firstname" />
+<div vertical layout id="register-form">
+   <paper-input-decorator floatingLabel isInvalid="{{ isInvalid('first_name') ? 'false' : 'true' }}" error="{{ errors.first_name }}" label="Name">
+        <input is="core-input" required type="text" ng-model="user.first_name" />
     </paper-input-decorator>
-    <paper-input-decorator floatingLabel label="Surname">
-        <input is="core-input" type="text" ng-model="lastname" />
+    <paper-input-decorator floatingLabel isInvalid="{{ isInvalid('last_name') }}" error="{{ errors.first_name }}" label="Surname">
+        <input is="core-input" required type="text" ng-model="user.last_name" />
     </paper-input-decorator>
-    <paper-input-decorator floatingLabel label="Email">
-        <input is="core-input" type="email" ng-model="email" />
+    <paper-input-decorator floatingLabel isInvalid="{{ isInvalid('email') }}" error="{{ errors.first_name }}" label="Email">
+        <input is="core-input" required type="email" ng-model="user.email" />
     </paper-input-decorator>
-    <paper-input-decorator floatingLabel label="Password">
-        <input is="core-input" type="password" ng-model="password" />
+    <paper-input-decorator floatingLabel isInvalid="{{ isInvalid('password') }}" error="{{ errors.first_name }}" label="Password">
+        <input is="core-input" required type="password" ng-model="user.password" />
     </paper-input-decorator>
-    <paper-input-decorator floatingLabel label="Repeat password">
-        <input is="core-input" type="password" ng-model="passwordRepeat" />
+    <paper-input-decorator floatingLabel isInvalid="{{ isInvalid('username') }}" error="{{ getErrors('username') }}" label="Repeat password">
+        <input is="core-input" required type="password" ng-model="user.passwordRepeat" />
     </paper-input-decorator>
 </div>
-<paper-button raised ng-click="register(firstname, lastname, email, password)">Register</paper-button>
+<paper-button raised ng-click="register(user)">Register</paper-button>
 <paper-button raised>login</paper-button>
