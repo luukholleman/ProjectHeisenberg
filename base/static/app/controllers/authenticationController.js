@@ -1,15 +1,8 @@
-angular.module('punktlichDep').controller('AuthenticationController', function ($scope, AuthenticationService, RegistrationService, ValidationService) {
-    $scope.isInvalid = function (element) {
-        if ($scope.errors.length == 0)
-            return false;
-
-        return $scope.errors[element] ? true : false;
-    };
-
-    $scope.getErrors = function (element) {
-        return $scope.isInvalid(element) ? $scope.errors.join(', ') : '';
-    };
-
+angular.module('punktlichDep').controller('AuthenticationController', function ($scope,
+                                                                                $location,
+                                                                                AuthenticationService,
+                                                                                RegistrationService,
+                                                                                ValidationService) {
     $scope.login = function (email, password) {
         AuthenticationService.login(email, password);
     };
@@ -19,7 +12,7 @@ angular.module('punktlichDep').controller('AuthenticationController', function (
 
         if (valid) {
             RegistrationService.register(user, function () {
-                console.log('User succesfully saved');
+                $location.path('/login');
             }, function (errors) {
                 ValidationService.showErrors(form, errors)
             });
