@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -32,7 +33,7 @@ AUTH_USER_MODEL = 'authentication.User'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.templates.loaders.eggs.Loader',
+    # 'django.templates.loaders.eggs.Loader',
 )
 
 # Application definition
