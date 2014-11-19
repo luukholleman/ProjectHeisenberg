@@ -109,6 +109,8 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = ''
 
+# Disable slash append, angular doesn't support this properly
+APPEND_SLASH = False
 
 # Load local settings located in local_settings.py
 try:
