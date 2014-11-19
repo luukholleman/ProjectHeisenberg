@@ -1,3 +1,4 @@
+from django.utils.text import slugify
 from rest_framework import viewsets
 from rest_framework.decorators import permission_classes
 from rest_framework.generics import RetrieveAPIView
@@ -11,6 +12,17 @@ from authentication.serializers import UserSerializer
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def post_save(self, obj, created=False):
+        """
+        On creation, replace the raw password with a hashed version.
+        """
+        if created:
+            obj.set_password(obj.password)
+            obj.username = slugify(obj.first_name + ' ' + obj.last_name)
+
+            obj.save()
+
 
 @permission_classes((IsSelf,))
 class AuthenticatedUser(RetrieveAPIView):
