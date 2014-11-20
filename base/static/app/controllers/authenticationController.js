@@ -21,8 +21,7 @@ angular.module('punktlichDep').controller('AuthenticationController', function (
 
         RegistrationService.register(user, function () {
             $scope.flash.setMessage('You are registered successfully!');
-            // @todo authentication process login automatically redirect to index
-            $location.path('/login');
+            $scope.hasRegistered = true;
         }, function (errors) {
             ValidationService.showErrors(form, errors)
         });
