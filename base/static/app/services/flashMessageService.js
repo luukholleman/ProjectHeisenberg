@@ -2,9 +2,9 @@ angular.module('punktlichDep').factory('FlashMessageService', function ($rootSco
     //var queue = [];
     var currentMessage = "";
 
-    $rootScope.$on("$routeChangeSuccess", function () {
+    //$rootScope.$on("$routeChangeSuccess", function () {
         //currentMessage = queue.shift() || undefined;
-    });
+    //});
 
     return {
         setMessage: function (message) {
@@ -18,9 +18,6 @@ angular.module('punktlichDep').factory('FlashMessageService', function ($rootSco
         },
         getMessage: function () {
             return currentMessage;
-        },
-        discardMessage: function() {
-
         }
     };
 });

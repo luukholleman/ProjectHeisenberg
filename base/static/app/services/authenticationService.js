@@ -1,14 +1,13 @@
 angular.module('punktlichDep').factory('AuthenticationService', function ($http) {
-    function login(email, password) {
+    function login(email, password, success, error) {
         $http.post(apiBase + 'login', {
             email: email,
             password: password
         }).success(function (data) {
             setToken(data.token);
-
-            location.path = '/'
-        }).error(function () {
-            //@todo error messages toasten
+            success();
+        }).error(function (response) {
+            error(response);
         });
     }
 

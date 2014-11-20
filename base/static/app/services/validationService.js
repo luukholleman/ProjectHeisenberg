@@ -4,7 +4,7 @@ var validationMessages = {
     repeat: 'Must be the same value as {0}.'
 }
 
-angular.module('punktlichDep').factory('ValidationService', function () {
+angular.module('punktlichDep').factory('ValidationService', function (FlashMessageService) {
     function resetValidation(form) {
         var formElement = document.querySelector('[name=' + form.$name + ']');
         Array.prototype.forEach.call(formElement.querySelectorAll('paper-input-decorator'), function (field) {
@@ -49,8 +49,16 @@ angular.module('punktlichDep').factory('ValidationService', function () {
     function showErrors(form, errors) {
         resetValidation(form);
 
+        if(!errors) {
+            return;
+        }
+
         for (var field in errors) {
             setError(form, field, errors[field]);
+        }
+
+        if(errors['non_field_errors']){
+            FlashMessageService.setMessage(errors['non_field_errors'].join());
         }
     }
 

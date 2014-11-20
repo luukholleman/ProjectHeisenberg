@@ -1,23 +1,22 @@
-<core-scaffold>
+<style>
+    .bg {
+        background-color: #ececec;
+        z-index: -1;
+    }
+</style>
+<div vertical layout center>
+    <div class="bg" dummy fit></div>
+    <form-box>
+        <h2>Login</h2>
 
-    <span tool>Title</span>
-
-    <div class="content" vertical layout>
-        <paper-input-decorator
-                label="Email"
-                floatingLabel="true"
-                ng-model="email">
-            <input is="core-input" type="text" ng-model="email"/>
-        </paper-input-decorator>
-        <paper-input-decorator
-                label="Password"
-                floatingLabel="true"
-                ng-model="password">
-            <input is="core-input" type="password" ng-model="password"/>
-        </paper-input-decorator>
-        <paper-button
-                raised="true"
-                ng-click="login(email, password);">LOGIN
-        </paper-button>
-    </div>
-</core-scaffold>
+        <form name="loginform">
+            <paper-input-decorator floatingLabel label="Email">
+                <input is="core-input" required type="email" name="email" ng-model="email"/>
+            </paper-input-decorator>
+            <paper-input-decorator floatingLabel label="Password">
+                <input is="core-input" required name="password" type="password" ng-model="password"/>
+            </paper-input-decorator>
+        </form>
+        <paper-button raised ng-click="login(loginform, email, password)">Login</paper-button>
+    </form-box>
+</div>
