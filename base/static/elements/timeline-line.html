@@ -1,16 +1,118 @@
-<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../bower/polymer/polymer.html">
 
 <polymer-element name="timeline-line">
     <template>
         <style>
             :host {
-                padding: 20px;
-                width: 100%;
+                padding: 0;
+                margin: 0 auto;
+                overflow-y: scroll;
+                overflow-x: auto;
+                position: relative;
             }
-        </style>
 
+            .all {
+                width: 5000px;
+            }
+            .bar {
+                height:4px;
+                background:#eee;
+                width:100%;
+                position:relative;
+                top:13px;
+                left:0;
+            }
+
+            .timeline {
+                white-space:nowrap;
+                padding:30px 0 10px 0;
+                position:relative;
+            }
+
+            .entry {
+                display:inline-block;
+                vertical-align:top;
+                position:relative;
+                width: 0px;
+                overflow: visible;
+            }
+
+            .entry-info {
+                overflow: visible;
+                background:#1C7ABF;
+                color:#fff;
+                font-size:12px;
+                text-align:center;
+                border-radius:8px;
+                font-style: italic;
+                width: 64px;
+                height: 16px;
+                display: none;
+                position: relative;
+                left: -32px;
+            }
+
+            .entry.active > .entry-info {
+                display: block;
+            }
+            .entry:after {
+                content:'';
+                display:block;
+                background:#eee;
+                width:7px;
+                height:7px;
+                border-radius:6px;
+                border:2px solid #06182E;
+                position:absolute;
+                left:50%;
+                top:-25px;
+                margin-left:-6px;
+            }
+
+            .entry-info:before {
+                content:'';
+                display:block;
+                background:#06182E;
+                width:3px;
+                height:20px;
+                position:absolute;
+                left:50%;
+                top:-20px;
+                margin-left:-2px;
+            }
+
+            .entry.active:after {
+                background: #f3b300;
+            }
+
+        </style>
+        <div class="all">
+            <div class="bar"></div>
+            <div class="timeline">
+                <div class="entry" style="left: 5px;" on-click="{{buttonClick}}">
+                    <div class="entry-info">20-jan</div>
+                </div>
+                <div class="entry" style="left: 50px;" on-click="{{buttonClick}}">
+                    <div class="entry-info">20-feb</div>
+                </div>
+                <div class="entry" style="left: 100px;" on-click="{{buttonClick}}">
+                    <div class="entry-info">20-mar</div>
+                </div>
+                <div class="entry" style="left: 500px;" on-click="{{buttonClick}}">
+                    <div class="entry-info">20-apr</div>
+                </div>
+                <div class="entry" style="left: 4000px;" on-click="{{buttonClick}}">
+                    <div class="entry-info">20-jun</div>
+                </div>
+            </div>
+        </div>
     </template>
     <script>
-        Polymer({});
+        Polymer({
+            buttonClick: function(event, detail, sender) {
+                sender.classList.toggle('active');
+                console.log(sender);
+            }
+        });
     </script>
 </polymer-element>
