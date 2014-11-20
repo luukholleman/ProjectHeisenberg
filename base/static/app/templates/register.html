@@ -22,10 +22,10 @@
         <input is="core-input" required name="password" type="password" ng-model="user.password" />
     </paper-input-decorator>
     <paper-input-decorator floatingLabel label="Repeat password">
-        <input is="core-input" required name="password_repeat" type="password" />
+        <input is="core-input" required name="password_repeat" type="password" ng-model="password_repeat" />
     </paper-input-decorator>
     </form>
 <paper-button raised ng-click="register(registerform, user)">Register</paper-button>
-<paper-button raised>login</paper-button>
+<paper-button raised ng-click="goto('/login')">login</paper-button>
 </form-box>
 </div>
