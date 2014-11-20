@@ -77,4 +77,4 @@ class ActivateUser(APIView):
         # activate the user
         user.activate()
 
-        return Response({'sucess': 'User succesfully activated'})
+        return Response({'success': 'User successfully activated'})
