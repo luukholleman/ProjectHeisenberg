@@ -1,4 +1,13 @@
-<div vertical layout id="register-form">
+<style>
+    .bg {
+        background-color: #ececec;
+        z-index: -1;
+    }
+</style>
+<div vertical layout center>
+    <div class="bg" dummy fit></div>
+<form-box>
+   <h2>Register</h2>
     <form name="registerform">
    <paper-input-decorator floatingLabel  label="Name">
         <input is="core-input" type="text" name="first_name" ng-model="user.first_name" />
@@ -16,6 +25,7 @@
         <input is="core-input" required name="password_repeat" type="password" />
     </paper-input-decorator>
     </form>
-</div>
 <paper-button raised ng-click="register(registerform, user)">Register</paper-button>
 <paper-button raised>login</paper-button>
+</form-box>
+</div>
