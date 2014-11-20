@@ -8,10 +8,9 @@ angular.module('punktlichDep').controller('ActivationController', function ($sco
 
     $http.post('/api/v1/users/activate/', {activation_token: token}).success(function(data, status, headers) {
         $location.path('/login');
-
-        // todo show toast with success
+        $scope.flash.setMessage('Your account was activated successfully! You can now login!');
     }).error(function(data, status, headres) {
-        // todo show toast with error
+        $scope.flash.setMessage('Your account could not be activated');
     });
 
 });
