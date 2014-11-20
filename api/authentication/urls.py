@@ -2,7 +2,7 @@ from django.conf.urls import include, url
 from rest_framework import routers
 from api.authentication.views import UserViewSet, AuthenticatedUser
 
-router = routers.DefaultRouter()
+router = routers.DefaultRouter(trailing_slash=False)
 
 router.register(r'users', UserViewSet)
 
