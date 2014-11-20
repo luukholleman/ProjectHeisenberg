@@ -4,7 +4,7 @@ angular.module('punktlichDep').controller('AuthenticationController', function (
 
         if (valid) {
             AuthenticationService.login(email, password, function(){
-                $location.path('/');
+                $location.path('/timeline');
                 FlashMessageService.setMessage("You've logged in!");
             }, function(errors){
                 ValidationService.showErrors(form, errors);
