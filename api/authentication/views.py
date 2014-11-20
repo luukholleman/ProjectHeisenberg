@@ -1,7 +1,7 @@
 from django.utils.text import slugify
 from rest_framework import viewsets
 from rest_framework.authtoken.views import ObtainAuthToken as BaseObtainAuthToken
-from rest_framework.decorators import permission_classes
+from rest_framework.decorators import permission_classes, api_view
 from rest_framework.generics import RetrieveAPIView
 
 from authentication.models import User
