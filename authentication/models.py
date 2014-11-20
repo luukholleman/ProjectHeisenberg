@@ -26,6 +26,9 @@ class User(AbstractBaseUser, PermissionsMixin):
                                                 'active. Unselect this instead of deleting accounts.'))
     date_joined = models.DateTimeField(_('date joined'), default=tz.now)
 
+    activation_token = models.CharField(max_length=90, null=True)
+    activation_expire = models.DateField(null=True, default=None)
+
     objects = UserManager()
 
     def get_full_name(self):
@@ -39,3 +42,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         "Returns the short name for the user."
         return self.first_name
 
+    def activate(self):
+        self.activation_expire = None
+        self.activation_token = None
+        self.is_active = True
+        return self.save()
