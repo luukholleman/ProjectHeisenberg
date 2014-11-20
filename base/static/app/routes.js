@@ -10,6 +10,10 @@ angular.module('punktlichDep').config(['$routeProvider',
                 templateUrl: appPath + 'templates/register.html',
                 controller: 'AuthenticationController'
             }).
+            when('/activate/:token', {
+                templateUrl: appPath + 'templates/activate.html',
+                controller: 'ActivationController'
+            }).
             otherwise({
                 redirectTo: ''
             });
