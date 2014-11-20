@@ -113,6 +113,9 @@ STATIC_ROOT = ''
 # Disable slash append, angular doesn't support this properly
 APPEND_SLASH = False
 
+# Site url
+SITE_URL = ''
+
 # Load local settings located in local_settings.py
 try:
     from local_settings import *
