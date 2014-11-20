@@ -1,0 +1,50 @@
+<link rel="import" href="../bower/polymer/polymer.html">
+
+<polymer-element name="form-box">
+    <template>
+        <style>
+            :host {
+                position: relative;
+
+                background-color: #fff;
+
+                width: 100%;
+                padding: 20px 16px;
+                box-sizing: border-box;
+                -moz-box-sizing: border-box;
+
+                margin-top: 64px;
+                min-height: 256px;
+                max-width: 480px;
+
+                box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .26);
+                border-radius: 2px;
+            }
+
+            .form-box-header {
+                margin-bottom: 10px;
+                position: relative;
+            }
+
+            .form-box-footer{
+                margin-top: 35px;
+                position: relative;
+            }
+        </style>
+        <div class="form-box-header" layout horizontal center>
+            <content select="h2"></content>
+        </div>
+
+        <div class="form-box-content">
+            <content select="p"></content>
+            <content select="form"></content>
+        </div>
+        <div class="form-box-footer">
+            <content select="paper-button"></content>
+        </div>
+    </template>
+    <script>
+        Polymer({
+        });
+    </script>
+</polymer-element>

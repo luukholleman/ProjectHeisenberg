@@ -6,11 +6,11 @@ from django.template.loader import get_template
 from django.utils.text import slugify
 from rest_framework import viewsets
 from rest_framework.authtoken.views import ObtainAuthToken as BaseObtainAuthToken
-from rest_framework.decorators import permission_classes
 from rest_framework.generics import RetrieveAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from ProjectHeisenberg.settings import SITE_URL
+from rest_framework.decorators import permission_classes
 
 from authentication.models import User
 from base.rest.permissions import AuthenticatedOrAnonReadAndCreate, IsSelf

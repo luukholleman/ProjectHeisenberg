@@ -1,6 +1,15 @@
-angular.module('punktlichDep').controller('AuthenticationController', function ($scope, $location, AuthenticationService, RegistrationService, ValidationService) {
-    $scope.login = function (email, password) {
-        AuthenticationService.login(email, password);
+angular.module('punktlichDep').controller('AuthenticationController', function ($scope, $location, FlashMessageService, AuthenticationService, RegistrationService, ValidationService) {
+    $scope.login = function (form, email, password) {
+        var valid = ValidationService.validateClientSide(form);
+
+        if (valid) {
+            AuthenticationService.login(email, password, function(){
+                $location.path('/');
+                FlashMessageService.setMessage("You've logged in!");
+            }, function(errors){
+                ValidationService.showErrors(form, errors);
+            });
+        }
     };
 
     $scope.register = function (form, user) {

@@ -1,21 +1,40 @@
-<div vertical layout id="register-form">
-    <form name="registerform">
-   <paper-input-decorator floatingLabel  label="Name">
-        <input is="core-input" type="text" name="first_name" ng-model="user.first_name" />
-    </paper-input-decorator>
-    <paper-input-decorator floatingLabel label="Surname">
-        <input is="core-input" type="text" name="last_name" ng-model="user.last_name" />
-    </paper-input-decorator>
-    <paper-input-decorator floatingLabel label="Email">
-        <input is="core-input" required type="email" name="email" ng-model="user.email" />
-    </paper-input-decorator>
-    <paper-input-decorator floatingLabel label="Password">
-        <input is="core-input" required name="password" type="password" ng-model="user.password" />
-    </paper-input-decorator>
-    <paper-input-decorator floatingLabel label="Repeat password">
-        <input is="core-input" required name="password_repeat" type="password" />
-    </paper-input-decorator>
-    </form>
+<style>
+    .bg {
+        background-color: #ececec;
+        z-index: -1;
+    }
+</style>
+<div vertical layout center>
+    <div class="bg" dummy fit></div>
+    <form-box ng-show="!hasRegistered">
+        <h2>Register</h2>
+
+        <form name="registerform">
+            <paper-input-decorator floatingLabel label="Name">
+                <input is="core-input" type="text" name="first_name" ng-model="user.first_name"/>
+            </paper-input-decorator>
+            <paper-input-decorator floatingLabel label="Surname">
+                <input is="core-input" type="text" name="last_name" ng-model="user.last_name"/>
+            </paper-input-decorator>
+            <paper-input-decorator floatingLabel label="Email">
+                <input is="core-input" required type="email" name="email" ng-model="user.email"/>
+            </paper-input-decorator>
+            <paper-input-decorator floatingLabel label="Password">
+                <input is="core-input" required name="password" type="password" ng-model="user.password"/>
+            </paper-input-decorator>
+            <paper-input-decorator floatingLabel label="Repeat password">
+                <input is="core-input" required name="password_repeat" type="password" ng-model="password_repeat"/>
+            </paper-input-decorator>
+        </form>
+        <paper-button raised ng-click="register(registerform, user)">Register</paper-button>
+        <paper-button raised ng-click="goto('/login')">login</paper-button>
+    </form-box>
+
+    <form-box ng-show="hasRegistered">
+        <h2>Verify your email</h2>
+        <p>
+            Hey, you! Check your email!
+        </p>
+        <paper-button raised ng-click="goto('/login')">login</paper-button>
+    </form-box>
 </div>
-<paper-button raised ng-click="register(registerform, user)">Register</paper-button>
-<paper-button raised>login</paper-button>
