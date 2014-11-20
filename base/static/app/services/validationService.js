@@ -58,7 +58,7 @@ angular.module('punktlichDep').factory('ValidationService', function (FlashMessa
         }
 
         if(errors['non_field_errors']){
-            FlashMessageService.setMessage(errors['non_field_errors'].join());
+            FlashMessageService.setMessage(errors['non_field_errors'].join(), false);
         }
     }
 

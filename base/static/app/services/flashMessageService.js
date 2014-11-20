@@ -1,20 +1,16 @@
 angular.module('punktlichDep').factory('FlashMessageService', function ($rootScope) {
-    //var queue = [];
     var currentMessage = "";
 
-    //$rootScope.$on("$routeChangeSuccess", function () {
-        //currentMessage = queue.shift() || undefined;
-    //});
-
     return {
-        setMessage: function (message) {
-            //if (!currentMessage) {
-                currentMessage = message;
-                document.querySelector('paper-toast').show();
-            //}
-            //else {
-                //queue.push(message);
-            //}
+        setMessage: function (message, autoClose) {
+            autoClose = typeof autoClose !== 'undefined' ? autoClose : true;
+
+            currentMessage = message;
+            var el = document.querySelector('paper-toast');
+            el.duration = autoClose == true ? 5000 : 600000;
+            el.show();
+
+
         },
         getMessage: function () {
             return currentMessage;
