@@ -184,7 +184,7 @@ Polymer({
              * Move time span based on delta, if delta is not equal to 0.
              */
             if (delta != 0) {
-                var rate = (this.timeSpanEnd - this.timeSpanStart) / this.clientWidth;
+                var rate = (this.timeSpanEnd - this.timeSpanStart) / this.clientWidth / 3;
                 this.timeSpanStart -= delta * rate;
                 this.timeSpanEnd -= delta * rate;
 
