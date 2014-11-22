@@ -36,24 +36,29 @@
         </style>
         <div style="width: 100%">
             <div class="bar"></div>
-            <div id="timeline" on-trackstart="{{ trackstart }}" on-track="{{ track }}" class="timeline">
+            <div id="timeline" on-trackstart="{{ trackstart }}" on-trackend="{{ trackend }}" on-track="{{ track }}"
+                 class="timeline">
                 <timeline-now id="now"></timeline-now>
                 <content select="timeline-item"></content>
             </div>
         </div>
         <core-collapse id="collapsebox" on-core-resize="{{ collapseResize }}">
-            <div id="infobox"> </div>
+            <div id="infobox"></div>
             <div>
-                <paper-button style="background-color: #008888" raised>More info...</paper-button>
+                <paper-button on-click="{{ openHighlighted }}" style="background-color: #eeeeee" raised>More info...</paper-button>
             </div>
         </core-collapse>
     </template>
     <script>
         Polymer({
             openingItem: null,
+            highlightedItem: null,
             timeSpanStart: new Date(2014, 10, 1).getTime() / 1000,
             timeSpanEnd: new Date(2014, 11, 1).getTime() / 1000,
-            trackx:0,
+            trackX: 0,
+            tracking: false,
+            trackDelta: 0,
+            trackInterval: null,
             ready: function () {
                 var items = this.querySelectorAll('timeline-item');
                 var me = this;
@@ -85,22 +90,43 @@
                     item.timeSpanEnd = this.timeSpanEnd;
                 }
             },
-            trackstart: function(a,b,c) {
-                //console.log('trackstart', a,b,c);
-                this.trackx = a.clientX;
+            trackstart: function (event) {
+                this.trackX = event.clientX;
+                this.tracking = true;
             },
-            track: function(a,b,c){
-                //console.log('track', a,b,c);
-                var diff = a.clientX - this.trackx;
-                this.trackx=a.clientX;
-                //console.log(diff);
-                if(Math.abs(diff) > 0) {
-                    var span = this.timeSpanEnd-this.timeSpanStart;
-                    var scr = span / this.clientWidth;
-                    this.timeSpanStart -= diff * scr;
-                    this.timeSpanEnd -= diff * scr;
-                    this.update();
+            trackend: function (a) {
+                console.log('trackend');
+                this.tracking = false;
+                var me = this;
+                this.trackInterval = setInterval(function () {
+                    me.doTrack();
+                }, 10);
+            },
+            doTrack: function () {
+                if(this.trackInterval && this.tracking) {
+                    clearInterval(this.trackInterval);
+                    this.trackInterval = null;
                 }
+
+                if (Math.abs(this.trackDelta) > 0) {
+                    var scr = (this.timeSpanEnd - this.timeSpanStart) / this.clientWidth;
+                    this.timeSpanStart -= this.trackDelta * scr;
+                    this.timeSpanEnd -= this.trackDelta * scr;
+                }
+
+                if(!this.tracking) {
+                    this.trackDelta /= Math.PI / 10 + 1;
+                    if(Math.abs(this.trackDelta) < 1) {
+                        this.trackDelta = 0;
+                        clearInterval(this.trackInterval);
+                    }
+                }
+            },
+            track: function (event) {
+                this.trackDelta = event.clientX - this.trackX;
+                this.trackX = event.clientX;
+
+                this.doTrack();
             },
             timeSpanStartChanged: function () {
                 this.$.now.timeSpanStart = this.timeSpanStart;
@@ -134,14 +160,19 @@
             },
             open: function (event) {
                 console.log('open', event.target);
-                //this.timeSpanStart = new Date(2014, 10, 1).getTime() / 1000;
-                //this.timeSpanEnd = new Date(2014, 11, 1).getTime() / 1000;
+            },
+            openHighlighted: function() {
+                if(this.highlightedItem) {
+                    this.open(this.highlightedItem);
+                }
             },
             highlighted: function (event) {
                 var delayed = this.$.collapsebox.opened;
                 Array.prototype.forEach.call(this.querySelectorAll('timeline-item'), function (item) {
                     item.unhighlight();
                 });
+
+                this.highlightedItem = event.target;
 
                 if (delayed) {
                     this.openingItem = event.target;
@@ -152,6 +183,7 @@
                 this.$.collapsebox.opened = true;
             },
             unhighlighted: function (event) {
+                this.highlightedItem = null;
                 this.$.collapsebox.opened = false;
             }
         });

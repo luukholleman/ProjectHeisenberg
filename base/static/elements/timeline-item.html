@@ -70,7 +70,7 @@
                 background: #009688;
             }
         </style>
-        <div id="bubble" class="bubble" on-click="{{ clicked }}">
+        <div id="bubble" class="bubble" on-tap="{{ tap }}">
             <div class="entry-info">
                 {{ dateString }}
             </div>
@@ -110,7 +110,7 @@
             ready:function(){
                 this.update();
             },
-            clicked: function () {
+            tap: function () {
                 if (this.highlighted) {
                     this.open();
                 }
