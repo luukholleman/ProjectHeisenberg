@@ -7,7 +7,8 @@
 
 <polymer-element name="timeline-line" attributes="timeSpanStart timeSpanEnd"
                  on-touchstart="{{ touchStart }}" on-touchmove="{{ touchMove }}" on-touchend="{{ touchEnd }}"
-                 on-trackstart="{{ trackStart }}" on-trackend="{{ trackEnd }}" on-track="{{ track }}">
+                 on-trackstart="{{ trackStart }}" on-trackend="{{ trackEnd }}" on-track="{{ track }}"
+                 on-mousewheel="{{ mouseWheel }}">
 <template>
     <style>
         :host {
@@ -18,6 +19,7 @@
             position: relative;
             padding: 75px 0 50px;
             min-height: 180px;
+            touch-action: none;
         }
 
         .bar {
@@ -111,6 +113,21 @@
              */
             return Math.sqrt((e.touches[0].pageX - e.touches[1].pageX) * (e.touches[0].pageX - e.touches[1].pageX) +
                     (e.touches[0].pageY - e.touches[1].pageY) * (e.touches[0].pageY - e.touches[1].pageY));
+        },
+        mouseWheel: function(e) {
+            var difference = e.wheelDelta;
+
+            /*
+             * Calculate the rate at which the time span should be changed.
+             */
+            var rate = (this.timeSpanEnd - this.timeSpanStart) / this.clientWidth;
+            var focusRate = e.clientX / this.clientWidth;
+
+            /*
+             * Update the time span.
+             */
+            this.timeSpanStart += difference * rate * (focusRate);
+            this.timeSpanEnd -= difference * rate * (1 - focusRate);
         },
         touchStart: function (e) {
             if (e.touches.length == 2) {

@@ -8,10 +8,15 @@ body {
     user-select: none;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     -webkit-touch-callout: none;
-
-    height: 100%;
 }
 body, html {
     height: 100%;
+    width: 100%;
     padding: 0;
+    overflow:   hidden;
+}
+
+body > div { /* hack to prevent 'over-scrolling' on safari/chrome */
+    height:     100%;
+    overflow:   scroll;
 }
