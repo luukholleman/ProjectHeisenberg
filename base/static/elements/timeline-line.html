@@ -1,21 +1,20 @@
 <link rel="import" href="../bower/polymer/polymer.html">
 <link rel="import" href="../bower/core-collapse/core-collapse.html">
 <link rel="import" href="../bower/paper-button/paper-button.html">
+<link rel="import" href="../bower/paper-icon-button/paper-icon-button.html">
 
 <link rel="import" href="timeline-item.html">
 <link rel="import" href="timeline-now.html">
 
-<polymer-element name="timeline-line" attributes="timeSpanStart timeSpanEnd"
-                 on-touchstart="{{ touchStart }}" on-touchmove="{{ touchMove }}" on-touchend="{{ touchEnd }}"
-                 on-trackstart="{{ trackStart }}" on-trackend="{{ trackEnd }}" on-track="{{ track }}"
-                 on-mousewheel="{{ mouseWheel }}">
+<polymer-element name="timeline-line" vertical layout attributes="timeSpanStart timeSpanEnd"
+        >
 <template>
     <style>
         :host {
             padding: 0;
             margin: 0px auto;
-            overflow-y: scroll;
-            overflow-x: auto;
+            overflow-y: auto;
+            overflow-x: hidden;
             position: relative;
             padding: 75px 0 50px;
             min-height: 180px;
@@ -33,10 +32,13 @@
 
         .timeline {
             white-space: nowrap;
-            padding: 30px 0 20px 0;
+            padding: 30px 0 10px 0;
             position: relative;
         }
 
+        .timelineBox {
+            padding: 30px 0 20px 0;
+        }
         #collapseBox {
             padding: 10px;
         }
@@ -45,230 +47,291 @@
             margin: 20px 0 0;
         }
     </style>
-    <div style="width: 100%">
+
+    <div class="timelineBox" on-touchstart="{{ touchStart }}" on-touchmove="{{ touchMove }}"
+         on-touchend="{{ touchEnd }}"
+         on-trackstart="{{ trackStart }}" on-trackend="{{ trackEnd }}" on-track="{{ track }}"
+         on-mousewheel="{{ mouseWheel }}">
         <div class="bar"></div>
-        <div id="timeline" class="timeline">
+        <div class="timeline">
             <timeline-now id="now"></timeline-now>
             <content select="timeline-item"></content>
+        </div>
+
+        <div horizontal justified layout>
+            <div horizontal start-justified layout>
+                <paper-icon-button on-tap="{{ goZoomIn }}" icon="add"></paper-icon-button>
+                <paper-icon-button on-tap="{{ goZoomOut }}" icon="remove"></paper-icon-button>
+            </div>
+            <div horizontal end-justified layout>
+                <paper-icon-button on-tap="{{ goLeft }}" icon="chevron-left"></paper-icon-button>
+                <paper-icon-button on-tap="{{ goRight }}" icon="chevron-right"></paper-icon-button>
+            </div>
         </div>
     </div>
     <core-collapse id="collapseBox" on-core-resize="{{ collapseResize }}">
         <div id="infoBox"></div>
         <div id="moreInfo">
-            <paper-button on-click="{{ openHighlighted }}" style="background-color: #eeeeee" raised>More info...
+            <paper-button on-click="{{ openHighlighted }}" style="background-color: #eeeeee" raised>
+                More info...
             </paper-button>
         </div>
     </core-collapse>
 </template>
 <script>
-    Polymer({
-        openingItem: null, /* item to be opened after #collapseBox has closed.  */
-        highlightedItem: null, /* currently highlighted item. */
-        timeSpanStart: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7 * 1).getTime() / 1000,
-        /* time span end in seconds since 1 January 1970 (default: now-1 weeks). */
-        timeSpanEnd: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7 * 2).getTime() / 1000,
-        /* time span end in seconds since 1 January 1970 (default: now+2 weeks). */
-        lastTrackX: 0, /* previous tracking x-position. */
-        isTracking: false, /* is user tracking. */
-        isScaling: false, /* is user pinching/scaling? */
-        lastPinchLength: 0, /* previous length between fingers while pinching. */
+Polymer({
+    openingItem: null, /* item to be opened after #collapseBox has closed.  */
+    highlightedItem: null, /* currently highlighted item. */
+    timeSpanStart: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7 * 1).getTime() / 1000,
+    /* time span end in seconds since 1 January 1970 (default: now-1 weeks). */
+    timeSpanEnd: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7 * 2).getTime() / 1000,
+    /* time span end in seconds since 1 January 1970 (default: now+2 weeks). */
+    lastTrackX: 0, /* previous tracking x-position. */
+    isTracking: false, /* is user tracking. */
+    isScaling: false, /* is user pinching/scaling? */
+    lastPinchLength: 0, /* previous length between fingers while pinching. */
 
-        ready: function () {
+    ready: function () {
+        /*
+         * Attach event listeners to all timeline-item elements inside this timeline-line.
+         */
+        var items = this.querySelectorAll('timeline-item');
+        var me = this;
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            item.addEventListener('item-highlighted', function (event) {
+                me.highlighted(event);
+            });
+            item.addEventListener('item-unhighlighted', function (event) {
+                me.unhighlighted(event);
+            });
+            item.addEventListener('item-open', function (event) {
+                me.open(event.target);
+            });
+        }
+
+        /*
+         * tell items about the time span of this timeline.
+         */
+        this.$.now.lineWidth = this.clientWidth;
+        this.$.now.timeSpanStart = this.timeSpanStart;
+        this.$.now.timeSpanEnd = this.timeSpanEnd;
+
+        var items = this.querySelectorAll('timeline-item');
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            item.lineWidth = this.clientWidth;
+            item.timeSpanStart = this.timeSpanStart;
+            item.timeSpanEnd = this.timeSpanEnd;
+        }
+    },
+    goLeft: function () {
+        var delta = (this.timeSpanEnd - this.timeSpanStart) / 4;
+        this.timeSpanStart -= delta;
+        this.timeSpanEnd -= delta;
+    },
+    goRight: function () {
+        var delta = (this.timeSpanEnd - this.timeSpanStart) / 4;
+        this.timeSpanStart += delta;
+        this.timeSpanEnd += delta;
+    },
+    goZoomIn: function () {
+        /*
+         * Calculate the rate at which the time span should be changed.
+         */
+        var rate = (this.timeSpanEnd - this.timeSpanStart) / this.clientWidth;
+
+        this.timeSpanStart += 100 * rate;
+        this.timeSpanEnd -= 100 * rate;
+    },
+    goZoomOut: function () {
+        /*
+         * Calculate the rate at which the time span should be changed.
+         */
+        var rate = (this.timeSpanEnd - this.timeSpanStart) / this.clientWidth;
+
+        this.timeSpanStart -= 250 * rate;
+        this.timeSpanEnd += 250 * rate;
+    },
+    calculatePinchLength: function (event) {
+        /*
+         * Calculate the distance between the first two fingers.
+         */
+        return Math.sqrt((event.touches[0].pageX - event.touches[1].pageX) * (event.touches[0].pageX - event.touches[1].pageX) +
+                (event.touches[0].pageY - event.touches[1].pageY) * (event.touches[0].pageY - event.touches[1].pageY));
+    },
+    mouseWheel: function (event) {
+        var isTwoAxis = typeof event.wheelDeltaY !== 'undefined';
+        var differenceY = isTwoAxis ? event.wheelDeltaY : event.wheelDelta;
+
+        /*
+         * Calculate the rate at which the time span should be changed.
+         */
+        var rate = (this.timeSpanEnd - this.timeSpanStart) / this.clientWidth;
+        var focusRate = event.clientX / this.clientWidth;
+
+        /*
+         * Update the time span.
+         */
+        this.timeSpanStart += differenceY * rate * (focusRate);
+        this.timeSpanEnd -= differenceY * rate * (1 - focusRate);
+
+        if(isTwoAxis)
+        {
+            var delta = event.wheelDeltaX;
+
             /*
-             * Attach event listeners to all timeline-item elements inside this timeline-line.
+             * Move time span based on delta, if delta is not equal to 0.
              */
-            var items = this.querySelectorAll('timeline-item');
-            var me = this;
-            for (var i = 0; i < items.length; i++) {
-                var item = items[i];
-                item.addEventListener('item-highlighted', function (event) {
-                    me.highlighted(event);
-                });
-                item.addEventListener('item-unhighlighted', function (event) {
-                    me.unhighlighted(event);
-                });
-                item.addEventListener('item-open', function (event) {
-                    me.open(event.target);
-                });
+            if (delta != 0) {
+                var rate = (this.timeSpanEnd - this.timeSpanStart) / this.clientWidth;
+                this.timeSpanStart -= delta * rate;
+                this.timeSpanEnd -= delta * rate;
+
+                event.preventDefault();
             }
-
+        }
+    },
+    touchStart: function (event) {
+        if (event.touches.length == 2) {
             /*
-             * tell items about the time span of this timeline.
+             * Store initial pinch length for scaling.
              */
-            this.$.now.lineWidth = this.clientWidth;
-            this.$.now.timeSpanStart = this.timeSpanStart;
-            this.$.now.timeSpanEnd = this.timeSpanEnd;
-
-            var items = this.querySelectorAll('timeline-item');
-            for (var i = 0; i < items.length; i++) {
-                var item = items[i];
-                item.lineWidth = this.clientWidth;
-                item.timeSpanStart = this.timeSpanStart;
-                item.timeSpanEnd = this.timeSpanEnd;
-            }
-        },
-        calculatePinchLength: function (e) {
+            this.isScaling = true;
+            this.lastPinchLength = this.calculatePinchLength(event);
+        }
+    },
+    touchEnd: function (event) {
+        this.isScaling = this.isScaling && event.touches.length >= 2;
+    },
+    touchMove: function (event) {
+        if (this.isScaling || event.touches.length >= 2) {
             /*
-             * Calculate the distance between the first two fingers.
+             * Calculate difference between current and previously calculated pinch length.
              */
-            return Math.sqrt((e.touches[0].pageX - e.touches[1].pageX) * (e.touches[0].pageX - e.touches[1].pageX) +
-                    (e.touches[0].pageY - e.touches[1].pageY) * (e.touches[0].pageY - e.touches[1].pageY));
-        },
-        mouseWheel: function(e) {
-            var difference = e.wheelDelta;
+            var previous = this.lastPinchLength;
+            var now = this.lastPinchLength = this.calculatePinchLength(event);
+            var difference = now - previous;
 
             /*
              * Calculate the rate at which the time span should be changed.
              */
             var rate = (this.timeSpanEnd - this.timeSpanStart) / this.clientWidth;
-            var focusRate = e.clientX / this.clientWidth;
+            var minX = Math.min(event.touches[0].pageX, event.touches[1].pageX);
+            var maxX = Math.max(event.touches[0].pageX, event.touches[1].pageX);
+            var focussedPixel = minX + (maxX - minX) / 2;
+            var focusRate = focussedPixel / this.clientWidth;
 
             /*
              * Update the time span.
              */
             this.timeSpanStart += difference * rate * (focusRate);
             this.timeSpanEnd -= difference * rate * (1 - focusRate);
-        },
-        touchStart: function (e) {
-            if (e.touches.length == 2) {
-                /*
-                 * Store initial pinch length for scaling.
-                 */
-                this.isScaling = true;
-                this.lastPinchLength = this.calculatePinchLength(e);
-            }
-        },
-        touchEnd: function (e) {
-            this.isScaling = this.isScaling && e.touches.length >= 2;
-        },
-        touchMove: function (e) {
-            if (this.isScaling || e.touches.length >= 2) {
-                /*
-                 * Calculate difference between current and previously calculated pinch length.
-                 */
-                var previous = this.lastPinchLength;
-                var now = this.lastPinchLength = this.calculatePinchLength(e);
-                var difference = now - previous;
 
-                /*
-                 * Calculate the rate at which the time span should be changed.
-                 */
-                var rate = (this.timeSpanEnd - this.timeSpanStart) / this.clientWidth;
-                var minX = Math.min(e.touches[0].pageX, e.touches[1].pageX);
-                var maxX = Math.max(e.touches[0].pageX, e.touches[1].pageX);
-                var focussedPixel = minX + (maxX - minX) / 2;
-                var focusRate = focussedPixel / this.clientWidth;
-
-                /*
-                 * Update the time span.
-                 */
-                this.timeSpanStart += difference * rate * (focusRate);
-                this.timeSpanEnd -= difference * rate * (1 - focusRate);
-
-            }
-        },
-        trackStart: function (event) {
-            this.lastTrackX = event.clientX;
-            this.isTracking = !this.isScaling;
-
-            /*
-             * push updated clientWith to items.
-             */
-            this.$.now.lineWidth = this.clientWidth;
-            var items = this.querySelectorAll('timeline-item');
-            for (var i = 0; i < items.length; i++) {
-                items[i].lineWidth = this.clientWidth;
-            }
-        },
-        trackEnd: function () {
-            if (!this.isTracking) {
-                return;
-            }
-            this.isTracking = false;
-        },
-        track: function (event) {
-            if (this.isScaling) {
-                this.isTracking = false;
-            }
-            if (this.isTracking) {
-                var delta = event.clientX - this.lastTrackX;
-                this.lastTrackX = event.clientX;
-
-                /*
-                 * Move time span based on delta, if delta is not equal to 0.
-                 */
-                if (delta != 0) {
-                    var rate = (this.timeSpanEnd - this.timeSpanStart) / this.clientWidth;
-                    this.timeSpanStart -= delta * rate;
-                    this.timeSpanEnd -= delta * rate;
-                }
-            }
-        },
-        timeSpanStartChanged: function () {
-            this.$.now.timeSpanStart = this.timeSpanStart;
-            var items = this.querySelectorAll('timeline-item');
-            for (var i = 0; i < items.length; i++) {
-                items[i].timeSpanStart = this.timeSpanStart;
-            }
-        },
-        timeSpanEndChanged: function () {
-            this.$.now.timeSpanEnd = this.timeSpanEnd;
-            var items = this.querySelectorAll('timeline-item');
-            for (var i = 0; i < items.length; i++) {
-                items[i].timeSpanEnd = this.timeSpanEnd;
-            }
-        },
-        showItem: function (item) {
-            /*
-             * Clear and refill #infoBox with information about the given item.
-             */
-            while (this.$.infoBox.hasChildNodes()) {
-                this.$.infoBox.removeChild(this.$.infoBox.lastChild);
-            }
-
-            for (var i = 0; i < item.children.length; i++) {
-                this.$.infoBox.appendChild(item.children[i].cloneNode(true));
-            }
-        },
-        collapseResize: function (event) {
-            if (!event.target.opened && this.openingItem) {
-                this.showItem(this.openingItem);
-                event.target.opened = true;
-                this.openingItem = null;
-            }
-        },
-        open: function (item) {
-            console.log('open', item);
-        },
-        openHighlighted: function () {
-            if (this.highlightedItem) {
-                this.open(this.highlightedItem);
-            }
-        },
-        highlighted: function (event) {
-            /*
-             * Close highlighted items. If any were opened, wait for it to close.
-             * Then show the highlighted item.
-             */
-            var delayed = this.$.collapseBox.opened;
-            Array.prototype.forEach.call(this.querySelectorAll('timeline-item'), function (item) {
-                item.unhighlight();
-            });
-
-            this.highlightedItem = event.target;
-
-            if (delayed) {
-                this.openingItem = event.target;
-                return;
-            }
-
-            this.showItem(event.target);
-            this.$.collapseBox.opened = true;
-        },
-        unhighlighted: function (event) {
-            this.highlightedItem = null;
-            this.$.collapseBox.opened = false;
         }
-    });
+    },
+    trackStart: function (event) {
+        this.lastTrackX = event.clientX;
+        this.isTracking = !this.isScaling;
+
+        /*
+         * push updated clientWith to items.
+         */
+        this.$.now.lineWidth = this.clientWidth;
+        var items = this.querySelectorAll('timeline-item');
+        for (var i = 0; i < items.length; i++) {
+            items[i].lineWidth = this.clientWidth;
+        }
+    },
+    trackEnd: function () {
+        if (!this.isTracking) {
+            return;
+        }
+        this.isTracking = false;
+    },
+    track: function (event) {
+        if (this.isScaling) {
+            this.isTracking = false;
+        }
+        if (this.isTracking) {
+            var delta = event.clientX - this.lastTrackX;
+            this.lastTrackX = event.clientX;
+
+            /*
+             * Move time span based on delta, if delta is not equal to 0.
+             */
+            if (delta != 0) {
+                var rate = (this.timeSpanEnd - this.timeSpanStart) / this.clientWidth;
+                this.timeSpanStart -= delta * rate;
+                this.timeSpanEnd -= delta * rate;
+            }
+        }
+    },
+    timeSpanStartChanged: function () {
+        this.$.now.timeSpanStart = this.timeSpanStart;
+        var items = this.querySelectorAll('timeline-item');
+        for (var i = 0; i < items.length; i++) {
+            items[i].timeSpanStart = this.timeSpanStart;
+        }
+    },
+    timeSpanEndChanged: function () {
+        this.$.now.timeSpanEnd = this.timeSpanEnd;
+        var items = this.querySelectorAll('timeline-item');
+        for (var i = 0; i < items.length; i++) {
+            items[i].timeSpanEnd = this.timeSpanEnd;
+        }
+    },
+    showItem: function (item) {
+        /*
+         * Clear and refill #infoBox with information about the given item.
+         */
+        while (this.$.infoBox.hasChildNodes()) {
+            this.$.infoBox.removeChild(this.$.infoBox.lastChild);
+        }
+
+        for (var i = 0; i < item.children.length; i++) {
+            this.$.infoBox.appendChild(item.children[i].cloneNode(true));
+        }
+    },
+    collapseResize: function (event) {
+        if (!event.target.opened && this.openingItem) {
+            this.showItem(this.openingItem);
+            event.target.opened = true;
+            this.openingItem = null;
+        }
+    },
+    open: function (item) {
+        console.log('open', item);
+    },
+    openHighlighted: function () {
+        if (this.highlightedItem) {
+            this.open(this.highlightedItem);
+        }
+    },
+    highlighted: function (event) {
+        /*
+         * Close highlighted items. If any were opened, wait for it to close.
+         * Then show the highlighted item.
+         */
+        var delayed = this.$.collapseBox.opened;
+        Array.prototype.forEach.call(this.querySelectorAll('timeline-item'), function (item) {
+            item.unhighlight();
+        });
+
+        this.highlightedItem = event.target;
+
+        if (delayed) {
+            this.openingItem = event.target;
+            return;
+        }
+
+        this.showItem(event.target);
+        this.$.collapseBox.opened = true;
+    },
+    unhighlighted: function (event) {
+        this.highlightedItem = null;
+        this.$.collapseBox.opened = false;
+    }
+});
 </script>
 </polymer-element>
