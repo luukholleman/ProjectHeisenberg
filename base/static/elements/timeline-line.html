@@ -1,6 +1,11 @@
 <link rel="import" href="../bower/polymer/polymer.html">
+<link rel="import" href="../bower/core-collapse/core-collapse.html">
+<link rel="import" href="../bower/paper-button/paper-button.html">
 
-<polymer-element name="timeline-line">
+<link rel="import" href="timeline-item.html">
+<link rel="import" href="timeline-now.html">
+
+<polymer-element name="timeline-line" attributes="timeSpanStart timeSpanEnd">
     <template>
         <style>
             :host {
@@ -9,109 +14,145 @@
                 overflow-y: scroll;
                 overflow-x: auto;
                 position: relative;
+                padding: 10px 0;
             }
 
-            .all {
-                width: 5000px;
-            }
             .bar {
-                height:4px;
-                background:#eee;
-                width:100%;
-                position:relative;
-                top:13px;
-                left:0;
+                height: 4px;
+                background: #eee;
+                width: 100%;
+                position: relative;
+                top: 13px;
+                left: 0;
             }
 
             .timeline {
-                white-space:nowrap;
-                padding:30px 0 10px 0;
-                position:relative;
-            }
-
-            .entry {
-                display:inline-block;
-                vertical-align:top;
-                position:relative;
-                width: 0px;
-                overflow: visible;
-            }
-
-            .entry-info {
-                overflow: visible;
-                background:#1C7ABF;
-                color:#fff;
-                font-size:12px;
-                text-align:center;
-                border-radius:8px;
-                font-style: italic;
-                width: 64px;
-                height: 16px;
-                display: none;
+                white-space: nowrap;
+                padding: 30px 0 20px 0;
                 position: relative;
-                left: -32px;
             }
 
-            .entry.active > .entry-info {
-                display: block;
-            }
-            .entry:after {
-                content:'';
-                display:block;
-                background:#eee;
-                width:7px;
-                height:7px;
-                border-radius:6px;
-                border:2px solid #06182E;
-                position:absolute;
-                left:50%;
-                top:-25px;
-                margin-left:-6px;
-            }
-
-            .entry-info:before {
-                content:'';
-                display:block;
-                background:#06182E;
-                width:3px;
-                height:20px;
-                position:absolute;
-                left:50%;
-                top:-20px;
-                margin-left:-2px;
-            }
-
-            .entry.active:after {
-                background: #f3b300;
-            }
 
         </style>
-        <div class="all">
+        <div style="width: 100%">
             <div class="bar"></div>
-            <div class="timeline">
-                <div class="entry" style="left: 5px;" on-click="{{buttonClick}}">
-                    <div class="entry-info">20-jan</div>
-                </div>
-                <div class="entry" style="left: 50px;" on-click="{{buttonClick}}">
-                    <div class="entry-info">20-feb</div>
-                </div>
-                <div class="entry" style="left: 100px;" on-click="{{buttonClick}}">
-                    <div class="entry-info">20-mar</div>
-                </div>
-                <div class="entry" style="left: 500px;" on-click="{{buttonClick}}">
-                    <div class="entry-info">20-apr</div>
-                </div>
-                <div class="entry" style="left: 4000px;" on-click="{{buttonClick}}">
-                    <div class="entry-info">20-jun</div>
-                </div>
+            <div id="timeline" on-trackstart="{{ trackstart }}" on-track="{{ track }}" class="timeline">
+                <timeline-now id="now"></timeline-now>
+                <content select="timeline-item"></content>
             </div>
         </div>
+        <core-collapse id="collapsebox" on-core-resize="{{ collapseResize }}">
+            <div id="infobox"> </div>
+            <div>
+                <paper-button style="background-color: #008888" raised>More info...</paper-button>
+            </div>
+        </core-collapse>
     </template>
     <script>
         Polymer({
-            buttonClick: function(event, detail, sender) {
-                sender.classList.toggle('active');
-                console.log(sender);
+            openingItem: null,
+            timeSpanStart: new Date(2014, 10, 1).getTime() / 1000,
+            timeSpanEnd: new Date(2014, 11, 1).getTime() / 1000,
+            trackx:0,
+            ready: function () {
+                var items = this.querySelectorAll('timeline-item');
+                var me = this;
+                for (var i = 0; i < items.length; i++) {
+                    var item = items[i];
+                    item.addEventListener('item-highlighted', function (event) {
+                        me.highlighted(event);
+                    });
+                    item.addEventListener('item-unhighlighted', function (event) {
+                        me.unhighlighted(event);
+                    });
+                    item.addEventListener('item-open', function (event) {
+                        me.open(event);
+                    });
+                }
+
+                this.update();
+            },
+            update: function () {
+                this.$.now.lineWidth = this.clientWidth;
+                this.$.now.timeSpanStart = this.timeSpanStart;
+                this.$.now.timeSpanEnd = this.timeSpanEnd;
+
+                var items = this.querySelectorAll('timeline-item');
+                for (var i = 0; i < items.length; i++) {
+                    var item = items[i];
+                    item.lineWidth = this.clientWidth;
+                    item.timeSpanStart = this.timeSpanStart;
+                    item.timeSpanEnd = this.timeSpanEnd;
+                }
+            },
+            trackstart: function(a,b,c) {
+                //console.log('trackstart', a,b,c);
+                this.trackx = a.clientX;
+            },
+            track: function(a,b,c){
+                //console.log('track', a,b,c);
+                var diff = a.clientX - this.trackx;
+                this.trackx=a.clientX;
+                //console.log(diff);
+                if(Math.abs(diff) > 0) {
+                    var span = this.timeSpanEnd-this.timeSpanStart;
+                    var scr = span / this.clientWidth;
+                    this.timeSpanStart -= diff * scr;
+                    this.timeSpanEnd -= diff * scr;
+                    this.update();
+                }
+            },
+            timeSpanStartChanged: function () {
+                this.$.now.timeSpanStart = this.timeSpanStart;
+                var items = this.querySelectorAll('timeline-item');
+                for (var i = 0; i < items.length; i++) {
+                    items[i].timeSpanStart = this.timeSpanStart;
+                }
+            },
+            timeSpanEndChanged: function () {
+                this.$.now.timeSpanEnd = this.timeSpanEnd;
+                var items = this.querySelectorAll('timeline-item');
+                for (var i = 0; i < items.length; i++) {
+                    items[i].timeSpanEnd = this.timeSpanEnd;
+                }
+            },
+            showItem: function (item) {
+                while (this.$.infobox.hasChildNodes()) {
+                    this.$.infobox.removeChild(this.$.infobox.lastChild);
+                }
+
+                for (var i = 0; i < item.children.length; i++) {
+                    this.$.infobox.appendChild(item.children[i].cloneNode(true));
+                }
+            },
+            collapseResize: function (event) {
+                if (!event.target.opened && this.openingItem) {
+                    this.showItem(this.openingItem);
+                    event.target.opened = true;
+                    this.openingItem = null;
+                }
+            },
+            open: function (event) {
+                console.log('open', event.target);
+                //this.timeSpanStart = new Date(2014, 10, 1).getTime() / 1000;
+                //this.timeSpanEnd = new Date(2014, 11, 1).getTime() / 1000;
+            },
+            highlighted: function (event) {
+                var delayed = this.$.collapsebox.opened;
+                Array.prototype.forEach.call(this.querySelectorAll('timeline-item'), function (item) {
+                    item.unhighlight();
+                });
+
+                if (delayed) {
+                    this.openingItem = event.target;
+                    return;
+                }
+
+                this.showItem(event.target);
+                this.$.collapsebox.opened = true;
+            },
+            unhighlighted: function (event) {
+                this.$.collapsebox.opened = false;
             }
         });
     </script>
