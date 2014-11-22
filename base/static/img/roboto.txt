@@ -1,2 +1,0 @@
-convert -background "#37A139" -fill white -size 1024x1024 -font roboto.ttf -gravity center -pointsize 800 label:P. punktlich.png; convert punktlich.png -resize 180 180.png; convert punktlich.png -resize 152 152.png; convert punktlich.png -resize 120 120.png; convert punktlich.png -resize 76 76.png
-MacBook-Pro-van-Tim-2:
