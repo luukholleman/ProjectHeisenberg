@@ -13,6 +13,13 @@ def createUser(email, password, first_name, last_name, is_staff, is_active):
 
 
 class UserTestCase(TestCase):
+
+    def test_activate_activates_user(self):
+        """Create inactive user"""
+        user = createUser(email='test@test.nl', password='wee', first_name='test', last_name='test', is_staff=False, is_active=False)
+        user.activate()
+        self.assertTrue(user.is_active)
+
     def test_administrator_is_staff_and_active(self):
         """Users who are staff are flagged with is_staff=true"""
         admin = createUser(email='admin@punkasdtli.ch',
