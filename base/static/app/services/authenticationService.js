@@ -13,6 +13,7 @@ angular.module('punktlichDep').factory('AuthenticationService', function ($http)
 
     function setToken(token)
     {
+        localStorage.setItem('authentication-token', token);
         $http.defaults.headers.common['Authorization'] = 'Token ' + token;
     }
 
