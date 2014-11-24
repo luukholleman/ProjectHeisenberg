@@ -10,6 +10,14 @@ angular.module('punktlichDep').config(['$routeProvider',
                 templateUrl: appPath + 'templates/register.html',
                 controller: 'AuthenticationController'
             }).
+            when('/timeline', {
+                templateUrl: appPath + 'templates/timeline.html',
+                controller: 'TimelineController'
+            }).
+            when('/activate/:token', {
+                templateUrl: appPath + 'templates/activate.html',
+                controller: 'ActivationController'
+            }).
             otherwise({
                 redirectTo: ''
             });
