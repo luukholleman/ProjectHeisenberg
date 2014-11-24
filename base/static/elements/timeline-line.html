@@ -1,13 +1,10 @@
 <link rel="import" href="../bower/polymer/polymer.html">
-<link rel="import" href="../bower/core-collapse/core-collapse.html">
 <link rel="import" href="../bower/paper-button/paper-button.html">
 <link rel="import" href="../bower/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower/paper-shadow/paper-shadow.html">
+<link rel="import" href="timeline-sign.html">
 
-<link rel="import" href="timeline-item.html">
-<link rel="import" href="timeline-now.html">
-
-<polymer-element name="timeline-line" vertical layout attributes="timeSpanStart timeSpanEnd"
-        >
+<polymer-element name="timeline-line" vertical layout attributes="timeSpanStart timeSpanEnd">
 <template>
     <style>
         :host {
@@ -17,34 +14,60 @@
             overflow-x: hidden;
             position: relative;
             padding: 75px 0 50px;
-            min-height: 180px;
             touch-action: none;
         }
 
-        .bar {
-            height: 4px;
+        #bar {
+            height: 8px;
             background: #eee;
             width: 100%;
             position: relative;
-            top: 13px;
-            left: 0;
+            margin: 0;
+            padding: 0;
         }
 
         .timeline {
             white-space: nowrap;
             padding: 30px 0 10px 0;
             position: relative;
+            margin: 0;
+            height: 64px;
+        }
+
+        #now {
+            padding: 0;
+            margin: 0;
+            position: relative;
+            left: 0px;
+            top: 0px;
+            background-color: #4592E6;
+            height: 100%;
+        }
+
+        .nowLabel {
+            color: #009688;
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            margin-top: -100px;
+            margin-right: -20px;
+        }
+
+        .nowLabel:after {
+            content: '';
+            display: block;
+            width: 1px;
+            height: 100px;
+            background-color: #979797;
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            margin-top: 20px;
+            margin-right: 20px;
         }
 
         .timelineBox {
             padding: 30px 0 20px 0;
-        }
-        #collapseBox {
-            padding: 10px;
-        }
-
-        #moreInfo {
-            margin: 20px 0 0;
         }
     </style>
 
@@ -52,36 +75,27 @@
          on-touchend="{{ touchEnd }}"
          on-trackstart="{{ trackStart }}" on-trackend="{{ trackEnd }}" on-track="{{ track }}"
          on-mousewheel="{{ mouseWheel }}">
-        <div class="bar"></div>
-        <div class="timeline">
-            <timeline-now id="now"></timeline-now>
-            <content select="timeline-item"></content>
+        <div class="timeline" horizontal layout center>
+            <div id="bar">
+                <div id="now">
+                    <div class="nowLabel">
+                        NOW
+                    </div>
+                </div>
+                <content select="timeline-item"></content>
+            </div>
         </div>
-
         <div horizontal justified layout>
-            <div horizontal start-justified layout>
+            <div horizontal end-justified layout>
                 <paper-icon-button on-tap="{{ goZoomIn }}" icon="add"></paper-icon-button>
                 <paper-icon-button on-tap="{{ goZoomOut }}" icon="remove"></paper-icon-button>
             </div>
-            <div horizontal end-justified layout>
-                <paper-icon-button on-tap="{{ goLeft }}" icon="chevron-left"></paper-icon-button>
-                <paper-icon-button on-tap="{{ goRight }}" icon="chevron-right"></paper-icon-button>
-            </div>
         </div>
     </div>
-    <core-collapse id="collapseBox" on-core-resize="{{ collapseResize }}">
-        <div id="infoBox"></div>
-        <div id="moreInfo">
-            <paper-button on-click="{{ openHighlighted }}" style="background-color: #eeeeee" raised>
-                More info...
-            </paper-button>
-        </div>
-    </core-collapse>
 </template>
 <script>
 Polymer({
-    openingItem: null, /* item to be opened after #collapseBox has closed.  */
-    highlightedItem: null, /* currently highlighted item. */
+    lastHighlightedItem: null, /* currently highlighted item. */
     timeSpanStart: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7 * 1).getTime() / 1000,
     /* time span end in seconds since 1 January 1970 (default: now-1 weeks). */
     timeSpanEnd: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7 * 2).getTime() / 1000,
@@ -90,22 +104,21 @@ Polymer({
     isTracking: false, /* is user tracking. */
     isScaling: false, /* is user pinching/scaling? */
     lastPinchLength: 0, /* previous length between fingers while pinching. */
-
+    signFrequency: 'month', /* year/month/day */
+    signs: {},
+    /*
+     * ====================
+     * Polymer events
+     * ====================
+     */
     ready: function () {
         /*
          * Attach event listeners to all timeline-item elements inside this timeline-line.
          */
-        var items = this.querySelectorAll('timeline-item');
         var me = this;
+        var items = this.querySelectorAll('timeline-item');
         for (var i = 0; i < items.length; i++) {
-            var item = items[i];
-            item.addEventListener('item-highlighted', function (event) {
-                me.highlighted(event);
-            });
-            item.addEventListener('item-unhighlighted', function (event) {
-                me.unhighlighted(event);
-            });
-            item.addEventListener('item-open', function (event) {
+            items[i].addEventListener('item-open', function (event) {
                 me.open(event.target);
             });
         }
@@ -113,10 +126,8 @@ Polymer({
         /*
          * tell items about the time span of this timeline.
          */
-        this.$.now.lineWidth = this.clientWidth;
-        this.$.now.timeSpanStart = this.timeSpanStart;
-        this.$.now.timeSpanEnd = this.timeSpanEnd;
-
+        this.update();
+        this.updateSignFrequency();
         var items = this.querySelectorAll('timeline-item');
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
@@ -125,16 +136,31 @@ Polymer({
             item.timeSpanEnd = this.timeSpanEnd;
         }
     },
-    goLeft: function () {
-        var delta = (this.timeSpanEnd - this.timeSpanStart) / 4;
-        this.timeSpanStart -= delta;
-        this.timeSpanEnd -= delta;
+    /*
+     * ====================
+     * Utility methods
+     * ====================
+     */
+    calculatePinchLength: function (event) {
+        /*
+         * Calculate the distance between the first two fingers.
+         */
+        return Math.sqrt((event.touches[0].pageX - event.touches[1].pageX) * (event.touches[0].pageX - event.touches[1].pageX) +
+                (event.touches[0].pageY - event.touches[1].pageY) * (event.touches[0].pageY - event.touches[1].pageY));
     },
-    goRight: function () {
-        var delta = (this.timeSpanEnd - this.timeSpanStart) / 4;
-        this.timeSpanStart += delta;
-        this.timeSpanEnd += delta;
+    open: function (item) {
+        if (this.lastHighlightedItem) {
+            this.lastHighlightedItem.close();
+        }
+
+        this.lastHighlightedItem = event.target;
+        this.fire('item-open', {item: item});
     },
+    /*
+     * ====================
+     * Button events
+     * ====================
+     */
     goZoomIn: function () {
         /*
          * Calculate the rate at which the time span should be changed.
@@ -143,6 +169,7 @@ Polymer({
 
         this.timeSpanStart += 100 * rate;
         this.timeSpanEnd -= 100 * rate;
+        this.updateSignFrequency();
     },
     goZoomOut: function () {
         /*
@@ -150,16 +177,15 @@ Polymer({
          */
         var rate = (this.timeSpanEnd - this.timeSpanStart) / this.clientWidth;
 
-        this.timeSpanStart -= 250 * rate;
-        this.timeSpanEnd += 250 * rate;
+        this.timeSpanStart -= 100 * rate;
+        this.timeSpanEnd += 100 * rate;
+        this.updateSignFrequency();
     },
-    calculatePinchLength: function (event) {
-        /*
-         * Calculate the distance between the first two fingers.
-         */
-        return Math.sqrt((event.touches[0].pageX - event.touches[1].pageX) * (event.touches[0].pageX - event.touches[1].pageX) +
-                (event.touches[0].pageY - event.touches[1].pageY) * (event.touches[0].pageY - event.touches[1].pageY));
-    },
+    /*
+     * ====================
+     * element events
+     * ====================
+     */
     mouseWheel: function (event) {
         var isTwoAxis = typeof event.wheelDeltaY !== 'undefined';
         var differenceY = isTwoAxis ? event.wheelDeltaY : event.wheelDelta;
@@ -175,9 +201,9 @@ Polymer({
          */
         this.timeSpanStart += differenceY * rate * (focusRate);
         this.timeSpanEnd -= differenceY * rate * (1 - focusRate);
+        this.updateSignFrequency();
 
-        if(isTwoAxis)
-        {
+        if (isTwoAxis) {
             var delta = event.wheelDeltaX;
 
             /*
@@ -227,9 +253,10 @@ Polymer({
              */
             this.timeSpanStart += difference * rate * (focusRate);
             this.timeSpanEnd -= difference * rate * (1 - focusRate);
-
+            this.updateSignFrequency();
         }
     },
+
     trackStart: function (event) {
         this.lastTrackX = event.clientX;
         this.isTracking = !this.isScaling;
@@ -237,7 +264,7 @@ Polymer({
         /*
          * push updated clientWith to items.
          */
-        this.$.now.lineWidth = this.clientWidth;
+        this.update();
         var items = this.querySelectorAll('timeline-item');
         for (var i = 0; i < items.length; i++) {
             items[i].lineWidth = this.clientWidth;
@@ -267,70 +294,111 @@ Polymer({
             }
         }
     },
+    /*
+     * ====================
+     * Changed events
+     * ====================
+     */
     timeSpanStartChanged: function () {
-        this.$.now.timeSpanStart = this.timeSpanStart;
+        this.update();
         var items = this.querySelectorAll('timeline-item');
         for (var i = 0; i < items.length; i++) {
             items[i].timeSpanStart = this.timeSpanStart;
         }
     },
     timeSpanEndChanged: function () {
-        this.$.now.timeSpanEnd = this.timeSpanEnd;
+        this.update();
         var items = this.querySelectorAll('timeline-item');
         for (var i = 0; i < items.length; i++) {
             items[i].timeSpanEnd = this.timeSpanEnd;
         }
     },
-    showItem: function (item) {
-        /*
-         * Clear and refill #infoBox with information about the given item.
-         */
-        while (this.$.infoBox.hasChildNodes()) {
-            this.$.infoBox.removeChild(this.$.infoBox.lastChild);
+    /*
+     * ====================
+     * Update methods
+     * ====================
+     */
+    update: function() {
+        this.updateNow();
+        this.updateSigns();
+    },
+    updateNow: function () {
+        var now = new Date().getTime() / 1000;
+        var perc = (now - this.timeSpanStart) / (this.timeSpanEnd - this.timeSpanStart);
+        var width = Math.round(perc * this.clientWidth);
+        this.$.now.style.display = now > this.timeSpanStart ? 'block' : 'none';
+        this.$.now.style.width = width >= this.clientWidth ? '100%' : width + 'px';
+    },
+    updateSigns: function() {
+        //update
+        for (var sign in this.signs) {
+            this.signs[sign].lineWidth = this.clientWidth;
+            this.signs[sign].timeSpanStart = this.timeSpanStart;
+            this.signs[sign].timeSpanEnd = this.timeSpanEnd;
         }
 
-        for (var i = 0; i < item.children.length; i++) {
-            this.$.infoBox.appendChild(item.children[i].cloneNode(true));
-        }
-    },
-    collapseResize: function (event) {
-        if (!event.target.opened && this.openingItem) {
-            this.showItem(this.openingItem);
-            event.target.opened = true;
-            this.openingItem = null;
-        }
-    },
-    open: function (item) {
-        console.log('open', item);
-    },
-    openHighlighted: function () {
-        if (this.highlightedItem) {
-            this.open(this.highlightedItem);
-        }
-    },
-    highlighted: function (event) {
-        /*
-         * Close highlighted items. If any were opened, wait for it to close.
-         * Then show the highlighted item.
-         */
-        var delayed = this.$.collapseBox.opened;
-        Array.prototype.forEach.call(this.querySelectorAll('timeline-item'), function (item) {
-            item.unhighlight();
-        });
+        //add
+        switch (this.signFrequency) {
+            case 'year':
+                var date = new Date(this.timeSpanStart * 1000);
+                while (date.getTime() < this.timeSpanEnd * 1000) {
+                    var year = new Date(date.getFullYear(), 0, 1);
+                    if(this.signs[year.getTime()]) {
+                        date.setFullYear(date.getFullYear() + 1);
+                        continue;
+                    }
+                    var element = document.createElement('timeline-sign');
+                    element.timeSpanStart = this.timeSpanStart;
+                    element.timeSpanEnd = this.timeSpanEnd;
+                    element.lineWidth = this.clientWidth;
+                    element.date = year.getTime() / 1000;
+                    element.value = year.getFullYear();
 
-        this.highlightedItem = event.target;
+                    //console.log('added year symbol for year', year.getFullYear(), ' @ ', year.getTime(), element);
+                    this.$.bar.appendChild(element);
+                    this.signs[year.getTime()] = element;
 
-        if (delayed) {
-            this.openingItem = event.target;
-            return;
+                    date.setFullYear(date.getFullYear() + 1);
+                }
+                break;
+            case 'month':
+                var date = new Date(this.timeSpanStart * 1000);
+                while (date.getTime() < this.timeSpanEnd * 1000) {
+                    var month = new Date(date.getFullYear(), date.getMonth(), 1);
+                    if(this.signs[month.getTime()]) {
+                        date.setMonth(date.getMonth() + 1);
+                        continue;
+                    }
+                    var element = document.createElement('timeline-sign');
+                    element.timeSpanStart = this.timeSpanStart;
+                    element.timeSpanEnd = this.timeSpanEnd;
+                    element.lineWidth = this.clientWidth;
+                    element.date = month.getTime() / 1000;
+                    element.value = month.getMonth();//@todo to text and add year in january
+
+                    //console.log('added month symbol for year', month.getFullYear(), month.getMonth(), ' @ ', month.getTime(), element);
+                    this.$.bar.appendChild(element);
+                    this.signs[month.getTime()] = element;
+
+                    date.setMonth(date.getMonth() + 1);
+                }
+                break;
+        }
+    },
+    updateSignFrequency: function () {
+        var dayTime = 60 * 60 * 24;
+        var timeSpan = this.timeSpanEnd - this.timeSpanStart;
+        var frequency = timeSpan > dayTime * 365 ? 'year' : (timeSpan > dayTime * 31 ? 'month' : 'day');
+
+        if(frequency == 'day') {frequency ='month';}//@todo remove
+        if (frequency != this.signFrequency) {
+            for (var sign in this.signs) {
+                this.$.bar.removeChild(this.signs[sign]);
+                delete this.signs[sign];
+            }
         }
 
-        this.showItem(event.target);
-        this.$.collapseBox.opened = true;
-    },
-    unhighlighted: function (event) {
-        this.highlightedItem = null;
-        this.$.collapseBox.opened = false;
+        this.signFrequency = frequency;
     }
 });
 </script>

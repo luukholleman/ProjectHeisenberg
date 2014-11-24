@@ -1,22 +1,18 @@
 <div>
     <core-toolbar style="background: #009688; color:white">
-        <paper-icon-button icon="add"></paper-icon-button>
+        <paper-icon-button icon="add-circle-outline"></paper-icon-button>
         <strong flex>Timeline</strong>
         <paper-icon-button icon="more-vert"></paper-icon-button>
     </core-toolbar>
 </div>
 <timeline-line id="timeline" style="width: 100%" vertical layout>
-    <timeline-item date="{{ generateDate(2014, 11, 4) }}">
-        <div>Info about event A on '14-11-04</div>
+    <timeline-item color="green" date="{{ generateDate(2014, 11, 4) }}">
     </timeline-item>
-    <timeline-item date="{{ generateDate(2014, 11, 16) }}">
-        <div>Info about event B on '14-11-16</div>
+    <timeline-item color="pink"date="{{ generateDate(2014, 11, 16) }}">
     </timeline-item>
-    <timeline-item date="{{ generateDate(2014, 11, 23) }}">
-        <div>Info about event C on '14-11-23</div>
+    <timeline-item color="teal" count="2" date="{{ generateDate(2014, 11, 23) }}">
     </timeline-item>
-    <timeline-item date="{{ generateDate(2014, 12, 6) }}">
-        <div>Info about event D on '14-12-06</div>
+    <timeline-item color="red" date="{{ generateDate(2014, 12, 6) }}">
     </timeline-item>
 </timeline-line>
 

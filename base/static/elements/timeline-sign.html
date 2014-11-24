@@ -1,0 +1,68 @@
+<link rel="import" href="../bower/polymer/polymer.html">
+<link rel="import" href="../bower/paper-shadow/paper-shadow.html">
+
+<polymer-element name="timeline-sign" attributes="date value">
+    <template>
+        <link rel="stylesheet" href="../css/groups.css">
+
+        <style>
+            :host {
+                width: 0px;
+                height: 0px;
+                position: absolute;
+                top: 8px; /* timeline-line.bar.height */
+                margin: 0 0;
+                padding: 0;
+                color: #009688;
+                margin-top: -100px;
+                margin-left: -20px;
+            }
+
+            :host:after {
+                content: '';
+                display: block;
+                width: 1px;
+                height: 100px;
+                background-color: #979797;
+                position: absolute;
+                right: 0px;
+                top: 0px;
+                margin-top: 20px;
+                margin-right: 20px;
+            }
+
+
+        </style>
+        LABEL: {{ value }}
+    </template>
+    <script>
+        Polymer('timeline-sign', {
+            date: 0,
+            timeSpanStart: 0,
+            timeSpanEnd: 0,
+            lineWidth: 0,
+            timeSpanStartChanged: function () {
+                this.update();
+            },
+            timeSpanEndChanged: function () {
+                this.update();
+            },
+            dateChanged: function () {
+                this.update();
+            },
+            lineWidthChanged: function () {
+                this.update();
+            },
+            update: function () {
+                var percentage = (this.date - this.timeSpanStart) / (this.timeSpanEnd - this.timeSpanStart);
+                this.style.left = Math.round(percentage * this.lineWidth) + 'px';
+
+                this.day = new Date(this.date * 1000).getDate();
+            },
+            ready: function () {
+                this.update();
+            }
+        });
+    </script>
+
+</polymer-element>

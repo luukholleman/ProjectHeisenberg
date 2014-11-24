@@ -1,96 +1,79 @@
 <link rel="import" href="../bower/polymer/polymer.html">
+<link rel="import" href="../bower/paper-shadow/paper-shadow.html">
 
-<polymer-element name="timeline-item" attributes="date highlighted timeSpanStart timeSpanEnd">
+<polymer-element name="timeline-item" attributes="date color count">
     <template>
+        <link rel="stylesheet" href="../css/groups.css">
+
         <style>
-            :host, .bubble {
-                position: absolute;
+            :host {
                 width: 0px;
-                height: 0;
+                height: 0px;
+                position: absolute;
+                top: 4px; /* half timeline-line.bar.height */
+            }
+
+            :host, .bubble {
                 margin: 0 0;
                 padding: 0;
             }
 
             .bubble {
-                display: inline-block;
-                vertical-align: top;
-                overflow: visible;
+                width: 48px;
+                height: 48px;
+                margin: -24px;
+                display: block;
+                border-radius: 50%;
+                -webkit-transition: width .2s, height .2s, margin .2s, font-size .2s;
+                transition: width .2s, height .2s, margin .2s, font-size .2s;
             }
 
-            .entry-info {
-                overflow: visible;
-                background: #1C7ABF;
-                color: #fff;
-                font-size: 12px;
-                text-align: center;
-                border-radius: 8px;
-                font-style: italic;
+            .bubble.highlighted, .bubble:hover {
                 width: 64px;
-                height: 16px;
-                display: none;
-                position: relative;
-                left: -32px;
+                height: 64px;
+                margin: -32px;
+                font-size: 21px;
             }
-
-            .bubble.highlighted > .entry-info {
-                display: block;
-            }
-
-            .bubble:after {
-                content: '';
-                display: block;
-                background: #eee;
-                width: 15px;
-                height: 15px;
-                border-radius: 10px;
-                border: 3px solid #06182E;
+            .bubble .badge {
                 position: absolute;
-                left: 50%;
-                top: -28px;
-                margin-left: -10px;
+                top: 0px;
+                right: 0px;
+                width: 24px;
+                height: 24px;
+                background-color: #F44336;
+                color: white;
+                border-radius: 50%;
+                margin: -8px;
+
+                -webkit-transition: width .2s, height .2s, margin .2s;
+                transition: width .2s, height .2s, margin .2s;
             }
 
-            .bubble:before {
-                /*
-                 * Increase clickable area of bubble
-                 */
-                content:'';
-                position:absolute;
-                left: 50%;
-                top: -33px;
-                margin-left: -15px;
-                width: 31px;
-                height: 31px;
+            .bubble.highlighted .badge, .bubble:hover .badge {
+                width: 32px;
+                height: 32px;
+                margin: -11px;
             }
 
-            .entry-info:before {
-                content: '';
-                display: block;
-                background: #06182E;
-                width: 3px;
-                height: 20px;
-                position: absolute;
-                left: 50%;
-                top: -20px;
-                margin-left: -2px;
-            }
 
-            .bubble.highlighted:after {
-                background: #f3b300;
-            }
         </style>
-        <div id="bubble" class="bubble" on-tap="{{ tap }}">
-            <div class="entry-info">
-                (info)
+        <paper-shadow z="1" id="bubble" class="group-{{ color }} bubble" on-tap="{{ tap }}" horizontal layout center>
+            <div flex vertical layout center>
+                {{ day }}
             </div>
-        </div>
-        <div id="itemData" style="display: none">
-            <content id="content"></content>
-        </div>
+            <template if="{{ count > 1 }}">
+                <paper-shadow class="badge" horizontal layout center>
+                    <div flex vertical layout center>
+                        {{ count }}
+                    </div>
+                </paper-shadow>
+            </template>
+        </paper-shadow>
     </template>
     <script>
         Polymer('timeline-item', {
-            highlighted: false,
+            color: 'grey',
+            day: 0,
             date: 0,
             timeSpanStart: 0,
             timeSpanEnd: 0,
@@ -108,40 +91,22 @@
                 this.update();
             },
             update: function () {
-                var now = this.date;
-                var perc = (now - this.timeSpanStart) / (this.timeSpanEnd - this.timeSpanStart);
-                this.style.display = now >= this.timeSpanStart && now <= this.timeSpanEnd ? 'block' : 'none';
-                this.style.left = Math.round(perc * this.lineWidth) + 'px';
+                var percentage = (this.date - this.timeSpanStart) / (this.timeSpanEnd - this.timeSpanStart);
+                this.style.left = Math.round(percentage * this.lineWidth) + 'px';
+
+                this.day = new Date(this.date * 1000).getDate();
             },
             ready: function () {
                 this.update();
             },
             tap: function () {
-                if (this.highlighted) {
                     this.open();
-                }
-                else {
-                    this.highlight();
-                }
             },
             open: function () {
                 this.fire('item-open');
-            },
-            highlight: function () {
-                if (this.highlighted) {
-                    return;
-                }
-                this.fire('item-highlighted');
-                this.highlighted = true;
                 this.$.bubble.classList.add('highlighted');
             },
-            unhighlight: function () {
-                if (!this.highlighted) {
-                    return;
-                }
-
-                this.fire('item-unhighlighted');
-                this.highlighted = false;
+            close: function () {
                 this.$.bubble.classList.remove('highlighted');
             }
         });
