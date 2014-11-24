@@ -18,6 +18,10 @@ angular.module('punktlichDep').config(['$routeProvider',
                 templateUrl: appPath + 'templates/activate.html',
                 controller: 'ActivationController'
             }).
+            when('/', {
+                templateUrl: appPath + 'templates/home.html',
+                controller: 'HomeController'
+            }).
             otherwise({
                 redirectTo: ''
             });
