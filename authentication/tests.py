@@ -40,7 +40,7 @@ class UserTestCase(TestCase):
         user = createUser(email='inactive_user@punktli.ch',
                           password='pbkdf2_sha256$12000$HioPsiaBxrqj$jNnLqrZK',
                           first_name='Punktlich',
-                          last_name='test inactive usera',
+                          last_name='test inactive user',
                           is_staff=False,
                           is_active=False)
         self.assertFalse(user.is_active)
