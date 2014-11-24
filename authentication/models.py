@@ -1,3 +1,5 @@
+from datetime import timedelta, datetime
+import hashlib
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils import timezone as tz
@@ -47,3 +49,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.activation_token = None
         self.is_active = True
         return self.save()
+
+    def set_activation(self, expire_days):
+        time_span = timedelta(days=expire_days)
+        self.activation_token = hashlib.sha1(self.email).hexdigest()
+        self.activation_expire = datetime.now() + time_span

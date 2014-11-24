@@ -28,12 +28,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def post_save(self, user, created=False):
         if created:
             user.set_password(user.password)
-
-            time_span = timedelta(days=7)
-
-            user.is_active = False
-            user.activation_token = hashlib.sha1(user.email).hexdigest()
-            user.activation_expire = datetime.now() + time_span
+            user.set_activation(expire_days=7)
 
             send_mail(subject="Welcome to Punktlich",
                       html_message=get_template('base/emails/activate.html').render(Context({'site_url': SITE_URL, 'user': user})),
