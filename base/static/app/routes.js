@@ -1,28 +1,52 @@
+angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
+    function ($stateProvider, $urlRouterProvider) {
+        $urlRouterProvider.
+            otherwise('/');
 
-angular.module('punktlichDep').config(['$routeProvider',
-    function ($routeProvider) {
-        $routeProvider.
-            when('/login', {
-                templateUrl: appPath + 'templates/login.html',
-                controller: 'AuthenticationController'
+        $stateProvider.
+            state('index', {
+                url: '/',
+                views: {
+                    "body": {
+                        templateUrl: appPath + "templates/home.html",
+                        controller: 'HomeController'
+                    }
+                }
             }).
-            when('/register', {
-                templateUrl: appPath + 'templates/register.html',
-                controller: 'AuthenticationController'
+            state('login', {
+                url: '/login',
+                views: {
+                    'body': {
+                        templateUrl: appPath + 'templates/login.html',
+                        controller: 'AuthenticationController'
+                    }
+                }
             }).
-            when('/timeline', {
-                templateUrl: appPath + 'templates/timeline.html',
-                controller: 'TimelineController'
+            state('register', {
+                url: '/register',
+                views: {
+                    'body': {
+                        templateUrl: appPath + 'templates/register.html',
+                        controller: 'AuthenticationController'
+                    }
+                }
             }).
-            when('/activate/:token', {
-                templateUrl: appPath + 'templates/activate.html',
-                controller: 'ActivationController'
+            state('timeline', {
+                'url': '/timeline',
+                views: {
+                    'body': {
+                        templateUrl: appPath + 'templates/timeline.html',
+                        controller: 'TimelineController'
+                    }
+                }
             }).
-            when('/', {
-                templateUrl: appPath + 'templates/home.html',
-                controller: 'HomeController'
-            }).
-            otherwise({
-                redirectTo: ''
+            state('activate.token', {
+                'url': '/activate/:token',
+                views: {
+                    'body': {
+                        templateUrl: appPath + 'templates/activate.html',
+                        controller: 'ActivationController'
+                    }
+                }
             });
     }]);
