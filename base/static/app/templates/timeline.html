@@ -21,15 +21,26 @@
 </timeline-line>
 
 <div vertical layout center flex>
-    <div horizontal layout flex wrap around-justified>
-        <div style="border-radius:20px;background-color: #efefef;width:200px;height:100px; margin: 10px; padding:5px">
-            BLOCK
+    <div horizontal layout wrap around-justified>
+
+        <div class="filter-pane">
+            <timeline-filter flex three title="Filter Gemeente Zwolle" role="button" aria-label="Filter Gemeente Zwolle"
+                             class="group-yellow">GZ
+            </timeline-filter>
+            <timeline-filter title="Filter Windesheim" role="button" aria-label="Filter Windesheim"
+                             class="group-deep-purple">W
+            </timeline-filter>
+            <timeline-filter title="Filter Punktlich" role="button" aria-label="Filter Punktlich"
+                             class="group-red">P
+            </timeline-filter>
         </div>
-        <div style="border-radius:20px;background-color: #efefef;width:200px;height:100px; margin: 10px; padding:5px">
-            BLOCK
-        </div>
-        <div style="border-radius:20px;background-color: #efefef;width:200px;height:100px; margin: 10px; padding:5px">
-            BLOCK
+        <div vertical layout>
+            <paper-shadow style="width: 700px; padding-left: 20px; margin-bottom: 35px;"
+                    class="group-deep-purple"><h1 style="">Sprint review, Punktlich</h1></paper-shadow>
+            <paper-shadow style="background-color: #ffeb3b; width: 700px; padding-left: 20px; margin-bottom: 35px;"
+                    class="group-yellow"><h1 style="">Burger overleg, Gemeente Zwolle</h1></paper-shadow>
+            <paper-shadow style="width: 700px; padding-left: 20px; margin-bottom: 35px;"
+                     class="group-red"><h1 style="">Congres, Windesheim</h1></paper-shadow>
         </div>
 
     </div>

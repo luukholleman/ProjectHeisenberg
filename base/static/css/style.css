@@ -28,3 +28,10 @@ core-toolbar paper-fab {
     top: 32px;
     right: 24px;
 }
+
+.filter-pane{
+    width: 90px;
+}
+.filter-pane > timeline-filter{
+    margin-bottom: 10px;
+}
