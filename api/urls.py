@@ -3,4 +3,5 @@ from api.views import APIRoot
 
 urlpatterns = [
     url('', include('api.authentication.urls')),
+    url('', include('api.meeting.urls'))
 ]

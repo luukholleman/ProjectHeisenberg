@@ -1,8 +1,8 @@
-from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import generics, viewsets
+from api.meeting.serializers import MeetingSerializer
 from meeting.models import Meeting
 
 
-class MeetingList(generics.ListCreateAPIView):
+class MeetingViewSet(viewsets.ViewSet):
     queryset = Meeting.objects.all()
-    permission_classes = (IsAuthenticated,)
+    serializer_class = MeetingSerializer
