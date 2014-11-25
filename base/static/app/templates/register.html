@@ -26,8 +26,8 @@
                 <input is="core-input" required name="password_repeat" type="password" ng-model="password_repeat"/>
             </paper-input-decorator>
         </form>
-        <paper-button raised ng-click="register(registerform, user)">Register</paper-button>
-        <paper-button raised ng-click="goto('/login')">login</paper-button>
+        <paper-button style="background: #009688; color:white" raised ng-click="register(registerform, user)">Register</paper-button>
+        <paper-button style="color: #009688" ng-click="goto('/login')">login</paper-button>
     </form-box>
 
     <form-box ng-show="hasRegistered">
