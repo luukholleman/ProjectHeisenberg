@@ -110,6 +110,7 @@ Polymer({
     timeSpanEnd: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7 * 2).getTime() / 1000,
     /* time span end in seconds since 1 January 1970 (default: now+2 weeks). */
     lastTrackX: 0, /* previous tracking x-position. */
+    lastTapTime: 0, /* last time timeline was tapped. */
     isTracking: false, /* is user tracking. */
     isScaling: false, /* is user pinching/scaling? */
     lastPinchLength: 0, /* previous length between fingers while pinching. */
@@ -139,16 +140,16 @@ Polymer({
         this.updateSignFrequency();
         this.update();
 
-        this.push('lineWidth', this.clientWidth);
-        this.push('timeSpanStart', this.timeSpanStart);
-        this.push('timeSpanEnd', this.timeSpanEnd);
+        this.pushToItems('lineWidth', this.clientWidth);
+        this.pushToItems('timeSpanStart', this.timeSpanStart);
+        this.pushToItems('timeSpanEnd', this.timeSpanEnd);
     },
     /*
      * ====================
      * Utility methods
      * ====================
      */
-    push: function (key, value) {
+    pushToItems: function (key, value) {
         var items = this.querySelectorAll('timeline-item');
         for (var i = 0; i < items.length; i++) {
             items[i][key] = value;
@@ -156,19 +157,45 @@ Polymer({
     },
     calculatePinchLength: function (event) {
         /*
-         * Calculate the distance between the first two fingers.
+         * Calculate the distance between the first two fingers. (pythagoras)
          */
         return Math.sqrt((event.touches[0].pageX - event.touches[1].pageX) * (event.touches[0].pageX - event.touches[1].pageX) +
                 (event.touches[0].pageY - event.touches[1].pageY) * (event.touches[0].pageY - event.touches[1].pageY));
     },
-    isDateVisible: function (date) {
+    getFrequencyByWidth: function (width) {
+        if (width < 4) {
+            return 'year';
+        }
+        if (width < 16) {
+            return 'halfmonth';
+        }
+        if (width < 80) {
+            return 'month';
+        }
+        if (width < 130) {
+            return 'quarterday';
+        }
+        if (width < 200) {
+            return 'halfday';
+        }
+        return 'day';
+    },
+    isMonthVisible: function (date) {
         switch (this.signFrequency) {
             case 'year':
                 return new Date(date * 1000).getMonth() == 0;
             case 'halfmonth':
-                var oddMonths = [1, 3, 5, 7, 9, 11];
-                return oddMonths.indexOf(new Date(date * 1000).getMonth()) == -1;
-            case 'month':
+                return (new Date(date * 1000).getMonth() % 2) == 0;
+            default:
+                return true;
+        }
+    },
+    isDayVisible: function (date) {
+        switch (this.signFrequency) {
+            case 'quarterday':
+                return (new Date(date * 1000).getDate() % 4) == 1;
+            case 'halfday':
+                return (new Date(date * 1000).getDate() % 2) == 1;
             case 'day':
                 return true;
         }
@@ -195,6 +222,26 @@ Polymer({
                 delete this.daySigns[sign];
             }
         }
+    },
+    pushToSigns: function (signs, key, value) {
+        for (var i in signs) {
+            signs[i][key] = value;
+        }
+    },
+    pushVisibilityToSigns: function (signs, func) {
+        for (var i in signs) {
+
+            signs[i].visible = func.call(this, signs[i].date);
+        }
+    },
+    createSign: function (dateObj) {
+        var element = document.createElement('timeline-sign');
+        element.timeSpanStart = this.timeSpanStart;
+        element.timeSpanEnd = this.timeSpanEnd;
+        element.lineWidth = this.clientWidth;
+        element.date = dateObj.getTime() / 1000;
+
+        return element;
     },
     zoomToTimeSpan: function (target, focusRatio) {
         this.timeSpanStart -= (target - this.getTimeSpan()) * focusRatio;
@@ -243,7 +290,7 @@ Polymer({
     },
     /*
      * ====================
-     * Button events
+     * element events
      * ====================
      */
     goZoomIn: function () {
@@ -252,11 +299,6 @@ Polymer({
     goZoomOut: function () {
         this.zoom(-250, 0.5);
     },
-    /*
-     * ====================
-     * element events
-     * ====================
-     */
     mouseWheel: function (event) {
         var isTwoAxis = typeof event.wheelDeltaY !== 'undefined';
         var differenceY = isTwoAxis ? event.wheelDeltaY : event.wheelDelta;
@@ -296,7 +338,7 @@ Polymer({
         this.lastTrackX = event.clientX;
         this.isTracking = !this.isScaling;
         this.$.draggable.classList.add('grabbing');
-        this.push('lineWidth', this.clientWidth);
+        this.pushToItems('lineWidth', this.clientWidth);
     },
     trackEnd: function () {
         this.$.draggable.classList.remove('grabbing');
@@ -316,11 +358,11 @@ Polymer({
      */
     timeSpanStartChanged: function () {
         this.update();
-        this.push('timeSpanStart', this.timeSpanStart);
+        this.pushToItems('timeSpanStart', this.timeSpanStart);
     },
     timeSpanEndChanged: function () {
         this.update();
-        this.push('timeSpanEnd', this.timeSpanEnd);
+        this.pushToItems('timeSpanEnd', this.timeSpanEnd);
     },
     /*
      * ====================
@@ -333,73 +375,66 @@ Polymer({
     },
     updateNow: function () {
         var now = new Date().getTime() / 1000;
-        var percentage = (now - this.timeSpanStart) / (this.timeSpanEnd - this.timeSpanStart);
-        var width = Math.round(percentage * this.clientWidth);
+        var percentage = (now - this.timeSpanStart) / this.getTimeSpan();
+
         this.$.now.style.display = now > this.timeSpanStart ? 'block' : 'none';
-        this.$.now.style.width = width + 'px';
+        this.$.now.style.width = Math.round(percentage * this.clientWidth) + 'px';
     },
     updateSigns: function () {
         //update
-        for (var sign in this.signs) {
-            this.signs[sign].lineWidth = this.clientWidth;
-            this.signs[sign].timeSpanStart = this.timeSpanStart;
-            this.signs[sign].timeSpanEnd = this.timeSpanEnd;
+        this.pushToSigns(this.signs, 'lineWidth', this.clientWidth);
+        this.pushToSigns(this.signs, 'timeSpanStart', this.timeSpanStart);
+        this.pushToSigns(this.signs, 'timeSpanEnd', this.timeSpanEnd);
+        this.pushToSigns(this.daySigns, 'lineWidth', this.clientWidth);
+        this.pushToSigns(this.daySigns, 'timeSpanStart', this.timeSpanStart);
+        this.pushToSigns(this.daySigns, 'timeSpanEnd', this.timeSpanEnd);
+        this.pushVisibilityToSigns(this.signs, this.isMonthVisible);
+        this.pushVisibilityToSigns(this.daySigns, this.isDayVisible);
 
-            this.signs[sign].visible = this.isDateVisible(this.signs[sign].date);
-        }
+        /*
+         * Add monthly signs to timeline.
+         */
+        var monthNames = [ "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December" ];
+        var date = new Date(this.timeSpanStart * 1000);
+        date.setDate(1);
+        while (date.getTime() <= this.timeSpanEnd * 1000) {
+            var month = new Date(date.getFullYear(), date.getMonth(), 1);
 
-        for (var sign in this.daySigns) {
-            this.daySigns[sign].lineWidth = this.clientWidth;
-            this.daySigns[sign].timeSpanStart = this.timeSpanStart;
-            this.daySigns[sign].timeSpanEnd = this.timeSpanEnd;
-        }
-
-        //add months
-        var currentDate = new Date(this.timeSpanStart * 1000);
-        currentDate.setDate(1);
-        while (currentDate.getTime() <= this.timeSpanEnd * 1000) {
-            var month = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
             if (this.signs[month.getTime()]) {
-                currentDate.setDate(15);
-                currentDate.setMonth(currentDate.getMonth() + 1);
-                currentDate.setDate(1);
+                date.setMonth(date.getMonth() + 1);
                 continue;
             }
 
-            var signElement = document.createElement('timeline-sign');
-            signElement.timeSpanStart = this.timeSpanStart;
-            signElement.timeSpanEnd = this.timeSpanEnd;
-            signElement.lineWidth = this.clientWidth;
-            signElement.date = month.getTime() / 1000;
-            signElement.visible = this.isDateVisible(signElement.date.date);
-            var monthNames = [ "January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December" ];
-            signElement.innerHTML = monthNames[month.getMonth()] + (month.getMonth() == 0 ? '<br/>' + month.getFullYear() : '');
+            var element = this.createSign(month);
+            element.visible = this.isMonthVisible(element.date);
+            element.innerHTML = monthNames[month.getMonth()] +
+                    (month.getMonth() == 0 ? '<br/>' + month.getFullYear() : '');
 
-            this.$.bar.appendChild(signElement);
-            this.signs[month.getTime()] = signElement;
+            this.$.bar.appendChild(element);
+            this.signs[month.getTime()] = element;
 
-            currentDate.setDate(15);
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            currentDate.setDate(1);
+            date.setMonth(date.getMonth() + 1);
         }
 
-        //add days
-        if (this.signFrequency == 'day') {
+        /*
+         * Add daily signs to timeline.
+         */
+        if (this.signFrequency.indexOf('day') != -1) {
             var date = new Date(this.timeSpanStart * 1000);
             while (date.getTime() < this.timeSpanEnd * 1000) {
                 var day = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
                 if (this.daySigns[day.getTime()] || date.getDate() == 1) {
                     date.setDate(date.getDate() + 1);
                     continue;
                 }
-                var element = document.createElement('timeline-sign');
-                element.timeSpanStart = this.timeSpanStart;
-                element.timeSpanEnd = this.timeSpanEnd;
-                element.lineWidth = this.clientWidth;
-                element.date = day.getTime() / 1000;
+
+                var element = this.createSign(day);
                 element.innerHTML = day.getDate();
-                element.visible = true;
+                element.visible = this.isDayVisible(day);
+                ;
+
                 this.$.bar.appendChild(element);
                 this.daySigns[day.getTime()] = element;
 
@@ -408,27 +443,12 @@ Polymer({
         }
     },
     updateSignFrequency: function () {
-        var timeSpanInDays = (this.timeSpanEnd - this.timeSpanStart) / (60 * 60 * 24);
-        var pixelsPerDay = this.clientWidth / timeSpanInDays;
-        var frequency = 'month';
-        if (pixelsPerDay < 4) {
-            frequency = 'year';
-        }
-        else if (pixelsPerDay < 16) {
-            frequency = 'halfmonth';
-        }
-        else if (pixelsPerDay < 200) {
-            frequency = 'month';
-        }
-        else {
-            frequency = 'day';
-        }
-        if (frequency != this.signFrequency) {
-            if (frequency != 'day') {
-                for (var sign in this.daySigns) {
-                    this.$.bar.removeChild(this.daySigns[sign]);
-                    delete this.daySigns[sign];
-                }
+        var frequency = this.getFrequencyByWidth(this.clientWidth / (this.getTimeSpan() / (3600 * 24)));
+
+        if (frequency != this.signFrequency && frequency.indexOf('day') == -1) {
+            for (var sign in this.daySigns) {
+                this.$.bar.removeChild(this.daySigns[sign]);
+                delete this.daySigns[sign];
             }
         }
 
