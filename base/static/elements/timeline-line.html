@@ -17,7 +17,7 @@
             cursor: ew-resize;
         }
 
-        .timelineBox{
+        .timelineBox {
             padding: 105px 0 0 0;
         }
 
@@ -149,6 +149,52 @@ Polymer({
         return Math.sqrt((event.touches[0].pageX - event.touches[1].pageX) * (event.touches[0].pageX - event.touches[1].pageX) +
                 (event.touches[0].pageY - event.touches[1].pageY) * (event.touches[0].pageY - event.touches[1].pageY));
     },
+    isDateVisible: function (date) {
+        switch (this.signFrequency) {
+            case 'year':
+                return new Date(date * 1000).getMonth() == 0;
+            case 'halfmonth':
+                var oddMonths = [1, 3, 5, 7, 9, 11];
+                return oddMonths.indexOf(new Date(date * 1000).getMonth()) == -1;
+            case 'month':
+            case 'day':
+                return true;
+        }
+    },
+    justifyZoom: function () {
+        var nowTimeSpan = this.timeSpanEnd - this.timeSpanStart;
+        var maxTimeSpan = (this.clientWidth / 3) * (60 * 60 * 24);
+        if (nowTimeSpan > maxTimeSpan) {
+            var diff = maxTimeSpan - nowTimeSpan;
+            this.timeSpanStart -= diff / 2;
+            this.timeSpanEnd += diff / 2;
+        }
+
+        //max 230px per day!
+    },
+    cleanSigns: function () {
+        for (var sign in this.signs) {
+            if (this.signs[sign] < this.timeSpanStart) {
+                this.$.bar.removeChild(this.signs[sign]);
+                delete this.signs[sign];
+            }
+            if (this.signs[sign] > this.timeSpanEnd) {
+                this.$.bar.removeChild(this.signs[sign]);
+                delete this.signs[sign];
+            }
+        }
+
+        for (var sign in this.daySigns) {
+            if (this.signs[sign] < this.timeSpanStart) {
+                this.$.bar.removeChild(this.daySigns[sign]);
+                delete this.daySigns[sign];
+            }
+            if (this.daySigns[sign] > this.timeSpanEnd) {
+                this.$.bar.removeChild(this.daySigns[sign]);
+                delete this.daySigns[sign];
+            }
+        }
+    },
     open: function (item) {
         Array.prototype.forEach.call(this.querySelectorAll('timeline-item'), function (item) {
             item.close();
@@ -201,6 +247,7 @@ Polymer({
          */
         this.timeSpanStart += differenceY * rate * (focusRate);
         this.timeSpanEnd -= differenceY * rate * (1 - focusRate);
+        this.justifyZoom();
         this.updateSignFrequency();
 
         if (isTwoAxis) {
@@ -213,10 +260,10 @@ Polymer({
                 var rate = (this.timeSpanEnd - this.timeSpanStart) / this.clientWidth / 3;
                 this.timeSpanStart -= delta * rate;
                 this.timeSpanEnd -= delta * rate;
-
-                event.preventDefault();
             }
         }
+
+        event.preventDefault();
     },
     touchStart: function (event) {
         if (event.touches.length == 2) {
@@ -229,6 +276,7 @@ Polymer({
     },
     touchEnd: function (event) {
         this.isScaling = this.isScaling && event.touches.length >= 2;
+        this.cleanSigns();
     },
     touchMove: function (event) {
         if (this.isScaling || event.touches.length >= 2) {
@@ -253,6 +301,7 @@ Polymer({
              */
             this.timeSpanStart += difference * rate * (focusRate);
             this.timeSpanEnd -= difference * rate * (1 - focusRate);
+            this.justifyZoom();
             this.updateSignFrequency();
         }
     },
@@ -275,6 +324,7 @@ Polymer({
             return;
         }
         this.isTracking = false;
+        this.cleanSigns();
     },
     track: function (event) {
         if (this.isScaling) {
@@ -330,8 +380,22 @@ Polymer({
         this.$.now.style.width = width + 'px';
     },
     updateSigns: function () {
-        var oddMonths = [1, 3, 5, 7, 9, 11];
+        //update
+        for (var sign in this.signs) {
+            this.signs[sign].lineWidth = this.clientWidth;
+            this.signs[sign].timeSpanStart = this.timeSpanStart;
+            this.signs[sign].timeSpanEnd = this.timeSpanEnd;
 
+            this.signs[sign].visible = this.isDateVisible(this.signs[sign].date);
+        }
+
+        for (var sign in this.daySigns) {
+            this.daySigns[sign].lineWidth = this.clientWidth;
+            this.daySigns[sign].timeSpanStart = this.timeSpanStart;
+            this.daySigns[sign].timeSpanEnd = this.timeSpanEnd;
+        }
+
+        //add months
         var currentDate = new Date(this.timeSpanStart * 1000);
         currentDate.setDate(1);
         while (currentDate.getTime() <= this.timeSpanEnd * 1000) {
@@ -343,12 +407,12 @@ Polymer({
                 continue;
             }
 
-            console.log('add sign at ', currentDate);
             var signElement = document.createElement('timeline-sign');
             signElement.timeSpanStart = this.timeSpanStart;
             signElement.timeSpanEnd = this.timeSpanEnd;
             signElement.lineWidth = this.clientWidth;
             signElement.date = month.getTime() / 1000;
+            signElement.visible = this.isDateVisible(signElement.date.date);
             var monthNames = [ "January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December" ];
             signElement.innerHTML = monthNames[month.getMonth()] + (month.getMonth() == 0 ? '<br/>' + month.getFullYear() : '');
@@ -361,7 +425,7 @@ Polymer({
             currentDate.setDate(1);
         }
 
-        //add day
+        //add days
         if (this.signFrequency == 'day') {
             var date = new Date(this.timeSpanStart * 1000);
             while (date.getTime() < this.timeSpanEnd * 1000) {
@@ -376,46 +440,17 @@ Polymer({
                 element.lineWidth = this.clientWidth;
                 element.date = day.getTime() / 1000;
                 element.innerHTML = day.getDate();
-
+                element.visible=true;
                 this.$.bar.appendChild(element);
                 this.daySigns[day.getTime()] = element;
 
                 date.setDate(date.getDate() + 1);
             }
         }
-
-
-        //update
-        for (var sign in this.signs) {
-            this.signs[sign].lineWidth = this.clientWidth;
-            this.signs[sign].timeSpanStart = this.timeSpanStart;
-            this.signs[sign].timeSpanEnd = this.timeSpanEnd;
-
-            switch (this.signFrequency) {
-                case 'year':
-                    this.signs[sign].minimal = new Date(this.signs[sign].date * 1000).getMonth() != 0;
-                    break;
-                case 'halfmonth':
-                    this.signs[sign].minimal = oddMonths.indexOf(new Date(this.signs[sign].date * 1000).getMonth()) != -1;
-                    break;
-                case 'month':
-                case 'day':
-                    this.signs[sign].minimal = false;
-                    break;
-            }
-        }
-
-        for (var sign in this.daySigns) {
-            this.daySigns[sign].lineWidth = this.clientWidth;
-            this.daySigns[sign].timeSpanStart = this.timeSpanStart;
-            this.daySigns[sign].timeSpanEnd = this.timeSpanEnd;
-        }
     },
     updateSignFrequency: function () {
         var timeSpanInDays = (this.timeSpanEnd - this.timeSpanStart) / (60 * 60 * 24);
         var pixelsPerDay = this.clientWidth / timeSpanInDays;
-
-        //console.log(pixelsPerDay);
         var frequency = 'month';
         if (pixelsPerDay < 4) {
             frequency = 'year';
@@ -430,8 +465,6 @@ Polymer({
             frequency = 'day';
         }
         if (frequency != this.signFrequency) {
-            console.log('set frequency to', frequency);
-
             if (frequency != 'day') {
                 for (var sign in this.daySigns) {
                     this.$.bar.removeChild(this.daySigns[sign]);
