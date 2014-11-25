@@ -1,39 +1,49 @@
 <link rel="import" href="../bower/polymer/polymer.html">
 <link rel="import" href="../bower/paper-shadow/paper-shadow.html">
 
-<polymer-element name="timeline-sign" attributes="date value">
+<polymer-element name="timeline-sign" attributes="date">
     <template>
         <link rel="stylesheet" href="../css/groups.css">
 
         <style>
             :host {
+                bottom: 0px;
+                margin: 0 0;
+                padding: 0;
+                z-index: 1;
+            }
+
+            :host, .container {
                 width: 0px;
                 height: 0px;
                 position: absolute;
-                top: 8px; /* timeline-line.bar.height */
-                margin: 0 0;
-                padding: 0;
-                color: #009688;
-                margin-top: -100px;
-                margin-left: -20px;
             }
 
-            :host:after {
+            .container {
+                margin-top: -140px;
+                margin-left: 0px;
+            }
+
+            .container:after {
                 content: '';
                 display: block;
                 width: 1px;
-                height: 100px;
+                height: 165px;
                 background-color: #979797;
                 position: absolute;
                 right: 0px;
                 top: 0px;
-                margin-top: 20px;
-                margin-right: 20px;
+                margin-top: 0px;
+                margin-right: 0px;
             }
 
 
         </style>
-        LABEL: {{ value }}
+        <div class="container">
+            <em style="font-weight: 100; font-size: 36px">
+                <content></content>
+            </em>
+        </div>
     </template>
     <script>
         Polymer('timeline-sign', {

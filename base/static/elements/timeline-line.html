@@ -126,8 +126,8 @@ Polymer({
         /*
          * tell items about the time span of this timeline.
          */
-        this.update();
         this.updateSignFrequency();
+        this.update();
         var items = this.querySelectorAll('timeline-item');
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
@@ -352,9 +352,8 @@ Polymer({
                     element.timeSpanEnd = this.timeSpanEnd;
                     element.lineWidth = this.clientWidth;
                     element.date = year.getTime() / 1000;
-                    element.value = year.getFullYear();
+                    element.innerHTML = year.getFullYear();
 
-                    //console.log('added year symbol for year', year.getFullYear(), ' @ ', year.getTime(), element);
                     this.$.bar.appendChild(element);
                     this.signs[year.getTime()] = element;
 
@@ -363,9 +362,10 @@ Polymer({
                 break;
             case 'month':
                 var date = new Date(this.timeSpanStart * 1000);
-                while (date.getTime() < this.timeSpanEnd * 1000) {
+                while (date.getTime() <= this.timeSpanEnd * 1000) {
                     var month = new Date(date.getFullYear(), date.getMonth(), 1);
                     if(this.signs[month.getTime()]) {
+                        date.setDate(15);
                         date.setMonth(date.getMonth() + 1);
                         continue;
                     }
@@ -374,13 +374,36 @@ Polymer({
                     element.timeSpanEnd = this.timeSpanEnd;
                     element.lineWidth = this.clientWidth;
                     element.date = month.getTime() / 1000;
-                    element.value = month.getMonth();//@todo to text and add year in january
+                    var monthNames = [ "January", "February", "March", "April", "May", "June",
+                        "July", "August", "September", "October", "November", "December" ];
+                    element.innerHTML = monthNames[month.getMonth()] + (month.getMonth() == 0 ? '<br/>' + month.getFullYear() : '');
 
-                    //console.log('added month symbol for year', month.getFullYear(), month.getMonth(), ' @ ', month.getTime(), element);
                     this.$.bar.appendChild(element);
                     this.signs[month.getTime()] = element;
 
+                    date.setDate(15);
                     date.setMonth(date.getMonth() + 1);
+                }
+                break;
+            case 'day':
+                var date = new Date(this.timeSpanStart * 1000);
+                while (date.getTime() < this.timeSpanEnd * 1000) {
+                    var day = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                    if(this.signs[day.getTime()]) {
+                        date.setDate(date.getDate() + 1);
+                        continue;
+                    }
+                    var element = document.createElement('timeline-sign');
+                    element.timeSpanStart = this.timeSpanStart;
+                    element.timeSpanEnd = this.timeSpanEnd;
+                    element.lineWidth = this.clientWidth;
+                    element.date = day.getTime() / 1000;
+                    element.innerHTML = day.getDate();
+
+                    this.$.bar.appendChild(element);
+                    this.signs[day.getTime()] = element;
+
+                    date.setDate(date.getDate() + 1);
                 }
                 break;
         }
@@ -388,10 +411,19 @@ Polymer({
     updateSignFrequency: function () {
         var dayTime = 60 * 60 * 24;
         var timeSpan = this.timeSpanEnd - this.timeSpanStart;
-        var frequency = timeSpan > dayTime * 365 ? 'year' : (timeSpan > dayTime * 31 ? 'month' : 'day');
+        var frequency = 'month';
+        if(timeSpan < dayTime * 7) {
+            frequency='day';
+        }
+        else if(timeSpan < dayTime * 30 * 9) {
+            frequency='month';
+        }
+        else {
+            frequency='year';
+        }
 
-        if(frequency == 'day') {frequency ='month';}//@todo remove
         if (frequency != this.signFrequency) {
+            console.log('set frequency to', frequency);
             for (var sign in this.signs) {
                 this.$.bar.removeChild(this.signs[sign]);
                 delete this.signs[sign];

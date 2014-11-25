@@ -11,6 +11,7 @@
                 height: 0px;
                 position: absolute;
                 top: 4px; /* half timeline-line.bar.height */
+                z-index:2;
             }
 
             :host, .bubble {
@@ -28,7 +29,7 @@
                 transition: width .2s, height .2s, margin .2s, font-size .2s;
             }
 
-            .bubble.highlighted, .bubble:hover {
+            .bubble.highlighted {
                 width: 64px;
                 height: 64px;
                 margin: -32px;
@@ -49,7 +50,7 @@
                 transition: width .2s, height .2s, margin .2s;
             }
 
-            .bubble.highlighted .badge, .bubble:hover .badge {
+            .bubble.highlighted .badge {
                 width: 32px;
                 height: 32px;
                 margin: -11px;
