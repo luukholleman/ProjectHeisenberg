@@ -12,4 +12,4 @@ class MeetingSerializer(serializers.Serializer):
 
     class Meta:
         model = Meeting
-        fields = ('id',)
+        fields = ('name', 'description', 'location', 'address', 'date_and_time')

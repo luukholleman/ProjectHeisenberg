@@ -8,8 +8,8 @@ router.register(r'users', UserViewSet, base_name='api.v1.user')
 # router.register(r'login', 'api.authentication.views.obtain_auth_token')
 
 urlpatterns = [
-    url('activate', ActivateUser.as_view()),
-    url('get-authenticated-user$', AuthenticatedUser.as_view(), name='api.v1.get-authenticated-user'),
-    url('login$', 'api.authentication.views.obtain_auth_token', name='api.v1.login'),
-    url('', include(router.urls)),
+    url(r'activate', ActivateUser.as_view()),
+    url(r'get-authenticated-user$', AuthenticatedUser.as_view(), name='api.v1.get-authenticated-user'),
+    url(r'login$', 'api.authentication.views.obtain_auth_token', name='api.v1.login'),
+    url(r'', include(router.urls)),
 ]
