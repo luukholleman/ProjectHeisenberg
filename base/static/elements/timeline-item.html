@@ -11,7 +11,7 @@
                 height: 0px;
                 position: absolute;
                 top: 4px; /* half timeline-line.bar.height */
-                z-index:2;
+                z-index: 2;
             }
 
             :host, .bubble {
@@ -35,6 +35,7 @@
                 margin: -32px;
                 font-size: 21px;
             }
+
             .bubble .badge {
                 position: absolute;
                 top: 0px;
@@ -101,7 +102,7 @@
                 this.update();
             },
             tap: function () {
-                    this.open();
+                this.open();
             },
             open: function () {
                 this.fire('item-open');
