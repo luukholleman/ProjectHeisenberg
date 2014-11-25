@@ -361,12 +361,12 @@ Polymer({
             currentDate.setDate(1);
         }
 
-        //add
+        //add day
         if (this.signFrequency == 'day') {
             var date = new Date(this.timeSpanStart * 1000);
             while (date.getTime() < this.timeSpanEnd * 1000) {
                 var day = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-                if (this.signs[day.getTime()] || date.getDate() == 1) {
+                if (this.daySigns[day.getTime()] || date.getDate() == 1) {
                     date.setDate(date.getDate() + 1);
                     continue;
                 }
@@ -403,6 +403,12 @@ Polymer({
                     this.signs[sign].minimal = false;
                     break;
             }
+        }
+
+        for (var sign in this.daySigns) {
+            this.daySigns[sign].lineWidth = this.clientWidth;
+            this.daySigns[sign].timeSpanStart = this.timeSpanStart;
+            this.daySigns[sign].timeSpanEnd = this.timeSpanEnd;
         }
     },
     updateSignFrequency: function () {
