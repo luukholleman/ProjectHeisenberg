@@ -1,3 +1,4 @@
+from django.http.response import HttpResponseNotFound
 from django.shortcuts import render
 from django.views.generic.base import TemplateView, RedirectView
 
@@ -7,3 +8,6 @@ class HomepageTemplateView(TemplateView):
 
 class RedirectToHomeView(RedirectView):
     url = '/'
+
+def not_found(request, url):
+    return HttpResponseNotFound("404")

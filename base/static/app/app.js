@@ -10,5 +10,6 @@ angular.module('punktlich').config(function ($httpProvider, $locationProvider) {
 
 angular.module('punktlichDep', [
     'ngRoute',
-    'ngResource'
+    'ngResource',
+    'ui.router'
 ]);
