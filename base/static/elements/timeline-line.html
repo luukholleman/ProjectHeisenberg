@@ -173,13 +173,18 @@ Polymer({
     justifyZoom: function () {
         var nowTimeSpan = this.timeSpanEnd - this.timeSpanStart;
         var maxTimeSpan = (this.clientWidth / 3) * (60 * 60 * 24);
+        var minTimeSpan = (this.clientWidth / 230) * (60 * 60 * 24);
+
         if (nowTimeSpan > maxTimeSpan) {
             var diff = maxTimeSpan - nowTimeSpan;
             this.timeSpanStart -= diff / 2;
             this.timeSpanEnd += diff / 2;
         }
-
-        //max 230px per day!
+        if (nowTimeSpan < minTimeSpan) {
+            var diff = nowTimeSpan - minTimeSpan;
+            this.timeSpanStart += diff / 2;
+            this.timeSpanEnd -= diff / 2;
+        }
     },
     cleanSigns: function () {
         for (var sign in this.signs) {
