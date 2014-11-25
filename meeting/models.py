@@ -3,12 +3,12 @@ from authentication.models import User
 
 
 class Meeting(models.Model):
-    creator = models.ForeignKey(null=True, User)
+    creator = models.ForeignKey(User, null=True, related_name='creator_user')
     name = models.CharField(max_length=90)
     description = models.TextField(null=True)
     location = models.CharField(null=True, max_length=90)
     address = models.CharField(null=True, max_length=200)
-    participants = models.ManyToManyField(User, through='MeetingUser')
+    participants = models.ManyToManyField(User, through='MeetingUser', related_name='participant_user')
     date_and_time = models.DateTimeField()
 
     def __str__(self):
@@ -24,7 +24,7 @@ class MeetingUser(models.Model):
     )
     user = models.ForeignKey(User)
     meeting = models.ForeignKey(Meeting)
-    user_state = models.CharField(default=False, choices=CHOICES)
+    user_state = models.CharField(max_length=20, default=False, choices=CHOICES)
     present_at = models.DateTimeField()
 
     def __str__(self):

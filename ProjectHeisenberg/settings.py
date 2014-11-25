@@ -48,6 +48,7 @@ INSTALLED_APPS = (
 
     'base',
     'authentication',
+    'meeting',
 
     'rest_framework',
     'rest_framework.authtoken',
