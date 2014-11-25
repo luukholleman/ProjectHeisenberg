@@ -105,6 +105,7 @@ Polymer({
     lastPinchLength: 0, /* previous length between fingers while pinching. */
     signFrequency: 'month', /* year/month/day */
     signs: {},
+    daySigns: {},
     /*
      * ====================
      * Polymer events
@@ -316,7 +317,7 @@ Polymer({
      * Update methods
      * ====================
      */
-    update: function() {
+    update: function () {
         this.updateNow();
         this.updateSigns();
     },
@@ -327,109 +328,108 @@ Polymer({
         this.$.now.style.display = now > this.timeSpanStart ? 'block' : 'none';
         this.$.now.style.width = width >= this.clientWidth ? '100%' : width + 'px';
     },
-    updateSigns: function() {
+    updateSigns: function () {
+        var oddMonths = [1, 3, 5, 7, 9, 11];
+
+        var currentDate = new Date(this.timeSpanStart * 1000);
+        currentDate.setDate(1);
+        while (currentDate.getTime() <= this.timeSpanEnd * 1000) {
+            var month = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+            if (this.signs[month.getTime()]) {
+                currentDate.setDate(15);
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                currentDate.setDate(1);
+                continue;
+            }
+
+            console.log('add sign at ', currentDate);
+            var signElement = document.createElement('timeline-sign');
+            signElement.timeSpanStart = this.timeSpanStart;
+            signElement.timeSpanEnd = this.timeSpanEnd;
+            signElement.lineWidth = this.clientWidth;
+            signElement.date = month.getTime() / 1000;
+            var monthNames = [ "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December" ];
+            signElement.innerHTML = monthNames[month.getMonth()] + (month.getMonth() == 0 ? '<br/>' + month.getFullYear() : '');
+
+            this.$.bar.appendChild(signElement);
+            this.signs[month.getTime()] = signElement;
+
+            currentDate.setDate(15);
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            currentDate.setDate(1);
+        }
+
+        //add
+        if (this.signFrequency == 'day') {
+            var date = new Date(this.timeSpanStart * 1000);
+            while (date.getTime() < this.timeSpanEnd * 1000) {
+                var day = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                if (this.signs[day.getTime()] || date.getDate() == 1) {
+                    date.setDate(date.getDate() + 1);
+                    continue;
+                }
+                var element = document.createElement('timeline-sign');
+                element.timeSpanStart = this.timeSpanStart;
+                element.timeSpanEnd = this.timeSpanEnd;
+                element.lineWidth = this.clientWidth;
+                element.date = day.getTime() / 1000;
+                element.innerHTML = day.getDate();
+
+                this.$.bar.appendChild(element);
+                this.daySigns[day.getTime()] = element;
+
+                date.setDate(date.getDate() + 1);
+            }
+        }
+
+
         //update
         for (var sign in this.signs) {
             this.signs[sign].lineWidth = this.clientWidth;
             this.signs[sign].timeSpanStart = this.timeSpanStart;
             this.signs[sign].timeSpanEnd = this.timeSpanEnd;
-        }
 
-        //add
-        switch (this.signFrequency) {
-            case 'year':
-                var date = new Date(this.timeSpanStart * 1000);
-                date.setMonth(0);
-                date.setDate(1);
-                while (date.getTime() < this.timeSpanEnd * 1000) {
-                    var year = new Date(date.getFullYear(), 0, 1);
-                    if(this.signs[year.getTime()]) {
-                        date.setFullYear(date.getFullYear() + 1);
-                        continue;
-                    }
-                    var element = document.createElement('timeline-sign');
-                    element.timeSpanStart = this.timeSpanStart;
-                    element.timeSpanEnd = this.timeSpanEnd;
-                    element.lineWidth = this.clientWidth;
-                    element.date = year.getTime() / 1000;
-                    element.innerHTML = year.getFullYear();
-
-                    this.$.bar.appendChild(element);
-                    this.signs[year.getTime()] = element;
-
-                    date.setFullYear(date.getFullYear() + 1);
-                }
-                break;
-            case 'month':
-                var date = new Date(this.timeSpanStart * 1000);
-                date.setDate(1);
-                while (date.getTime() <= this.timeSpanEnd * 1000) {
-                    var month = new Date(date.getFullYear(), date.getMonth(), 1);
-                    if(this.signs[month.getTime()]) {
-                        date.setDate(15);
-                        date.setMonth(date.getMonth() + 1);
-                        date.setDate(1);
-                        continue;
-                    }
-                    var element = document.createElement('timeline-sign');
-                    element.timeSpanStart = this.timeSpanStart;
-                    element.timeSpanEnd = this.timeSpanEnd;
-                    element.lineWidth = this.clientWidth;
-                    element.date = month.getTime() / 1000;
-                    var monthNames = [ "January", "February", "March", "April", "May", "June",
-                        "July", "August", "September", "October", "November", "December" ];
-                    element.innerHTML = monthNames[month.getMonth()] + (month.getMonth() == 0 ? '<br/>' + month.getFullYear() : '');
-
-                    this.$.bar.appendChild(element);
-                    this.signs[month.getTime()] = element;
-
-                    date.setDate(15);
-                    date.setMonth(date.getMonth() + 1);
-                    date.setDate(1);
-                }
-                break;
-            case 'day':
-                var date = new Date(this.timeSpanStart * 1000);
-                while (date.getTime() < this.timeSpanEnd * 1000) {
-                    var day = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-                    if(this.signs[day.getTime()]) {
-                        date.setDate(date.getDate() + 1);
-                        continue;
-                    }
-                    var element = document.createElement('timeline-sign');
-                    element.timeSpanStart = this.timeSpanStart;
-                    element.timeSpanEnd = this.timeSpanEnd;
-                    element.lineWidth = this.clientWidth;
-                    element.date = day.getTime() / 1000;
-                    element.innerHTML = day.getDate();
-
-                    this.$.bar.appendChild(element);
-                    this.signs[day.getTime()] = element;
-
-                    date.setDate(date.getDate() + 1);
-                }
-                break;
+            switch (this.signFrequency) {
+                case 'year':
+                    this.signs[sign].minimal = new Date(this.signs[sign].date * 1000).getMonth() != 0;
+                    break;
+                case 'halfmonth':
+                    this.signs[sign].minimal = oddMonths.indexOf(new Date(this.signs[sign].date * 1000).getMonth()) != -1;
+                    break;
+                case 'month':
+                case 'day':
+                    this.signs[sign].minimal = false;
+                    break;
+            }
         }
     },
     updateSignFrequency: function () {
-        var dayTime = 60 * 60 * 24;
-        var timeSpan = this.timeSpanEnd - this.timeSpanStart;
+        var timeSpanInDays = (this.timeSpanEnd - this.timeSpanStart) / (60 * 60 * 24);
+        var pixelsPerDay = this.clientWidth / timeSpanInDays;
+
+        //console.log(pixelsPerDay);
         var frequency = 'month';
-        if(timeSpan < dayTime * 7) {
-            frequency='day';
+        if (pixelsPerDay < 4) {
+            frequency = 'year';
         }
-        else if(timeSpan < dayTime * 30 * 9) {
-            frequency='month';
+        else if (pixelsPerDay < 16) {
+            frequency = 'halfmonth';
+        }
+        else if (pixelsPerDay < 200) {
+            frequency = 'month';
         }
         else {
-            frequency='year';
+            frequency = 'day';
         }
-
         if (frequency != this.signFrequency) {
             console.log('set frequency to', frequency);
-            for (var sign in this.signs) {
-                this.$.bar.removeChild(this.signs[sign]);
-                delete this.signs[sign];
+
+            if (frequency != 'day') {
+                for (var sign in this.daySigns) {
+                    this.$.bar.removeChild(this.daySigns[sign]);
+                    delete this.daySigns[sign];
+                }
             }
         }
 
