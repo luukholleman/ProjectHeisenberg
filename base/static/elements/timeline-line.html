@@ -15,6 +15,15 @@
             position: relative;
             touch-action: none;
             cursor: ew-resize;
+            cursor: -moz-grab;
+            cursor: -webkit-grab;
+            cursor: grab;
+        }
+
+        .timelineBox.grabbing{
+            cursor: -moz-grabbing;
+            cursor: -webkit-grabbing;
+            cursor: grabbing;
         }
 
         .timelineBox{
@@ -71,7 +80,7 @@
         }
     </style>
 
-    <div class="timelineBox" on-touchstart="{{ touchStart }}" on-touchmove="{{ touchMove }}"
+    <div id="draggable" class="timelineBox" on-touchstart="{{ touchStart }}" on-touchmove="{{ touchMove }}"
          on-touchend="{{ touchEnd }}"
          on-trackstart="{{ trackStart }}" on-trackend="{{ trackEnd }}" on-track="{{ track }}"
          on-mousewheel="{{ mouseWheel }}">
@@ -260,6 +269,7 @@ Polymer({
     trackStart: function (event) {
         this.lastTrackX = event.clientX;
         this.isTracking = !this.isScaling;
+        this.$.draggable.classList.add('grabbing');
 
         /*
          * push updated clientWith to items.
@@ -271,6 +281,7 @@ Polymer({
         }
     },
     trackEnd: function () {
+        this.$.draggable.classList.remove('grabbing');
         if (!this.isTracking) {
             return;
         }
