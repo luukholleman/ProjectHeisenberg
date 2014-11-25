@@ -96,7 +96,6 @@
 </template>
 <script>
 Polymer({
-    lastHighlightedItem: null, /* currently highlighted item. */
     timeSpanStart: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7 * 1).getTime() / 1000,
     /* time span end in seconds since 1 January 1970 (default: now-1 weeks). */
     timeSpanEnd: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7 * 2).getTime() / 1000,
@@ -150,11 +149,10 @@ Polymer({
                 (event.touches[0].pageY - event.touches[1].pageY) * (event.touches[0].pageY - event.touches[1].pageY));
     },
     open: function (item) {
-        if (this.lastHighlightedItem) {
-            this.lastHighlightedItem.close();
-        }
+        Array.prototype.forEach.call(this.querySelectorAll('timeline-item'), function (item) {
+            item.close();
+        });
 
-        this.lastHighlightedItem = event.target;
         this.fire('item-open', {item: item});
     },
     /*
@@ -342,6 +340,8 @@ Polymer({
         switch (this.signFrequency) {
             case 'year':
                 var date = new Date(this.timeSpanStart * 1000);
+                date.setMonth(0);
+                date.setDate(1);
                 while (date.getTime() < this.timeSpanEnd * 1000) {
                     var year = new Date(date.getFullYear(), 0, 1);
                     if(this.signs[year.getTime()]) {
@@ -363,11 +363,13 @@ Polymer({
                 break;
             case 'month':
                 var date = new Date(this.timeSpanStart * 1000);
+                date.setDate(1);
                 while (date.getTime() <= this.timeSpanEnd * 1000) {
                     var month = new Date(date.getFullYear(), date.getMonth(), 1);
                     if(this.signs[month.getTime()]) {
                         date.setDate(15);
                         date.setMonth(date.getMonth() + 1);
+                        date.setDate(1);
                         continue;
                     }
                     var element = document.createElement('timeline-sign');
@@ -384,6 +386,7 @@ Polymer({
 
                     date.setDate(15);
                     date.setMonth(date.getMonth() + 1);
+                    date.setDate(1);
                 }
                 break;
             case 'day':
