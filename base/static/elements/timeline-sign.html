@@ -1,7 +1,7 @@
 <link rel="import" href="../bower/polymer/polymer.html">
 <link rel="import" href="../bower/paper-shadow/paper-shadow.html">
 
-<polymer-element name="timeline-sign" attributes="date visible">
+<polymer-element name="timeline-sign" attributes="date visible tiny">
     <template>
         <link rel="stylesheet" href="../css/groups.css">
 
@@ -29,11 +29,19 @@
             .container[visible] {
                 margin-top: -140px;
             }
+            .container[tiny][visible] {
+                margin-top: -75px;
+            }
 
             .container > em {
                 opacity: 0;
                 transition: opacity .1s ease-in-out;
                 -webkit-transition: opacity .1s ease-in-out;
+                font-weight: 100;
+                font-size: 36px
+            }
+            .container[tiny] > em {
+                font-size: 24px;
             }
             .container[visible] > em {
                 opacity: 1;
@@ -58,9 +66,12 @@
             .container[visible]:after {
                 height: 132px;
             }
+            .container[tiny][visible]:after {
+                height: 67px;
+            }
         </style>
-        <div class="container" visible?="{{ visible }}">
-            <em style="font-weight: 100; font-size: 36px">
+        <div class="container" visible?="{{ visible }}" tiny?="{{ tiny }}">
+            <em>
                 <content></content>
             </em>
         </div>
@@ -69,6 +80,9 @@
         Polymer('timeline-sign', {
             date: 0,
             visible: false,
+            forced: false,
+            tiny: false,
+            forcedLocation: 0,
             timeSpanStart: 0,
             timeSpanEnd: 0,
             lineWidth: 0,
@@ -84,10 +98,18 @@
             lineWidthChanged: function () {
                 this.update();
             },
-            update: function () {
+            forcedChanged: function () {
+                this.update();
+            },
+            forcedLocationChanged: function () {
+                this.update();
+            },
+            getLocation: function() {
                 var percentage = (this.date - this.timeSpanStart) / (this.timeSpanEnd - this.timeSpanStart);
-                this.style.left = Math.round(percentage * this.lineWidth) + 'px';
-
+                return Math.round(percentage * this.lineWidth);
+            },
+            update: function () {
+                this.style.left = this.forced ? this.forcedLocation + 'px' : this.getLocation() + 'px';
                 this.day = new Date(this.date * 1000).getDate();
             },
             ready: function () {

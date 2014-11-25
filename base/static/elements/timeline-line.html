@@ -115,6 +115,7 @@ Polymer({
     isScaling: false, /* is user pinching/scaling? */
     lastPinchLength: 0, /* previous length between fingers while pinching. */
     signFrequency: 'month', /* year/month/day */
+    forced: null,
     signs: {},
     daySigns: {},
     /*
@@ -200,28 +201,26 @@ Polymer({
                 return true;
         }
     },
-    cleanSigns: function () {
-        for (var sign in this.signs) {
-            if (this.signs[sign] < this.timeSpanStart) {
-                this.$.bar.removeChild(this.signs[sign]);
-                delete this.signs[sign];
+    clearSignsInArray: function (array, offset) {
+        var removed = [];
+        for (var i in array) {
+            if (array[i].date < this.timeSpanStart - offset) {
+                this.$.bar.removeChild(array[i]);
+                removed.push(i);
             }
-            if (this.signs[sign] > this.timeSpanEnd) {
-                this.$.bar.removeChild(this.signs[sign]);
-                delete this.signs[sign];
+            else if (array[i].date > this.timeSpanEnd + offset) {
+                this.$.bar.removeChild(array[i]);
+                removed.push(i);
             }
         }
 
-        for (var sign in this.daySigns) {
-            if (this.signs[sign] < this.timeSpanStart) {
-                this.$.bar.removeChild(this.daySigns[sign]);
-                delete this.daySigns[sign];
-            }
-            if (this.daySigns[sign] > this.timeSpanEnd) {
-                this.$.bar.removeChild(this.daySigns[sign]);
-                delete this.daySigns[sign];
-            }
-        }
+        removed.forEach(function(i) {
+            delete array[i];
+        });
+    },
+    cleanSigns: function () {
+        this.clearSignsInArray(this.signs, 3600 * 24 * 100);
+        this.clearSignsInArray(this.daySigns, 3600 * 24, 10);
     },
     pushToSigns: function (signs, key, value) {
         for (var i in signs) {
@@ -381,7 +380,9 @@ Polymer({
         this.$.now.style.width = Math.round(percentage * this.clientWidth) + 'px';
     },
     updateSigns: function () {
-        //update
+        /*
+         * Update existing signs.
+         */
         this.pushToSigns(this.signs, 'lineWidth', this.clientWidth);
         this.pushToSigns(this.signs, 'timeSpanStart', this.timeSpanStart);
         this.pushToSigns(this.signs, 'timeSpanEnd', this.timeSpanEnd);
@@ -396,9 +397,12 @@ Polymer({
          */
         var monthNames = [ "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December" ];
-        var date = new Date(this.timeSpanStart * 1000);
+        var date = new Date((this.timeSpanStart - 3600 * 24 * 100) * 1000);
         date.setDate(1);
-        while (date.getTime() <= this.timeSpanEnd * 1000) {
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        while (date.getTime() <= (this.timeSpanEnd + 3600 * 24 * 100) * 1000) {
             var month = new Date(date.getFullYear(), date.getMonth(), 1);
 
             if (this.signs[month.getTime()]) {
@@ -411,6 +415,7 @@ Polymer({
             element.innerHTML = monthNames[month.getMonth()] +
                     (month.getMonth() == 0 ? '<br/>' + month.getFullYear() : '');
 
+
             this.$.bar.appendChild(element);
             this.signs[month.getTime()] = element;
 
@@ -421,8 +426,11 @@ Polymer({
          * Add daily signs to timeline.
          */
         if (this.signFrequency.indexOf('day') != -1) {
-            var date = new Date(this.timeSpanStart * 1000);
-            while (date.getTime() < this.timeSpanEnd * 1000) {
+            var date = new Date((this.timeSpanStart - 3600 * 24 * 10) * 1000);
+            date.setHours(0);
+            date.setMinutes(0);
+            date.setSeconds(0);
+            while (date.getTime() < (this.timeSpanEnd + 3600 * 24 * 10) * 1000) {
                 var day = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
                 if (this.daySigns[day.getTime()] || date.getDate() == 1) {
@@ -431,14 +439,45 @@ Polymer({
                 }
 
                 var element = this.createSign(day);
+                element.tiny = true;
                 element.innerHTML = day.getDate();
                 element.visible = this.isDayVisible(day);
-                ;
 
                 this.$.bar.appendChild(element);
                 this.daySigns[day.getTime()] = element;
 
                 date.setDate(date.getDate() + 1);
+            }
+        }
+
+        if(this.signFrequency == 'year') return;
+        var getMonth = function (date) {
+            var d = new Date(date * 1000);
+            return d.getFullYear() * 12 + d.getMonth();
+        }
+
+        var first = null;
+        var width = 300;
+        for (var i in this.signs) {
+            var s = this.signs[i];
+            if (s.date > this.timeSpanStart && (first == null || first.date < s.date)) {
+                first = s;
+                break;
+            }
+        }
+
+        var firstMonth = getMonth(first.date);
+        var firstLocation = Math.min(width, first.getLocation());
+
+        for (var i in this.signs) {
+            var sign = this.signs[i];
+            var month = getMonth(sign.date);
+            if (month < firstMonth) {
+                sign.forced = true;
+                sign.forcedLocation = firstLocation - (firstMonth - month) * width;
+            }
+            else {
+                sign.forced = false;
             }
         }
     },
