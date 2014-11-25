@@ -20,7 +20,7 @@
             cursor: grab;
         }
 
-        .timelineBox.grabbing{
+        .timelineBox.grabbing {
             cursor: -moz-grabbing;
             cursor: -webkit-grabbing;
             cursor: grabbing;
@@ -138,19 +138,22 @@ Polymer({
          */
         this.updateSignFrequency();
         this.update();
-        var items = this.querySelectorAll('timeline-item');
-        for (var i = 0; i < items.length; i++) {
-            var item = items[i];
-            item.lineWidth = this.clientWidth;
-            item.timeSpanStart = this.timeSpanStart;
-            item.timeSpanEnd = this.timeSpanEnd;
-        }
+
+        this.push('lineWidth', this.clientWidth);
+        this.push('timeSpanStart', this.timeSpanStart);
+        this.push('timeSpanEnd', this.timeSpanEnd);
     },
     /*
      * ====================
      * Utility methods
      * ====================
      */
+    push: function (key, value) {
+        var items = this.querySelectorAll('timeline-item');
+        for (var i = 0; i < items.length; i++) {
+            items[i][key] = value;
+        }
+    },
     calculatePinchLength: function (event) {
         /*
          * Calculate the distance between the first two fingers.
@@ -168,22 +171,6 @@ Polymer({
             case 'month':
             case 'day':
                 return true;
-        }
-    },
-    justifyZoom: function () {
-        var nowTimeSpan = this.timeSpanEnd - this.timeSpanStart;
-        var maxTimeSpan = (this.clientWidth / 3) * (60 * 60 * 24);
-        var minTimeSpan = (this.clientWidth / 230) * (60 * 60 * 24);
-
-        if (nowTimeSpan > maxTimeSpan) {
-            var diff = maxTimeSpan - nowTimeSpan;
-            this.timeSpanStart -= diff / 2;
-            this.timeSpanEnd += diff / 2;
-        }
-        if (nowTimeSpan < minTimeSpan) {
-            var diff = nowTimeSpan - minTimeSpan;
-            this.timeSpanStart += diff / 2;
-            this.timeSpanEnd -= diff / 2;
         }
     },
     cleanSigns: function () {
@@ -209,6 +196,44 @@ Polymer({
             }
         }
     },
+    zoomToTimeSpan: function (target, focusRatio) {
+        this.timeSpanStart -= (target - this.getTimeSpan()) * focusRatio;
+        this.timeSpanEnd += (target - this.getTimeSpan()) * (1 - focusRatio);
+    },
+    getTimeSpan: function () {
+        return this.timeSpanEnd - this.timeSpanStart;
+    },
+    getMass: function () {
+        return this.getTimeSpan() / this.clientWidth;
+    },
+    /*
+     * ====================
+     * Main functions
+     * ====================
+     */
+    zoom: function (zoomVelocity, focusRatio) {
+        this.timeSpanStart += zoomVelocity * this.getMass() * focusRatio;
+        this.timeSpanEnd -= zoomVelocity * this.getMass() * (1 - focusRatio);
+
+        /*
+         * Limit the zoom level.
+         */
+        var maxTimeSpan = (this.clientWidth / 3) * (3600 * 24);
+        var minTimeSpan = (this.clientWidth / 230) * (3600 * 24)
+
+        if (this.getTimeSpan() > maxTimeSpan) {
+            this.zoomToTimeSpan(maxTimeSpan, focusRatio);
+        }
+        if (this.getTimeSpan() < minTimeSpan) {
+            this.zoomToTimeSpan(minTimeSpan, focusRatio);
+        }
+
+        this.updateSignFrequency();
+    },
+    move: function (velocity) {
+        this.timeSpanStart -= velocity * this.getMass();
+        this.timeSpanEnd -= velocity * this.getMass();
+    },
     open: function (item) {
         Array.prototype.forEach.call(this.querySelectorAll('timeline-item'), function (item) {
             item.close();
@@ -222,24 +247,10 @@ Polymer({
      * ====================
      */
     goZoomIn: function () {
-        /*
-         * Calculate the rate at which the time span should be changed.
-         */
-        var rate = (this.timeSpanEnd - this.timeSpanStart) / this.clientWidth;
-
-        this.timeSpanStart += 100 * rate;
-        this.timeSpanEnd -= 100 * rate;
-        this.updateSignFrequency();
+        this.zoom(250, 0.5);
     },
     goZoomOut: function () {
-        /*
-         * Calculate the rate at which the time span should be changed.
-         */
-        var rate = (this.timeSpanEnd - this.timeSpanStart) / this.clientWidth;
-
-        this.timeSpanStart -= 100 * rate;
-        this.timeSpanEnd += 100 * rate;
-        this.updateSignFrequency();
+        this.zoom(-250, 0.5);
     },
     /*
      * ====================
@@ -250,40 +261,16 @@ Polymer({
         var isTwoAxis = typeof event.wheelDeltaY !== 'undefined';
         var differenceY = isTwoAxis ? event.wheelDeltaY : event.wheelDelta;
 
-        /*
-         * Calculate the rate at which the time span should be changed.
-         */
-        var rate = (this.timeSpanEnd - this.timeSpanStart) / this.clientWidth;
-        var focusRate = event.clientX / this.clientWidth;
-
-        /*
-         * Update the time span.
-         */
-        this.timeSpanStart += differenceY * rate * (focusRate);
-        this.timeSpanEnd -= differenceY * rate * (1 - focusRate);
-        this.justifyZoom();
-        this.updateSignFrequency();
+        this.zoom(differenceY, event.clientX / this.clientWidth);
 
         if (isTwoAxis) {
-            var delta = event.wheelDeltaX;
-
-            /*
-             * Move time span based on delta, if delta is not equal to 0.
-             */
-            if (delta != 0) {
-                var rate = (this.timeSpanEnd - this.timeSpanStart) / this.clientWidth / 3;
-                this.timeSpanStart -= delta * rate;
-                this.timeSpanEnd -= delta * rate;
-            }
+            this.move(event.wheelDeltaX / 3);
         }
 
         event.preventDefault();
     },
     touchStart: function (event) {
         if (event.touches.length == 2) {
-            /*
-             * Store initial pinch length for scaling.
-             */
             this.isScaling = true;
             this.lastPinchLength = this.calculatePinchLength(event);
         }
@@ -294,29 +281,14 @@ Polymer({
     },
     touchMove: function (event) {
         if (this.isScaling || event.touches.length >= 2) {
-            /*
-             * Calculate difference between current and previously calculated pinch length.
-             */
             var previous = this.lastPinchLength;
             var now = this.lastPinchLength = this.calculatePinchLength(event);
-            var difference = now - previous;
 
-            /*
-             * Calculate the rate at which the time span should be changed.
-             */
-            var rate = (this.timeSpanEnd - this.timeSpanStart) / this.clientWidth;
             var minX = Math.min(event.touches[0].pageX, event.touches[1].pageX);
             var maxX = Math.max(event.touches[0].pageX, event.touches[1].pageX);
-            var focussedPixel = minX + (maxX - minX) / 2;
-            var focusRate = focussedPixel / this.clientWidth;
+            var focus = minX + (maxX - minX) / 2;
 
-            /*
-             * Update the time span.
-             */
-            this.timeSpanStart += difference * rate * (focusRate);
-            this.timeSpanEnd -= difference * rate * (1 - focusRate);
-            this.justifyZoom();
-            this.updateSignFrequency();
+            this.zoom(now - previous, focus / this.clientWidth);
         }
     },
 
@@ -324,40 +296,17 @@ Polymer({
         this.lastTrackX = event.clientX;
         this.isTracking = !this.isScaling;
         this.$.draggable.classList.add('grabbing');
-
-        /*
-         * push updated clientWith to items.
-         */
-        this.update();
-        var items = this.querySelectorAll('timeline-item');
-        for (var i = 0; i < items.length; i++) {
-            items[i].lineWidth = this.clientWidth;
-        }
+        this.push('lineWidth', this.clientWidth);
     },
     trackEnd: function () {
         this.$.draggable.classList.remove('grabbing');
-        if (!this.isTracking) {
-            return;
-        }
         this.isTracking = false;
         this.cleanSigns();
     },
     track: function (event) {
-        if (this.isScaling) {
-            this.isTracking = false;
-        }
         if (this.isTracking) {
-            var delta = event.clientX - this.lastTrackX;
+            this.move(event.clientX - this.lastTrackX);
             this.lastTrackX = event.clientX;
-
-            /*
-             * Move time span based on delta, if delta is not equal to 0.
-             */
-            if (delta != 0) {
-                var rate = (this.timeSpanEnd - this.timeSpanStart) / this.clientWidth;
-                this.timeSpanStart -= delta * rate;
-                this.timeSpanEnd -= delta * rate;
-            }
         }
     },
     /*
@@ -367,17 +316,11 @@ Polymer({
      */
     timeSpanStartChanged: function () {
         this.update();
-        var items = this.querySelectorAll('timeline-item');
-        for (var i = 0; i < items.length; i++) {
-            items[i].timeSpanStart = this.timeSpanStart;
-        }
+        this.push('timeSpanStart', this.timeSpanStart);
     },
     timeSpanEndChanged: function () {
         this.update();
-        var items = this.querySelectorAll('timeline-item');
-        for (var i = 0; i < items.length; i++) {
-            items[i].timeSpanEnd = this.timeSpanEnd;
-        }
+        this.push('timeSpanEnd', this.timeSpanEnd);
     },
     /*
      * ====================
@@ -390,8 +333,8 @@ Polymer({
     },
     updateNow: function () {
         var now = new Date().getTime() / 1000;
-        var perc = (now - this.timeSpanStart) / (this.timeSpanEnd - this.timeSpanStart);
-        var width = Math.round(perc * this.clientWidth);
+        var percentage = (now - this.timeSpanStart) / (this.timeSpanEnd - this.timeSpanStart);
+        var width = Math.round(percentage * this.clientWidth);
         this.$.now.style.display = now > this.timeSpanStart ? 'block' : 'none';
         this.$.now.style.width = width + 'px';
     },
@@ -456,7 +399,7 @@ Polymer({
                 element.lineWidth = this.clientWidth;
                 element.date = day.getTime() / 1000;
                 element.innerHTML = day.getDate();
-                element.visible=true;
+                element.visible = true;
                 this.$.bar.appendChild(element);
                 this.daySigns[day.getTime()] = element;
 
