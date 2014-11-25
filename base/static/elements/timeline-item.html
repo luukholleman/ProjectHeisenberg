@@ -11,7 +11,8 @@
                 height: 0px;
                 position: absolute;
                 top: 4px; /* half timeline-line.bar.height */
-                z-index: 5;
+                z-index:2;
+                cursor: pointer;
             }
 
             :host, .bubble {
@@ -35,7 +36,6 @@
                 margin: -32px;
                 font-size: 21px;
             }
-
             .bubble .badge {
                 position: absolute;
                 top: 0px;
@@ -56,8 +56,6 @@
                 height: 32px;
                 margin: -11px;
             }
-
-
         </style>
         <paper-shadow z="1" id="bubble" class="group-{{ color }} bubble" on-tap="{{ tap }}" horizontal layout center>
             <div flex vertical layout center>
@@ -102,7 +100,7 @@
                 this.update();
             },
             tap: function () {
-                this.open();
+                    this.open();
             },
             open: function () {
                 this.fire('item-open');
