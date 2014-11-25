@@ -1,7 +1,7 @@
 <link rel="import" href="../bower/polymer/polymer.html">
 <link rel="import" href="../bower/paper-shadow/paper-shadow.html">
 
-<polymer-element name="timeline-sign" attributes="date">
+<polymer-element name="timeline-sign" attributes="date minimal">
     <template>
         <link rel="stylesheet" href="../css/groups.css">
 
@@ -10,7 +10,7 @@
                 bottom: 0px;
                 margin: 0 0;
                 padding: 0;
-                z-index: 1;
+                z-index: 3;
             }
 
             :host, .container {
@@ -22,8 +22,15 @@
             .container {
                 margin-top: -140px;
                 margin-left: 0px;
+                z-index: 2;
+                transition: margin-top .2s;
+                -webkit-transition: margin-top .2s;
             }
 
+            .container[minimal] > em {
+                transition: opacity .1s ease-in-out;
+                -webkit-transition: opacity .1s ease-in-out;
+            }
             .container:after {
                 content: '';
                 display: block;
@@ -35,11 +42,24 @@
                 top: 0px;
                 margin-top: 0px;
                 margin-right: 0px;
+                z-index: -1;
+
+                transition: height .2s;
+                -webkit-transition: height .2s;
             }
 
+            .container[minimal] {
+                margin-top: -50px;
+            }
 
+            .container[minimal] > em {
+                opacity: 0;
+            }
+            .container[minimal]:after {
+                height: 65px;
+            }
         </style>
-        <div class="container">
+        <div class="container" minimal?="{{ minimal }}">
             <em style="font-weight: 100; font-size: 36px">
                 <content></content>
             </em>
@@ -48,6 +68,7 @@
     <script>
         Polymer('timeline-sign', {
             date: 0,
+            minimal: false,
             timeSpanStart: 0,
             timeSpanEnd: 0,
             lineWidth: 0,
