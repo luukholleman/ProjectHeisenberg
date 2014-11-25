@@ -1,16 +1,20 @@
 <div>
     <core-toolbar style="background: #009688; color:white">
-        <paper-icon-button icon="add-circle-outline"></paper-icon-button>
-        <strong flex>Timeline</strong>
-        <paper-icon-button icon="more-vert"></paper-icon-button>
+        <paper-icon-button icon="menu"></paper-icon-button>
+        <strong flex>Punktlich.</strong>
+        <paper-fab icon="add" title="Create meeting" role="button" aria-label="Create meeting"
+                   style="background-color: #03A9F4;"></paper-fab>
     </core-toolbar>
 </div>
+
 <timeline-line id="timeline" style="width: 100%" vertical layout>
     <timeline-item color="green" date="{{ generateDate(2014, 11, 1,0,0, 0) }}">
     </timeline-item>
     <timeline-item color="pink"date="{{ generateDate(2014, 11, 16,0,0,0) }}">
     </timeline-item>
-    <timeline-item color="teal" count="2" date="{{ generateDate(2014, 11, 25,9,46,0) }}">
+    <timeline-item color="yellow" count="2" date="{{ generateDate(2014, 11, 25,9,46,0) }}">
+    </timeline-item>
+    <timeline-item color="deep-purple" date="{{ generateDate(2014, 11, 26,14,0,0) }}">
     </timeline-item>
     <timeline-item color="red" date="{{ generateDate(2014, 12, 1,0,0,0) }}">
     </timeline-item>

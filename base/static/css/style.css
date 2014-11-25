@@ -23,3 +23,8 @@ body > div { /* hack to prevent 'over-scrolling' on safari/chrome */
     height:     100%;
     overflow:   scroll;
 }
+
+core-toolbar paper-fab {
+    top: 32px;
+    right: 24px;
+}

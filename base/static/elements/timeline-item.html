@@ -12,6 +12,7 @@
                 position: absolute;
                 top: 4px; /* half timeline-line.bar.height */
                 z-index:2;
+                cursor: pointer;
             }
 
             :host, .bubble {
@@ -55,8 +56,6 @@
                 height: 32px;
                 margin: -11px;
             }
-
-
         </style>
         <paper-shadow z="1" id="bubble" class="group-{{ color }} bubble" on-tap="{{ tap }}" horizontal layout center>
             <div flex vertical layout center>
