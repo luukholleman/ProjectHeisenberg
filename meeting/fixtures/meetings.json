@@ -1,0 +1,14 @@
+[
+    {
+        "fields": {
+            "description": "Testmeeting",
+            "creator": 1,
+            "address": "Zwolle",
+            "location": "T009",
+            "date_and_time": "2014-11-25T08:23:19.120Z",
+            "name": "Test"
+        },
+        "model": "meeting.meeting",
+        "pk": 1
+    }
+]
