@@ -166,10 +166,8 @@ Polymer({
     },
     requestNewItems: function () {
         this.lastRequest = new Date().getTime();
-        var startDate = this.setDateToMidnight(new Date(this.timeSpanStart * 1000), 0)
-        var endDate = this.setDateToMidnight(new Date(this.timeSpanEnd * 1000), 1)
-
-        console.log('want', startDate, endDate);
+        var startDate = this.setDateToMidnight(new Date(this.timeSpanStart * 1000), 0);
+        var endDate = this.setDateToMidnight(new Date(this.timeSpanEnd * 1000), 1);
 
         this.fire('timeline-request-items', {
             start: startDate.toISOString(),

@@ -1,4 +1,4 @@
-angular.module('punktlichDep').controller('TimelineController', function ($scope) {
+angular.module('punktlichDep').controller('TimelineController', function ($scope, $timeout) {
     $scope.meetings = [];
 
     $scope.addMeeting = function (color, date) {
@@ -6,6 +6,9 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
             color: color,
             date: date,
             visible: true
+        });
+        $timeout(function () {
+            document.getElementById('timeline').refresh();
         })
     };
 
