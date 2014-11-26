@@ -3,7 +3,6 @@
 <link rel="import" href="../bower/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower/paper-shadow/paper-shadow.html">
 <link rel="import" href="timeline-sign.html">
-
 <polymer-element name="timeline-line" vertical layout attributes="timeSpanStart timeSpanEnd">
 <template>
     <style>
@@ -214,13 +213,13 @@ Polymer({
             }
         }
 
-        removed.forEach(function(i) {
+        removed.forEach(function (i) {
             delete array[i];
         });
     },
     cleanSigns: function () {
-        this.clearSignsInArray(this.signs, 3600 * 24 * 100);
-        this.clearSignsInArray(this.daySigns, 3600 * 24, 10);
+        this.clearSignsInArray(this.signs, 3600 * 24 * 40);
+        this.clearSignsInArray(this.daySigns, 3600 * 24, 5);
     },
     pushToSigns: function (signs, key, value) {
         for (var i in signs) {
@@ -397,40 +396,46 @@ Polymer({
          */
         var monthNames = [ "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December" ];
-        var date = new Date((this.timeSpanStart - 3600 * 24 * 100) * 1000);
-        date.setDate(1);
-        date.setHours(0);
-        date.setMinutes(0);
-        date.setSeconds(0);
-        while (date.getTime() <= (this.timeSpanEnd + 3600 * 24 * 100) * 1000) {
-            var month = new Date(date.getFullYear(), date.getMonth(), 1);
+        var date = new Date((this.timeSpanStart - 3600 * 24 * 40) * 1000);
+        var dateMonth = date.getMonth();
+        var dateYear = date.getFullYear();
 
-            if (this.signs[month.getTime()]) {
-                date.setMonth(date.getMonth() + 1);
+        var endDate = new Date((this.timeSpanEnd + 3600 * 24 * 40) * 1000);
+        var endMonth = endDate.getMonth();
+        var endYear = endDate.getFullYear();
+
+        while (dateYear < endYear || (dateYear == endYear && dateMonth <= endMonth)) {
+
+            if (this.signs[dateYear * 12 + dateMonth]) {
+                dateMonth++;
+                dateYear += Math.floor(dateMonth / 12);
+                dateMonth %= 12;
                 continue;
             }
 
-            var element = this.createSign(month);
+            var element = this.createSign(new Date(dateYear, dateMonth, 1, 0, 0, 0));
             element.visible = this.isMonthVisible(element.date);
-            element.innerHTML = monthNames[month.getMonth()] +
-                    (month.getMonth() == 0 ? '<br/>' + month.getFullYear() : '');
+            element.innerHTML = monthNames[dateMonth] +
+                    (dateMonth == 0 ? '<br/>' + dateYear : '');
 
 
             this.$.bar.appendChild(element);
-            this.signs[month.getTime()] = element;
+            this.signs[dateYear * 12 + dateMonth] = element;
 
-            date.setMonth(date.getMonth() + 1);
+            dateMonth++;
+            dateYear += Math.floor(dateMonth / 12);
+            dateMonth %= 12;
         }
 
         /*
          * Add daily signs to timeline.
          */
         if (this.signFrequency.indexOf('day') != -1) {
-            var date = new Date((this.timeSpanStart - 3600 * 24 * 10) * 1000);
+            var date = new Date((this.timeSpanStart - 3600 * 24 * 5) * 1000);
             date.setHours(0);
             date.setMinutes(0);
             date.setSeconds(0);
-            while (date.getTime() < (this.timeSpanEnd + 3600 * 24 * 10) * 1000) {
+            while (date.getTime() < (this.timeSpanEnd + 3600 * 24 * 5) * 1000) {
                 var day = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
                 if (this.daySigns[day.getTime()] || date.getDate() == 1) {
@@ -450,7 +455,10 @@ Polymer({
             }
         }
 
-        if(this.signFrequency == 'year') return;
+        if (this.signFrequency == 'year') {
+            return;
+        }
+
         var getMonth = function (date) {
             var d = new Date(date * 1000);
             return d.getFullYear() * 12 + d.getMonth();
