@@ -3,11 +3,14 @@
         <paper-icon-button icon="menu"></paper-icon-button>
         <strong flex>Punktlich.</strong>
         <paper-fab icon="add" title="Create meeting" role="button" aria-label="Create meeting"
+                   ng-click="addMeeting('light-blue', generateDate(2014, 12, day+2, 20, 0, 0));day=day+2;"
                    style="background-color: #03A9F4;"></paper-fab>
     </core-toolbar>
 </div>
 
 <timeline-line id="timeline" style="width: 100%" vertical layout>
+    <timeline-item ng-repeat="meeting in meetings | filter:visible=true"
+                   color="{{ meeting.color }}" date="{{ meeting.date }}"></timeline-item>
     <timeline-item color="green" date="{{ generateDate(2014, 11, 1,0,0, 0) }}">
     </timeline-item>
     <timeline-item color="pink" date="{{ generateDate(2014, 11, 16,0,0,0) }}">
@@ -24,8 +27,10 @@
     <div horizontal layout wrap around-justified>
 
         <div class="filter-pane">
-            <timeline-filter flex three title="Filter Gemeente Zwolle" role="button" aria-label="Filter Gemeente Zwolle"
-                             class="group-yellow">GZ
+            <timeline-filter
+                    ng-click="toggleGroupVisible('light-blue')"
+                    flex three title="Filter Gemeente Zwolle" role="button" aria-label="Filter Gemeente Zwolle"
+                    class="group-yellow">GZ
             </timeline-filter>
             <timeline-filter title="Filter Windesheim" role="button" aria-label="Filter Windesheim"
                              class="group-deep-purple">W
