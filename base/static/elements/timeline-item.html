@@ -58,6 +58,9 @@
             .bubble[invisible] {
                 background-color: black;
                 visibility: hidden;
+
+                animation: popdown .2s linear 0s 1 alternate;
+                -webkit-animation: popdown .2s linear 0s 1 alternate;
             }
 
             .bubble.clustered {
@@ -89,6 +92,29 @@
                 }
                 100% {
                     -webkit-transform: scale(1);
+                }
+            }
+
+            @keyframes popdown {
+                0% {
+                    transform: scale(1);
+                }
+                73% {
+                    transform: scale(0.3);
+                }
+                100% {
+                    transform: scale(0);
+                }
+            }
+            @-webkit-keyframes popdown {
+                0% {
+                    -webkit-transform: scale(1);
+                }
+                73% {
+                    -webkit-transform: scale(0.3);
+                }
+                100% {
+                    -webkit-transform: scale(0);
                 }
             }
         </style>
