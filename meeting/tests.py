@@ -22,8 +22,6 @@ class MeetingTestCase(TestCase):
         
         response = self.client.get('/api/v1/meetings', {'from': from_date, 'to': to_date})
 
-        self.assertEquals(response.status_code, 200)
-
         data = json.loads(response.content)
 
         # there should be 5 rows returned from the filter
