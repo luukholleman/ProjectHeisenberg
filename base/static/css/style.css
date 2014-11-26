@@ -35,3 +35,8 @@ core-toolbar paper-fab {
 .filter-pane > timeline-filter{
     margin-bottom: 10px;
 }
+
+paper-fab {
+    cursor: pointer;
+    z-index: 1;
+}
