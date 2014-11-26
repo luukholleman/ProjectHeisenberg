@@ -1,7 +1,7 @@
 <link rel="import" href="../bower/polymer/polymer.html">
 <link rel="import" href="../bower/paper-shadow/paper-shadow.html">
 
-<polymer-element name="timeline-sign" attributes="date minimal">
+<polymer-element name="timeline-sign" attributes="date visible tiny">
     <template>
         <link rel="stylesheet" href="../css/groups.css">
 
@@ -20,22 +20,38 @@
             }
 
             .container {
-                margin-top: -140px;
+                margin-top: -50px;
                 margin-left: 0px;
                 z-index: 2;
                 transition: margin-top .2s;
                 -webkit-transition: margin-top .2s;
             }
+            .container[visible] {
+                margin-top: -140px;
+            }
+            .container[tiny][visible] {
+                margin-top: -75px;
+            }
 
-            .container[minimal] > em {
+            .container > em {
+                opacity: 0;
                 transition: opacity .1s ease-in-out;
                 -webkit-transition: opacity .1s ease-in-out;
+                font-weight: 100;
+                font-size: 36px
             }
+            .container[tiny] > em {
+                font-size: 24px;
+            }
+            .container[visible] > em {
+                opacity: 1;
+            }
+
             .container:after {
                 content: '';
                 display: block;
                 width: 1px;
-                height: 132px;
+                height: 42px;
                 background-color: #979797;
                 position: absolute;
                 right: 0px;
@@ -47,20 +63,15 @@
                 transition: height .2s;
                 -webkit-transition: height .2s;
             }
-
-            .container[minimal] {
-                margin-top: -50px;
+            .container[visible]:after {
+                height: 132px;
             }
-
-            .container[minimal] > em {
-                opacity: 0;
-            }
-            .container[minimal]:after {
-                height: 42px;
+            .container[tiny][visible]:after {
+                height: 67px;
             }
         </style>
-        <div class="container" minimal?="{{ minimal }}">
-            <em style="font-weight: 100; font-size: 36px;margin: 0 5px 0 0;">
+        <div class="container" visible?="{{ visible }}" tiny?="{{ tiny }}">
+            <em>
                 <content></content>
             </em>
         </div>
@@ -68,7 +79,10 @@
     <script>
         Polymer('timeline-sign', {
             date: 0,
-            minimal: false,
+            visible: false,
+            forced: false,
+            tiny: false,
+            forcedLocation: 0,
             timeSpanStart: 0,
             timeSpanEnd: 0,
             lineWidth: 0,
@@ -84,10 +98,18 @@
             lineWidthChanged: function () {
                 this.update();
             },
-            update: function () {
+            forcedChanged: function () {
+                this.update();
+            },
+            forcedLocationChanged: function () {
+                this.update();
+            },
+            getLocation: function() {
                 var percentage = (this.date - this.timeSpanStart) / (this.timeSpanEnd - this.timeSpanStart);
-                this.style.left = Math.round(percentage * this.lineWidth) + 'px';
-
+                return Math.round(percentage * this.lineWidth);
+            },
+            update: function () {
+                this.style.left = this.forced ? this.forcedLocation + 'px' : this.getLocation() + 'px';
                 this.day = new Date(this.date * 1000).getDate();
             },
             ready: function () {
