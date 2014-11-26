@@ -117,6 +117,7 @@ Polymer({
     forced: null,
     signs: {},
     daySigns: {},
+    lastRequest: 0,
     /*
      * ====================
      * Polymer events
@@ -143,12 +144,53 @@ Polymer({
         this.pushToItems('lineWidth', this.clientWidth);
         this.pushToItems('timeSpanStart', this.timeSpanStart);
         this.pushToItems('timeSpanEnd', this.timeSpanEnd);
+
+        this.requestNewItems();
     },
     /*
      * ====================
      * Utility methods
      * ====================
      */
+
+    setDateToMidnight: function(date, next) {
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+
+        if(next) {
+            date.setDate(date.getDate() + next);
+        }
+
+        return date;
+    },
+    requestNewItems: function () {
+        this.lastRequest = new Date().getTime();
+        var startDate = this.setDateToMidnight(new Date(this.timeSpanStart * 1000), 0)
+        var endDate = this.setDateToMidnight(new Date(this.timeSpanEnd * 1000), 1)
+
+        console.log('want', startDate, endDate);
+
+        this.fire('timeline-request-items', {
+            start: startDate.toISOString(),
+            end: endDate.toISOString()
+        });
+    },
+    attemptRequestNewItems: function(){
+        var now = new Date().getTime();
+
+        if(now - this.lastRequest < 50) {
+            return;
+        }
+        this.lastRequest = now;
+
+        setTimeout(function(timeline, attemptTime){
+            if(timeline.lastRequest != attemptTime) {
+                return;
+            }
+            timeline.requestNewItems();
+        }, 100, this, this.lastRequest);
+    },
     pushToItems: function (key, value) {
         var items = this.querySelectorAll('timeline-item');
         for (var i = 0; i < items.length; i++) {
@@ -228,7 +270,6 @@ Polymer({
     },
     pushVisibilityToSigns: function (signs, func) {
         for (var i in signs) {
-
             signs[i].visible = func.call(this, signs[i].date);
         }
     },
@@ -274,10 +315,16 @@ Polymer({
         }
 
         this.updateSignFrequency();
+
+        if(zoomVelocity < 0) {
+            this.attemptRequestNewItems();
+        }
     },
     move: function (velocity) {
         this.timeSpanStart -= velocity * this.getMass();
         this.timeSpanEnd -= velocity * this.getMass();
+
+        this.attemptRequestNewItems();
     },
     open: function (item) {
         Array.prototype.forEach.call(this.querySelectorAll('timeline-item'), function (item) {
@@ -285,6 +332,11 @@ Polymer({
         });
 
         this.fire('item-open', {item: item});
+    },
+    refresh: function() {
+        this.pushToItems('lineWidth', this.clientWidth);
+        this.pushToItems('timeSpanStart', this.timeSpanStart);
+        this.pushToItems('timeSpanEnd', this.timeSpanEnd);
     },
     /*
      * ====================
@@ -331,7 +383,6 @@ Polymer({
             this.zoom(now - previous, focus / this.clientWidth);
         }
     },
-
     trackStart: function (event) {
         this.lastTrackX = event.clientX;
         this.isTracking = !this.isScaling;
