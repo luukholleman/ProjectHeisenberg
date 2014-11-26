@@ -1,5 +1,4 @@
 angular.module('punktlichDep').controller('TimelineController', function ($scope) {
-    $scope.groups = [];
     $scope.meetings = [];
 
     $scope.addMeeting = function (color, date) {
