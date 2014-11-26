@@ -30,7 +30,7 @@ class MeetingUser(models.Model):
     user = models.ForeignKey(User)
     meeting = models.ForeignKey(Meeting)
     user_state = models.IntegerField(max_length=1, default=UNKNOWN, choices=CHOICES)
-    present_at = models.DateTimeField()
+    present_at = models.DateTimeField(null=True)
 
     def __str__(self):
         return self.user.first_name + ' ' + self.meeting.name

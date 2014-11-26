@@ -11,10 +11,11 @@ class MeetingViewSet(viewsets.ModelViewSet):
     permission_classes = []
 
     def get_serializer_class(self):
-        if self.request.method == 'POST' or self.request.method == 'PUT':
-            return MeetingWriteSerializer
+        return MeetingWriteSerializer
+        #if self.request.method == 'POST' or self.request.method == 'PUT':
+        #    return MeetingWriteSerializer
 
-        return self.serializer_class
+        #return self.serializer_class
 
     def get_queryset(self):
 
