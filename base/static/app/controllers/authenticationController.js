@@ -15,9 +15,7 @@ angular.module('punktlichDep').controller('AuthenticationController', function (
     $scope.register = function (form, user) {
         var valid = ValidationService.validateClientSide(form);
 
-        if (!valid) {
-            return;
-        }
+        if (!valid) return;
 
         RegistrationService.register(user, function () {
             $scope.flash.setMessage('You are registered successfully!');

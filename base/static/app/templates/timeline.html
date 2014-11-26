@@ -3,7 +3,7 @@
         <paper-icon-button icon="menu"></paper-icon-button>
         <strong flex>Punktlich.</strong>
         <paper-fab icon="add" title="Create meeting" role="button" aria-label="Create meeting"
-                   ng-click="addMeeting('light-blue', generateDate(2014, 12, day+2, 20, 0, 0));day=day+2;"
+                   ng-click="addMeeting(0, 'light-blue', generateDate(2014, 12, day+2, 20, 0, 0));day=day+2;"
                    style="background-color: #03A9F4;"></paper-fab>
     </core-toolbar>
 </div>
@@ -11,16 +11,6 @@
 <timeline-line id="timeline" style="width: 100%" vertical layout>
     <timeline-item ng-repeat="meeting in meetings | filter:visible=true"
                    color="{{ meeting.color }}" date="{{ meeting.date }}"></timeline-item>
-    <timeline-item color="green" date="{{ generateDate(2014, 11, 1,0,0, 0) }}">
-    </timeline-item>
-    <timeline-item color="pink" date="{{ generateDate(2014, 11, 16,0,0,0) }}">
-    </timeline-item>
-    <timeline-item color="yellow" date="{{ generateDate(2014, 11, 27,9,46,0) }}">
-    </timeline-item>
-    <timeline-item color="deep-purple" date="{{ generateDate(2014, 11, 26,14,0,0) }}">
-    </timeline-item>
-    <timeline-item color="red" date="{{ generateDate(2014, 12, 5, 20, 0, 0) }}">
-    </timeline-item>
 </timeline-line>
 
 <div vertical layout center flex>
