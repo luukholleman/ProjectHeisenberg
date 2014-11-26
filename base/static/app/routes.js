@@ -40,6 +40,15 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                     }
                 }
             }).
+            state('meeting-create', {
+                url: '/meeting/create',
+                views: {
+                    'body': {
+                        templateUrl: appPath + 'templates/meeting/create.html',
+                        controller: 'MeetingController'
+                    }
+                }
+            }).
             state('activate.token', {
                 'url': '/activate/:token',
                 views: {
