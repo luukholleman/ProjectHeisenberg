@@ -12,7 +12,7 @@ class BasicMeetingSerializer(serializers.ModelSerializer):
 
 
 class MeetingWriteSerializer(BasicMeetingSerializer):
-    participants = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    participants = serializers.PrimaryKeyRelatedField(many=True, source='meetinguser_set')
 
     class Meta:
         model = Meeting
