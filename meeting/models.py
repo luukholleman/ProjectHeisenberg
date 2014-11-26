@@ -16,15 +16,20 @@ class Meeting(models.Model):
 
 
 class MeetingUser(models.Model):
+    UNKNOWN = 0
+    PRESENT = 1
+    MAYBE = 2
+    REJECT = 3
+
     CHOICES = (
-        (0, 'Unknown'),
-        (1, 'Present'),
-        (2, 'Maybe'),
-        (3, 'Reject')
+        (UNKNOWN, 'Unknown'),
+        (PRESENT, 'Present'),
+        (MAYBE, 'Maybe'),
+        (REJECT, 'Reject')
     )
     user = models.ForeignKey(User)
     meeting = models.ForeignKey(Meeting)
-    user_state = models.CharField(max_length=20, default=False, choices=CHOICES)
+    user_state = models.IntegerField(max_length=1, default=UNKNOWN, choices=CHOICES)
     present_at = models.DateTimeField()
 
     def __str__(self):
