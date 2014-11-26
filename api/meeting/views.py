@@ -1,6 +1,6 @@
 from django.utils.dateparse import parse_datetime
 from rest_framework import generics, viewsets
-from api.meeting.serializers import MeetingSerializer
+from api.meeting.serializers import MeetingSerializer, MeetingWriteSerializer
 from meeting.models import Meeting
 
 
@@ -8,6 +8,12 @@ class MeetingViewSet(viewsets.ModelViewSet):
     serializer_class = MeetingSerializer
     #todo add logged in permission here
     permission_classes = []
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return MeetingWriteSerializer
+
+        return self.serializer_class
 
     def get_queryset(self):
         from_date = parse_datetime(self.request.QUERY_PARAMS['from'])
