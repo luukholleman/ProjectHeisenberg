@@ -1,7 +1,7 @@
-angular.module('punktlichDep').controller('TimelineController', function ($scope, $timeout) {
+angular.module('punktlichDep').controller('TimelineController', function ($scope, $timeout, TimelineService) {
     $scope.meetings = [];
 
-    var init = function(){
+    var init = function () {
         $scope.addMeeting('punktlich', $scope.generateDate(2014, 12, 1, 10, 0, 0));
         $scope.addMeeting('green', $scope.generateDate(2014, 11, 27, 0, 0, 0));
         $scope.addMeeting('pink', $scope.generateDate(2014, 11, 26, 10, 5, 0));
@@ -22,6 +22,16 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
         //  Timeout takes care of a callback ofter $apply, this is needed because we want the added meeting to show.
         $timeout(function () {
             document.getElementById('timeline').refresh();
+        })
+    };
+
+    $scope.getMeetingsForTimeSpan = function (from, to) {
+        TimelineService.getMeetingsForTimeSpan(from, to, $scope.addMeetings)
+    };
+
+    $scope.addMeetings = function (meetings){
+        meetings.forEach(function(meeting){
+            $scope.addMeeting(meeting.color, meeting.date);
         })
     };
 
