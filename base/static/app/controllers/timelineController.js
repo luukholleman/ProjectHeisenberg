@@ -2,19 +2,19 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
     $scope.meetings = [];
 
     var init = function () {
-        $scope.addMeeting('punktlich', $scope.generateDate(2014, 12, 1, 10, 0, 0));
-        $scope.addMeeting('green', $scope.generateDate(2014, 11, 27, 0, 0, 0));
-        $scope.addMeeting('pink', $scope.generateDate(2014, 11, 26, 10, 5, 0));
-        $scope.addMeeting('yellow', $scope.generateDate(2014, 12, 3, 16, 0, 0));
-        $scope.addMeeting('red', $scope.generateDate(2014, 12, 5, 20, 0, 0));
+        $scope.getMeetingsForTimeSpan($scope.generateDate(2013, 1, 1, 0, 0, 0), $scope.generateDate(2019, 12, 31, 0, 0, 0));
+
+        $scope.addMeeting(0, 'blue', $scope.generateDate(2014, 12, 1, 10, 0, 0));
+        $scope.addMeeting(0, 'green', $scope.generateDate(2014, 11, 29 , 0, 0, 0));
+        $scope.addMeeting(0, 'yellow', $scope.generateDate(2014, 12, 3, 16, 0, 0));
         $timeout(function () {
             document.getElementById('timeline').refresh();
         })
     }
 
-    $scope.addMeeting = function (color, date) {
+    $scope.addMeeting = function (id, color, date) {
         $scope.meetings.push({
-//            id: id,
+            id: id,
             color: color,
             date: date,
             visible: true
@@ -29,9 +29,9 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
         TimelineService.getMeetingsForTimeSpan(from, to, $scope.addMeetings)
     };
 
-    $scope.addMeetings = function (meetings){
-        meetings.forEach(function(meeting){
-            $scope.addMeeting(meeting.color, meeting.date);
+    $scope.addMeetings = function (meetings) {
+        meetings.forEach(function (meeting) {
+            $scope.addMeeting(meeting.id, 'pink', new Date(meeting.date_and_time).getTime() / 1000);
         })
     };
 
