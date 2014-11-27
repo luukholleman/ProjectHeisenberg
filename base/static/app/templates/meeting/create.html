@@ -6,7 +6,6 @@
 </style>
 <div vertical layout center>
     <div class="bg" dummy fit></div>
-    <form-box>
         <h2>
             Plan a meeting
         </h2>
@@ -28,7 +27,10 @@
             </paper-input-decorator>
 
             <paper-input-decorator floatingLabel label="Date and time">
-                <input is="core-input" type="text" name="date_time" ng-model="meeting.date_time"/>
+                <input is="core-input" type="text" name="date_time" ng-model="meeting.date_and_time"/>
+            </paper-input-decorator>
+            <paper-input-decorator floatingLabel label="Address">
+                <input is="core-input" required type="text" name="address" ng-model="meeting.address"/>
             </paper-input-decorator>
             <paper-input-decorator floatingLabel label="Location">
                 <input is="core-input" required type="text" name="location" ng-model="meeting.location"/>
@@ -39,10 +41,7 @@
             </punkt-filter-box>
 
         </form>
-        <paper-button style="background: #009688; color:white" raised ng-click="register(registerform, user)">Register</paper-button>
+        <paper-button style="background: #009688; color:white" raised ng-click="save()">Register</paper-button>
         <paper-button style="color: #009688" ng-click="goto('/login')">login</paper-button>
 
-
-
-    </form-box>
 </div>

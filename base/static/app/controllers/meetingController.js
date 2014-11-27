@@ -18,6 +18,16 @@ angular.module('punktlichDep').controller('MeetingController', function ($scope,
         }));
     });
 
+    $scope.save = function() {
+        $scope.meeting.invitations = _.map($scope._participants, function(participant){
+            return {user: participant.id};
+        });
+
+        console.log($scope.meeting);
+
+        Restangular.service('meetings').post($scope.meeting);
+    }
+
     box.addEventListener('core-activate', function(item){
         $scope._participants = box.getSelection();
 
