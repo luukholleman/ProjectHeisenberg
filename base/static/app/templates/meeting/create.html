@@ -1,41 +1,39 @@
 <div vertical layout center>
-    <form-box>
-        <h2>
-            Plan a meeting
-        </h2>
-        <form name="registerform">
-            <paper-dropdown-menu label="Group">
-                <paper-dropdown class="dropdown">
-                    <core-menu class="menu">
-                        <paper-item ng-repeat="group in groups">{{ group }}</paper-item>
-                    </core-menu>
-                </paper-dropdown>
-            </paper-dropdown-menu>
+    <h2>
+        Plan a meeting
+    </h2>
+    <form name="registerform">
+        <paper-dropdown-menu label="Group">
+            <paper-dropdown class="dropdown">
+                <core-menu class="menu">
+                    <paper-item ng-repeat="group in groups">{{ group }}</paper-item>
+                </core-menu>
+            </paper-dropdown>
+        </paper-dropdown-menu>
 
-            <paper-input-decorator floatingLabel label="Name">
-                <input is="core-input" type="text" name="first_name" ng-model="meeting.name"/>
-            </paper-input-decorator>
+        <paper-input-decorator floatingLabel label="Name">
+            <input is="core-input" type="text" name="first_name" ng-model="meeting.name"/>
+        </paper-input-decorator>
 
-            <paper-input-decorator floatinglabel label="Description">
-                <textarea id="t1" rows="5" ng-model="meeting.description"></textarea>
-            </paper-input-decorator>
+        <paper-input-decorator floatinglabel label="Description">
+            <textarea id="t1" rows="5" ng-model="meeting.description"></textarea>
+        </paper-input-decorator>
 
-            <paper-input-decorator floatingLabel label="Date and time">
-                <input is="core-input" type="text" name="date_time" ng-model="meeting.date_time"/>
-            </paper-input-decorator>
-            <paper-input-decorator floatingLabel label="Location">
-                <input is="core-input" required type="text" name="location" ng-model="meeting.location"/>
-            </paper-input-decorator>
+        <paper-input-decorator floatingLabel label="Date and time">
+            <input is="core-input" type="text" name="date_time" ng-model="meeting.date_and_time"/>
+        </paper-input-decorator>
+        <paper-input-decorator floatingLabel label="Address">
+            <input is="core-input" required type="text" name="address" ng-model="meeting.address"/>
+        </paper-input-decorator>
+        <paper-input-decorator floatingLabel label="Location">
+            <input is="core-input" required type="text" name="location" ng-model="meeting.location"/>
+        </paper-input-decorator>
 
-            <punkt-filter-box items="{{ users }}" label="Add Participant" id="filter-box">
+        <punkt-filter-box label="Add Participant" id="filter-box">
 
-            </punkt-filter-box>
+        </punkt-filter-box>
 
-        </form>
-        <paper-button style="background: #009688; color:white" raised ng-click="register(registerform, user)">Register</paper-button>
-        <paper-button style="color: #009688" ng-click="goto('/login')">login</paper-button>
-
-
-
-    </form-box>
+    </form>
+    <paper-button style="background: #009688; color:white" raised ng-click="save()">Register</paper-button>
+    <paper-button style="color: #009688" ng-click="goto('/login')">login</paper-button>
 </div>

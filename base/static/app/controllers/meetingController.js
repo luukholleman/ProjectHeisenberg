@@ -8,7 +8,7 @@ angular.module('punktlichDep').controller('MeetingController', function ($scope,
 
     var box = document.getElementById('filter-box');
 
-    var users = Restangular.all('api/v1/users').getList().then(function(users){
+    var users = Restangular.all('users').getList().then(function(users){
         box.setData(_.each(_.toArray(users), function(user){
             user.meta = {
                 img: "http://lorempixel.com/24/24/people",
@@ -17,6 +17,16 @@ angular.module('punktlichDep').controller('MeetingController', function ($scope,
             };
         }));
     });
+
+    $scope.save = function() {
+        $scope.meeting.invitations = _.map($scope._participants, function(participant){
+            return {user: participant.id};
+        });
+
+        console.log($scope.meeting);
+
+        Restangular.service('meetings').post($scope.meeting);
+    }
 
     box.addEventListener('core-activate', function(item){
         $scope._participants = box.getSelection();
