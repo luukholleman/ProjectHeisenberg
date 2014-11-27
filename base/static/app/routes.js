@@ -7,9 +7,13 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
             state('index', {
                 url: '/',
                 views: {
-                    body: {
-                        templateUrl: appPath + "templates/home.html",
-                        controller: 'HomeController'
+                    timeline: {
+                        templateUrl: appPath + 'templates/timeline.html',
+                        controller: 'TimelineController'
+                    },
+                    content: {
+                        templateUrl: appPath + 'templates/meeting-list.html',
+                        controller: 'TimelineController'
                     }
                 }
             }).
@@ -43,7 +47,11 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
             state('meeting-create', {
                 url: '/meeting/create',
                 views: {
-                    body: {
+                    timeline: {
+                        templateUrl: appPath + 'templates/timeline.html',
+                        controller: 'TimelineController'
+                    },
+                    content: {
                         templateUrl: appPath + 'templates/meeting/create.html',
                         controller: 'MeetingController'
                     }

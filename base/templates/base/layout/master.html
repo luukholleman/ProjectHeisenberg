@@ -127,7 +127,10 @@
     {% verbatim %}
     <paper-toast text="{{ flash.getMessage() }}"></paper-toast>
     {% endverbatim %}
-    <div ui-view="body" flex></div>
+    <div ui-view="body">
+        <div ui-view="timeline" flex></div>
+        <div ui-view="content" flex></div>
+    </div>
 </div>
 </body>
 </html>
