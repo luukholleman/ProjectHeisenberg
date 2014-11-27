@@ -4,10 +4,13 @@ from meeting.models import Meeting, MeetingInvitation
 
 class MeetingInvitationSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=False, many=False)
+    present_at = serializers.DateTimeField(read_only=True)
+    state = serializers.ChoiceField(read_only=True)
 
     class Meta:
         model = MeetingInvitation
-        fields = ('user',)
+        fields = ('user', 'present_at', 'state')
+
 
 class MeetingSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=True, max_length=90)
