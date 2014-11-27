@@ -53,6 +53,9 @@
 
                 -webkit-transition: width .2s, height .2s, margin .2s;
                 transition: width .2s, height .2s, margin .2s;
+
+                animation: popup .2s linear 0s 1 alternate;
+                -webkit-animation: popup .2s linear 0s 1 alternate;
             }
 
             .bubble[invisible] {
@@ -65,6 +68,9 @@
 
             .bubble.clustered {
                 background-color: #009688;
+
+                animation: popup .2s linear 0s 1 alternate;
+                -webkit-animation: popup .2s linear 0s 1 alternate;
             }
             .bubble.highlighted .badge {
                 width: 32px;
@@ -173,7 +179,6 @@
                     return;
                 }
 
-                console.log('clusterrooting', this.color, size);
                 this.clustered = true;
                 this.clusterDate = date;
                 this.count = size;
