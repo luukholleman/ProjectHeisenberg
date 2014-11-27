@@ -1,0 +1,85 @@
+<link href="../bower/polymer/polymer.html" rel="import">
+<link href="../bower/paper-button/paper-button-base.html" rel="import">
+<link href="../bower/paper-ripple/paper-ripple.html" rel="import">
+<link href="../bower/paper-shadow/paper-shadow.html" rel="import">
+
+<polymer-element name="timeline-filter" extends="paper-button-base" attributes="mini" role="button">
+
+    <template>
+
+        <style>
+            :host {
+                display: inline-block;
+                position: relative;
+                outline: none;
+                -webkit-user-select: none;
+                user-select: none;
+                cursor: pointer;
+                z-index: 0;
+
+                box-sizing: border-box;
+                width: 56px;
+                height: 56px;
+                background: #d23f31;
+                color: #fff;
+                border-radius: 50%;
+                padding: 16px;
+
+                font-size: 22px;
+            }
+
+            :host([mini]) {
+                width: 40px;
+                height: 40px;
+                padding: 8px;
+            }
+
+            :host([disabled]) {
+                color: #c9c9c9;
+                pointer-events: none;
+                cursor: auto;
+            }
+
+            #ripple {
+                pointer-events: none;
+                z-index: -1;
+            }
+
+            #shadow {
+                border-radius: inherit;
+                pointer-events: none;
+            }
+        </style>
+
+        <template if="{{ raised }}">
+            <paper-shadow id="shadow" fit animated></paper-shadow>
+        </template>
+        <div fit horizontal layout center>
+            <div flex vertical layout center>
+                <content></content>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        Polymer({
+            publish: {
+
+                /**
+                 * Set this to true to style this is a "mini" FAB.
+                 *
+                 * @attribute mini
+                 * @type boolean
+                 * @default false
+                 */
+                mini: false,
+
+                raised: true,
+                recenteringTouch: false,
+                fill: true
+
+            }
+        });
+
+    </script>
+</polymer-element>
