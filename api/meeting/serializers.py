@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from api.authentication.serializers import UserSerializer
 from meeting.models import Meeting, MeetingInvitation
 
 
@@ -18,7 +19,8 @@ class MeetingSerializer(serializers.ModelSerializer):
     location = serializers.CharField(required=False)
     address = serializers.CharField(required=False)
     date_and_time = serializers.DateTimeField(required=True)
-    invitations = MeetingInvitationSerializer(source='meetinginvitation_set', read_only=False, many=True)
+    invitations = MeetingInvitationSerializer(source='meetinginvitation_set', read_only=False, many=True,
+                                              allow_add_remove=True)
 
     class Meta:
         model = Meeting
