@@ -3,7 +3,6 @@ angular.module('punktlichDep').controller('MeetingController', function ($scope,
         'Windesheim',
         'Gumbo Millenium',
         'Gemeente Zwolle',
-        'Faggots United'
     ];
 
     var box = document.getElementById('filter-box');
