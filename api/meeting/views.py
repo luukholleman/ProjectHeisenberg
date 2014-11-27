@@ -10,12 +10,20 @@ class MeetingViewSet(viewsets.ModelViewSet):
     #todo add logged in permission here
     permission_classes = []
 
-    def get_queryset(self):
+    _from_date = None
+    _to_date = None
 
-        if 'from' not in self.request.QUERY_PARAMS or 'to' not in self.request.QUERY_PARAMS:
+    def list(self, request, *args, **kwargs):
+        if 'from' not in request.QUERY_PARAMS or 'to' not in request.QUERY_PARAMS:
             raise Http404
 
-        from_date = parse_datetime(self.request.QUERY_PARAMS['from'])
-        to_date = parse_datetime(self.request.QUERY_PARAMS['to'])
+        self._from_date = parse_datetime(self.request.QUERY_PARAMS['from'])
+        self._to_date = parse_datetime(self.request.QUERY_PARAMS['to'])
 
-        return Meeting.objects.filter(date_and_time__range=[from_date, to_date])
+        return super(MeetingViewSet, self).list(request)
+
+    def get_queryset(self):
+        if self._from_date is None or self._to_date is None:
+            return Meeting.objects.all()
+
+        return Meeting.objects.filter(date_and_time__range=[self._from_date, self._to_date])
