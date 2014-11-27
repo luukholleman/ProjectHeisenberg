@@ -4,15 +4,65 @@
     {% load staticfiles %}
     <title>Punktlich</title>
 
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=no">
 
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css">
+    <!-- web app settings -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Punktlich">
 
+    <!-- apple touch icons -->
+    <link href="{{ STATIC_URL }}img/180.png" rel="apple-touch-icon">
+    <link href="{{ STATIC_URL }}img/152.png" sizes="152x152" rel="apple-touch-icon">
+    <link href="{{ STATIC_URL }}img/144.png" sizes="144x144" rel="apple-touch-icon">
+    <link href="{{ STATIC_URL }}img/120.png" sizes="120x120" rel="apple-touch-icon">
+    <link href="{{ STATIC_URL }}img/114.png" sizes="114x114" rel="apple-touch-icon">
+    <link href="{{ STATIC_URL }}img/76.png" sizes="76x76" rel="apple-touch-icon">
+    <link href="{{ STATIC_URL }}img/72.png" sizes="72x72" rel="apple-touch-icon">
+    <link href="{{ STATIC_URL }}img/57.png" sizes="57x57" rel="apple-touch-icon">
+
+    <!-- apple touch startup images -->
+    <link href="{{ STATIC_URL }}img/1536x2008.png"
+          media="(device-width: 768px) and (device-height: 1024px)
+                 and (orientation: portrait)
+                 and (-webkit-device-pixel-ratio: 2)"
+          rel="apple-touch-startup-image">
+    <link href="{{ STATIC_URL }}img/1496x2048.png"
+          media="(device-width: 768px) and (device-height: 1024px)
+                 and (orientation: landscape)
+                 and (-webkit-device-pixel-ratio: 2)"
+          rel="apple-touch-startup-image">
+    <link href="{{ STATIC_URL }}img/768x1004.png"
+          media="(device-width: 768px) and (device-height: 1024px)
+                 and (orientation: portrait)
+                 and (-webkit-device-pixel-ratio: 1)"
+          rel="apple-touch-startup-image">
+    <link href="{{ STATIC_URL }}img/748x1024.png"
+          media="(device-width: 768px) and (device-height: 1024px)
+                 and (orientation: landscape)
+                 and (-webkit-device-pixel-ratio: 1)"
+          rel="apple-touch-startup-image">
+    <link href="{{ STATIC_URL }}img/640x1096.png"
+          media="(device-width: 320px) and (device-height: 568px)
+                 and (-webkit-device-pixel-ratio: 2)"
+          rel="apple-touch-startup-image">
+    <link href="{{ STATIC_URL }}img/640x920.png"
+          media="(device-width: 320px) and (device-height: 480px)
+                 and (-webkit-device-pixel-ratio: 2)"
+          rel="apple-touch-startup-image">
+    <link href="{{ STATIC_URL }}img/320x460.png"
+          media="(device-width: 320px) and (device-height: 480px)
+                 and (-webkit-device-pixel-ratio: 1)"
+          rel="apple-touch-startup-image">
+
+    <!-- web components -->
     <script src="{{ STATIC_URL }}bower/webcomponentsjs/webcomponents.js"></script>
 
     <link rel="import" href="{{ STATIC_URL }}bower/paper-input/paper-input.html">
     <link rel="import" href="{{ STATIC_URL }}bower/paper-button/paper-button.html">
     <link rel="import" href="{{ STATIC_URL }}bower/paper-toast/paper-toast.html">
+    <link rel="import" href="{{ STATIC_URL }}bower/paper-icon-button/paper-icon-button.html">
+    <link rel="import" href="{{ STATIC_URL }}bower/paper-fab/paper-fab.html">
     <link rel="import" href="{{ STATIC_URL }}bower/core-icons/core-icons.html">
     <link rel="import" href="{{ STATIC_URL }}bower/core-toolbar/core-toolbar.html">
     <link rel="import" href="{{ STATIC_URL }}bower/core-media-query/core-media-query.html">
@@ -27,6 +77,10 @@
     <link rel="import" href="{{ STATIC_URL }}elements/form-box.html">
     <link rel="import" href="{{ STATIC_URL }}elements/punkt-filter-box.html">
 
+    <link rel="import" href="{{ STATIC_URL }}elements/timeline-line.html">
+    <link rel="import" href="{{ STATIC_URL }}elements/timeline-item.html">
+    <link rel="import" href="{{ STATIC_URL }}elements/timeline-filter.html">
+
     <!-- Angular dependencies -->
     <script src="{{ STATIC_URL }}bower/angular/angular.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}bower/angular-route/angular-route.js" type="text/javascript"></script>
@@ -36,6 +90,8 @@
     <script src="{{ STATIC_URL }}bower/underscore/underscore.js" type="text/javascript"></script>
 
     <!-- Main -->
+    <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}css/groups.css" rel="stylesheet">
     <script src="{{ STATIC_URL }}app/app.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}app/routes.js" type="text/javascript"></script>
 
@@ -55,13 +111,23 @@
     <script src="{{ STATIC_URL }}app/services/registrationService.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}app/services/validationService.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}app/services/flashMessageService.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}app/services/timelineService.js" type="text/javascript"></script>
 
     <base href="/">
+
+    <script>
+        //Hack to prevent 'over-scrolling' on iOS
+        document.addEventListener("touchmove", function (e) {
+            e.preventDefault();
+        }, false);
+    </script>
 </head>
 <body ng-app="punktlich" ng-controller="MainController" fullbleed vertical layout>
-        <div ui-view="body" fit></div>
-        {% verbatim %}
-        <paper-toast text="{{ flash.getMessage() }}"></paper-toast>
-        {% endverbatim %}
+<div flex fullbleed vertical layout>
+    {% verbatim %}
+    <paper-toast text="{{ flash.getMessage() }}"></paper-toast>
+    {% endverbatim %}
+    <div ui-view="body" flex></div>
+</div>
 </body>
 </html>

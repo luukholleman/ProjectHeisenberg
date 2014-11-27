@@ -7,7 +7,7 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
             state('index', {
                 url: '/',
                 views: {
-                    "body": {
+                    body: {
                         templateUrl: appPath + "templates/home.html",
                         controller: 'HomeController'
                     }
@@ -16,7 +16,7 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
             state('login', {
                 url: '/login',
                 views: {
-                    'body': {
+                    body: {
                         templateUrl: appPath + 'templates/login.html',
                         controller: 'AuthenticationController'
                     }
@@ -25,16 +25,16 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
             state('register', {
                 url: '/register',
                 views: {
-                    'body': {
+                    body: {
                         templateUrl: appPath + 'templates/register.html',
                         controller: 'AuthenticationController'
                     }
                 }
             }).
             state('timeline', {
-                'url': '/timeline',
+                url: '/timeline',
                 views: {
-                    'body': {
+                    body: {
                         templateUrl: appPath + 'templates/timeline.html',
                         controller: 'TimelineController'
                     }
@@ -43,16 +43,16 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
             state('meeting-create', {
                 url: '/meeting/create',
                 views: {
-                    'body': {
+                    body: {
                         templateUrl: appPath + 'templates/meeting/create.html',
                         controller: 'MeetingController'
                     }
                 }
             }).
             state('activate.token', {
-                'url': '/activate/:token',
+                url: '/activate/:token',
                 views: {
-                    'body': {
+                    body: {
                         templateUrl: appPath + 'templates/activate.html',
                         controller: 'ActivationController'
                     }
