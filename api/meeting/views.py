@@ -1,6 +1,7 @@
+from django.http import Http404
 from django.utils.dateparse import parse_datetime
 from rest_framework import generics, viewsets
-from api.meeting.serializers import MeetingSerializer, MeetingWriteSerializer
+from api.meeting.serializers import MeetingSerializer
 from meeting.models import Meeting
 
 
@@ -9,13 +10,11 @@ class MeetingViewSet(viewsets.ModelViewSet):
     #todo add logged in permission here
     permission_classes = []
 
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return MeetingWriteSerializer
-
-        return self.serializer_class
-
     def get_queryset(self):
+
+        if 'from' not in self.request.QUERY_PARAMS or 'to' not in self.request.QUERY_PARAMS:
+            raise Http404
+
         from_date = parse_datetime(self.request.QUERY_PARAMS['from'])
         to_date = parse_datetime(self.request.QUERY_PARAMS['to'])
 

@@ -1,0 +1,71 @@
+<link rel="import" href="../bower/polymer/polymer.html">
+<link rel="import" href="../bower/core-list/core-list.html">
+<link rel="import" href="../bower/core-item/core-item.html">
+<link rel="import" href="../bower/paper-input/paper-input.html">
+<link rel="import" href="../bower/core-input/core-input.html">
+
+<polymer-element name="punkt-filter-box" attributes="label">
+    <template>
+        <style>
+            #filterList {
+                height: 300px;
+            }
+            .punkt-filter-box-list {
+                width: 448px;
+            }
+            .punkt-filter-box-list core-item {
+                cursor: pointer;
+            }
+            .selected {
+                background-color: #009688;
+                color: white;
+            }
+            .hide {
+                display: none !important;
+            }
+        </style>
+        <div class="punkt-filter-box-filter">
+            <paper-input-decorator label="{{ label }}" floatingLabel>
+                <input is="core-input" value="{{ filterVal }}" />
+            </paper-input-decorator>
+        </div>
+        <div class="punkt-filter-box-list">
+            <core-list data="{{data}}" height="100" id="filterList" multi="true">
+              <template>
+                <core-item src="{{ model.meta.img }}" label="{{ model.meta.name }}" class="{{ {selected: selected} | tokenList }} {{ model.meta.show ? '' : 'hide' }}">
+                </core-item>
+              </template>
+            </core-list>
+        </div>
+    </template>
+    <script>
+        (function(){
+            Polymer('punkt-filter-box', {
+                ready: function() {
+
+                },
+                observe: {
+                    filterVal: 'filter'
+                },
+                filter: function(oldVal, newVal){
+                    for(var index in this.data) {
+                        item = this.data[index];
+
+                        item.meta.show = this.startsWith(item.meta.name, newVal);
+                    }
+
+                    this.$.filterList.updateSize();
+                },
+                startsWith: function(str, start){
+                    return (str.toLowerCase().indexOf(start.toLowerCase()) == 0);
+                },
+                getSelection: function(){
+                    return this.$.filterList.selection;
+                },
+                setData: function(data){
+                    this.data = data;
+                }
+            });
+        })();
+    </script>
+</polymer-element>
