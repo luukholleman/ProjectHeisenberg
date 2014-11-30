@@ -52,8 +52,21 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                         controller: 'TimelineController'
                     },
                     content: {
-                        templateUrl: appPath + 'templates/meeting/create.html',
+                        templateUrl: appPath + 'templates/meeting/form.html',
                         controller: 'MeetingController'
+                    }
+                }
+            }).
+            state('meeting-update', {
+                url: '/meeting/:id/update',
+                views: {
+                    timeline: {
+                        templateUrl: appPath + 'templates/timeline.html',
+                        controller: 'TimelineController'
+                    },
+                    content: {
+                        templateUrl: appPath + 'templates/meeting/form.html',
+                        controller: 'MeetingUpdateController'
                     }
                 }
             }).
