@@ -1,4 +1,7 @@
-angular.module('punktlichDep').controller('MeetingController', function ($scope, Restangular) {
+angular.module('punktlichDep').controller('MeetingController', function ($scope, $routeParams, Restangular, MeetingService) {
+
+    $scope.meeting = {};
+
     $scope.groups = [
         'Windesheim',
         'Gumbo Millenium',
@@ -7,9 +10,10 @@ angular.module('punktlichDep').controller('MeetingController', function ($scope,
 
     var box = document.getElementById('filter-box');
 
-    var users = Restangular.all('users').getList().then(function(users){
+    Restangular.all('users').getList().then(function(users){
         box.setData(_.each(_.toArray(users), function(user){
             user.meta = {
+                id: user.id,
                 img: "http://lorempixel.com/24/24/people",
                 name: user.first_name + " " + user.last_name,
                 show: true
@@ -22,12 +26,54 @@ angular.module('punktlichDep').controller('MeetingController', function ($scope,
             return {user: participant.id};
         });
 
-        console.log($scope.meeting);
+        $scope.meeting = MeetingService.create($scope.meeting);
+    };
 
-        Restangular.service('meetings').post($scope.meeting);
-    }
+    box.addEventListener('core-activate', function(){
+        $scope._participants = box.getSelection();
 
-    box.addEventListener('core-activate', function(item){
+        $scope.$apply();
+    });
+});
+
+angular.module('punktlichDep').controller('MeetingUpdateController', function($scope, MeetingService, Restangular, $stateParams){
+    var box = document.getElementById('filter-box');
+
+    $scope.groups = [
+        'Windesheim',
+        'Gumbo Millenium',
+        'Gemeente Zwolle',
+    ];
+
+    MeetingService.get($stateParams.id).get().then(function(data){
+        $scope.meeting = data;
+
+        Restangular.all('users').getList().then(function(users){
+            box.setData(_.each(_.toArray(users), function(user){
+                user.meta = {
+                    id: user.id,
+                    img: "http://lorempixel.com/24/24/people",
+                    name: user.first_name + " " + user.last_name,
+                    show: true
+                };
+            }));
+
+            box.setSelected($scope.meeting.invitations, function(listItem, invitation){
+                return listItem.meta.id == invitation.user;
+            });
+        });
+
+    });
+
+    $scope.save = function() {
+        $scope.meeting.invitations = _.map($scope._participants, function(participant){
+            return {user: participant.id};
+        });
+
+        MeetingService.update($scope.meeting);
+    };
+
+    box.addEventListener('core-activate', function(){
         $scope._participants = box.getSelection();
 
         $scope.$apply();
