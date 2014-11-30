@@ -13,6 +13,13 @@ class MeetingViewSet(viewsets.ModelViewSet):
     _from_date = None
     _to_date = None
 
+    def pre_save(self, meeting):
+        invitations = meeting.meetinginvitation_set.all()
+        for invitation in invitations:
+            invitation.delete()
+
+        super(MeetingViewSet, self).pre_save(meeting)
+
     def list(self, request, *args, **kwargs):
         if 'from' not in request.QUERY_PARAMS or 'to' not in request.QUERY_PARAMS:
             raise Http404
