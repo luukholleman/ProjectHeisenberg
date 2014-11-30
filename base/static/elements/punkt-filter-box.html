@@ -64,6 +64,15 @@
                 },
                 setData: function(data){
                     this.data = data;
+                },
+                setSelected: function(items, selectedCallable) {
+                    _.forEach(this.data, function(item, i){
+                        _.forEach(items, function(item2){
+                            if(selectedCallable(item, item2)){
+                                this.selectItem(i + 1);
+                            }
+                        });
+                    });
                 }
             });
         })();
