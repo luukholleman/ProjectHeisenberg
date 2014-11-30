@@ -2,9 +2,7 @@
     <core-toolbar style="background: #009688; color:white">
         <paper-icon-button icon="menu"></paper-icon-button>
         <strong flex>Punktlich.</strong>
-        <paper-fab icon="add" title="Create meeting" role="button" aria-label="Create meeting"
-                   ng-click="addMeeting(0, 'light-blue', generateDate(2014, 12, day+2, 20, 0, 0));day=day+2;"
-                   style="background-color: #03A9F4;"></paper-fab>
+        <paper-fab icon="add" title="Create meeting" role="button" aria-label="Create meeting" ng-click="goto('/meeting/create')" style="background-color: #03A9F4;"></paper-fab>
     </core-toolbar>
 </div>
 
