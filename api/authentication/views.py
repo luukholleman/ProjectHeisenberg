@@ -29,14 +29,13 @@ class UserViewSet(viewsets.ModelViewSet):
         if created:
             user.set_password(user.password)
             user.set_activation(expire_days=7)
+            user.save()
 
             send_mail(subject="Welcome to Punktlich",
                       html_message=get_template('base/emails/activate.html').render(Context({'site_url': SITE_URL, 'user': user})),
                       recipient_list=[user.email],
                       from_email=None,
                       message=None)
-
-            user.save()
 
 @permission_classes((IsSelf,))
 class AuthenticatedUser(RetrieveAPIView):
