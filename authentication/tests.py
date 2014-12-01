@@ -1,4 +1,4 @@
-from unittest import TestCase
+from django.test import TestCase
 from authentication.models import User
 from datetime import timedelta, datetime
 import random
@@ -15,22 +15,42 @@ def createUser(email, password, first_name, last_name, is_staff, is_active):
 
 class UserTestCase(TestCase):
 
-    def test_activate_sets_date_in_future(self):
-        user = createUser(email='test@test.nl', password='wee', first_name='test', last_name='test', is_staff=False, is_active=False)
+    def setUp(self):
+        """Create test data"""
+        self.user = createUser(email='test1235@test.nl', password='wee', first_name='test', last_name='test', is_staff=False,
+                          is_active=False)
 
+    def test_user_can_activate_with_hash(self):
+        """Test if user can be activated with generated hash"""
+        self.user.set_activation(expire_days=7)
+
+        self.assertIsNotNone(self.user.activation_token)
+
+        resp = self.client.post('/api/v1/users/activate/', {'activation_token': self.user.activation_token})
+        self.assertEquals(resp.status_code, 200)
+
+        # get the user
+        user = User.objects.filter(pk=self.user.pk).get()
+
+        # check if user is activated
+        self.assertTrue(user.is_active)
+
+    def test_activate_sets_date_in_future(self):
+        """Test if expire date is set correctly"""
         expire_days = 7
-        user.set_activation(self, expire_days=expire_days)
+        self.user.set_activation(expire_days=expire_days)
 
         today = datetime.now()
-        diff = today - user.activation_expire
-        self.assertEquals(diff.days, expire_days)
-        self.assertIsNotNone(user.activation_token)
+        diff = self.user.activation_expire - today
+
+        # Add one day to add today
+        self.assertEquals(diff.days + 1, expire_days)
+        self.assertIsNotNone(self.user.activation_token)
 
     def test_activate_activates_user(self):
         """Create inactive user"""
-        user = createUser(email='test@test.nl', password='wee', first_name='test', last_name='test', is_staff=False, is_active=False)
-        user.activate()
-        self.assertTrue(user.is_active)
+        self.user.activate()
+        self.assertTrue(self.user.is_active)
 
     def test_administrator_is_staff_and_active(self):
         """Users who are staff are flagged with is_staff=true"""
