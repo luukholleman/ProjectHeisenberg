@@ -1,25 +1,12 @@
-<div vertical layout style="height: 100%">
-    <div>
-        <core-toolbar style="background: #009688; color:white">
-            <paper-icon-button icon="arrow-back"></paper-icon-button>
-            <strong flex>Punktlich.</strong>
-            <paper-icon-button icon="more-vert"></paper-icon-button>
-        </core-toolbar>
-    </div>
-    <div>
-        <h2>Timeline</h2>
-    </div>
-    <div style="height: 200px; width: 100%; background-color: #efefef" vertical layout center>
-        <div>
-        <h4>(timeline goes here)</h4>
-        </div>
-    </div>
-    <div vertical layout center flex>
-        <div horizontal layout flex style="margin:10px;">
-            <div style="border-radius:20px;background-color: #efefef;width:200px;height:100px; margin: 10px; padding:5px">BLOCK</div>
-            <div style="border-radius:20px;background-color: #efefef;width:200px;height:100px; margin: 10px; padding:5px">BLOCK</div>
-            <div style="border-radius:20px;background-color: #efefef;width:200px;height:100px; margin: 10px; padding:5px">BLOCK</div>
-
-        </div>
-    </div>
+<div>
+    <core-toolbar style="background: #009688; color:white">
+        <paper-icon-button icon="menu"></paper-icon-button>
+        <strong flex>Punktlich.</strong>
+        <paper-fab icon="add" title="Create meeting" role="button" aria-label="Create meeting" ng-click="goto('/meeting/create')" style="background-color: #03A9F4;"></paper-fab>
+    </core-toolbar>
 </div>
+
+<timeline-line id="timeline" style="width: 100%" vertical layout>
+    <timeline-item ng-repeat="meeting in meetings | filter:visible=true"
+                   color="{{ meeting.color }}" date="{{ meeting.date }}"></timeline-item>
+</timeline-line>

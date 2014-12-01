@@ -1,0 +1,217 @@
+<link rel="import" href="../bower/polymer/polymer.html">
+<link rel="import" href="../bower/paper-shadow/paper-shadow.html">
+
+<polymer-element name="timeline-item" attributes="invisible date color count">
+    <template>
+        <link rel="stylesheet" href="../css/groups.css">
+
+        <style>
+            :host {
+                width: 0px;
+                height: 0px;
+                position: absolute;
+                top: 4px; /* half timeline-line.bar.height */
+                z-index: 5;
+                cursor: pointer;
+            }
+
+            :host, .bubble {
+                margin: 0 0;
+                padding: 0;
+            }
+
+            .bubble {
+                width: 48px;
+                height: 48px;
+                margin: -24px;
+                display: block;
+                border-radius: 50%;
+                -webkit-transition: width .2s, height .2s, margin .2s, font-size .2s;
+                transition: width .2s, height .2s, margin .2s, font-size .2s;
+
+                animation: popup .2s linear 0s 1 alternate;
+                -webkit-animation: popup .2s linear 0s 1 alternate;
+            }
+
+            .bubble.highlighted {
+                width: 64px;
+                height: 64px;
+                margin: -32px;
+                font-size: 21px;
+            }
+
+            .bubble .badge {
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                width: 24px;
+                height: 24px;
+                background-color: #F44336;
+                color: white;
+                border-radius: 50%;
+                margin: -8px;
+
+                -webkit-transition: width .2s, height .2s, margin .2s;
+                transition: width .2s, height .2s, margin .2s;
+
+                animation: popup .2s linear 0s 1 alternate;
+                -webkit-animation: popup .2s linear 0s 1 alternate;
+            }
+
+            .bubble[invisible] {
+                background-color: black;
+                visibility: hidden;
+
+                animation: popdown .2s linear 0s 1 alternate;
+                -webkit-animation: popdown .2s linear 0s 1 alternate;
+            }
+
+            .bubble.clustered {
+                background-color: #009688;
+
+                animation: popup .2s linear 0s 1 alternate;
+                -webkit-animation: popup .2s linear 0s 1 alternate;
+            }
+            .bubble.highlighted .badge {
+                width: 32px;
+                height: 32px;
+                margin: -11px;
+            }
+
+            @keyframes popup {
+                0% {
+                    transform: scale(0);
+                }
+                73% {
+                    transform: scale(1.5);
+                }
+                100% {
+                    transform: scale(1);
+                }
+            }
+            @-webkit-keyframes popup {
+                0% {
+                    -webkit-transform: scale(0);
+                }
+                73% {
+                    -webkit-transform: scale(1.5);
+                }
+                100% {
+                    -webkit-transform: scale(1);
+                }
+            }
+
+            @keyframes popdown {
+                0% {
+                    transform: scale(1);
+                }
+                73% {
+                    transform: scale(0.3);
+                }
+                100% {
+                    transform: scale(0);
+                }
+            }
+            @-webkit-keyframes popdown {
+                0% {
+                    -webkit-transform: scale(1);
+                }
+                73% {
+                    -webkit-transform: scale(0.3);
+                }
+                100% {
+                    -webkit-transform: scale(0);
+                }
+            }
+        </style>
+        <paper-shadow z="1" invisible?="{{ invisible }}" id="bubble" class="group-{{ color }} bubble {{ clustered ? 'clustered' : '' }}" on-tap="{{ tap }}" horizontal layout center>
+        <div flex vertical layout center>
+            <template if="{{ !clustered }}">
+                {{ day }}
+            </template>
+        </div>
+        <template if="{{ count > 1 }}">
+            <paper-shadow class="badge" horizontal layout center>
+                <div flex vertical layout center>
+                    {{ count }}
+                </div>
+            </paper-shadow>
+        </template>
+        </paper-shadow>
+    </template>
+    <script>
+        Polymer('timeline-item', {
+            color: 'grey',
+            day: 0,
+            date: 0,
+            count: 0,
+            timeSpanStart: 0,
+            timeSpanEnd: 0,
+            lineWidth: 0,
+            invisible: false,
+            clustered: false,
+            clusterDate: 0,
+            timeSpanStartChanged: function () {
+                this.update();
+            },
+            timeSpanEndChanged: function () {
+                this.update();
+            },
+            dateChanged: function () {
+                this.update();
+            },
+            lineWidthChanged: function () {
+                this.update();
+            },
+            getPosition: function (date) {
+                var percentage = (date - this.timeSpanStart) / (this.timeSpanEnd - this.timeSpanStart);
+                return Math.round(percentage * this.lineWidth);
+            },
+            update: function () {
+                this.style.left = this.getPosition(this.clustered ? this.clusterDate : this.date) + 'px';
+                this.day = new Date(this.date * 1000).getDate();
+            },
+            setClusterRoot: function(toggle, date, size) {
+                if(!toggle) {
+                    this.clustered = false;
+                    this.count = 1;
+                    this.update();
+                    return;
+                }
+
+                this.clustered = true;
+                this.clusterDate = date;
+                this.count = size;
+                this.invisible=false;
+                this.update();
+            },
+            ready: function () {
+                this.update();
+            },
+            tap: function () {
+                this.open();
+            },
+            open: function () {
+                this.parentNode.open(this);
+                this.$.bubble.classList.add('highlighted');
+            },
+            close: function () {
+                this.$.bubble.classList.remove('highlighted');
+            },
+            attached: function () {
+                if (!this.parentNode) {
+                    return;
+                }
+                this.parentNode.added(this);
+            },
+            detached: function () {
+                if (!this.parentNode) {
+                    return;
+                }
+                this.parentNode.removed(this);
+            },
+        })
+        ;
+    </script>
+
+</polymer-element>
