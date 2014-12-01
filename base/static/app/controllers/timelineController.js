@@ -5,8 +5,6 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
         document.getElementById('timeline').addEventListener('timeline-request-items', function (event) {
             $scope.getMeetingsForTimeSpan(event.detail.start, event.detail.end);
         });
-
-        document.getElementById('timeline').requestNewItems();
     }
 
     $scope.addMeeting = function (id, color, date) {

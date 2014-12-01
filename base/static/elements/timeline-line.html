@@ -130,6 +130,9 @@
                 this.updateSignFrequency();
                 this.update();
             },
+            domReady: function() {
+                this.requestNewItems();
+            },
             /*
              * ====================
              * Utility methods
@@ -560,7 +563,7 @@
                             return a + b.date
                         }, 0) / items.length;
 
-                console.log('made', items[0], 'cluster root of', items.length, 'items');
+                //console.log('made', items[0], 'cluster root of', items.length, 'items');
                 items[0].setClusterRoot(true, avgDate, items.length);
 
                 for (var j = 1; j < items.length; j++) {
@@ -569,7 +572,8 @@
                 }
             },
             updateClusters: function () {
-                console.log('start update clustering... (', this.getItems().length, 'in area)');
+                return;
+                //console.log('start update clustering... (', this.getItems().length, 'in area)');
 
                 /*
                  * Creating new clusters
