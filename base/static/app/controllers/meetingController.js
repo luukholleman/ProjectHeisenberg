@@ -1,4 +1,4 @@
-angular.module('punktlichDep').controller('MeetingController', function ($scope, $routeParams, Restangular, MeetingService) {
+angular.module('punktlichDep').controller('MeetingController', function ($scope, $location, $routeParams, Restangular, MeetingService, ValidationService) {
 
     $scope.meeting = {};
 
@@ -21,12 +21,16 @@ angular.module('punktlichDep').controller('MeetingController', function ($scope,
         }));
     });
 
-    $scope.save = function() {
+    $scope.save = function(form) {
         $scope.meeting.invitations = _.map($scope._invitations, function(participant){
             return {user: participant.id};
         });
 
-        $scope.meeting = MeetingService.create($scope.meeting);
+        MeetingService.create($scope.meeting, function(data){
+            $location.path('meeting/'+data.id+'/update');
+        }, function(errors){
+            ValidationService.showErrors(form, errors.data)
+        });
     };
 
     box.addEventListener('core-activate', function(){
@@ -36,7 +40,7 @@ angular.module('punktlichDep').controller('MeetingController', function ($scope,
     });
 });
 
-angular.module('punktlichDep').controller('MeetingUpdateController', function($scope, MeetingService, Restangular, $stateParams){
+angular.module('punktlichDep').controller('MeetingUpdateController', function($scope, MeetingService, Restangular, $stateParams, ValidationService){
     var box = document.getElementById('filter-box');
 
     $scope.groups = [
@@ -65,12 +69,16 @@ angular.module('punktlichDep').controller('MeetingUpdateController', function($s
 
     });
 
-    $scope.save = function() {
+    $scope.save = function(form) {
         $scope.meeting.invitations = _.map($scope._invitations, function(participant){
             return {user: participant.id};
         });
 
-        MeetingService.update($scope.meeting);
+        MeetingService.update($scope.meeting, function(){
+
+        }, function(errors){
+            ValidationService.showErrors(form, errors.data)
+        });
     };
 
     box.addEventListener('core-activate', function(){

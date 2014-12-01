@@ -2,7 +2,7 @@
     <h2>
         Plan a meeting
     </h2>
-    <form name="registerform">
+    <form name="meetingForm">
         <paper-dropdown-menu label="Group">
             <paper-dropdown class="dropdown">
                 <core-menu class="menu">
@@ -12,15 +12,15 @@
         </paper-dropdown-menu>
 
         <paper-input-decorator floatingLabel label="Name">
-            <input is="core-input" type="text" name="first_name" ng-model="meeting.name"/>
+            <input is="core-input" type="text" name="name" ng-model="meeting.name"/>
         </paper-input-decorator>
 
         <paper-input-decorator floatinglabel label="Description">
-            <textarea id="t1" rows="5" ng-model="meeting.description"></textarea>
+            <textarea id="t1" rows="5" name="description" ng-model="meeting.description"></textarea>
         </paper-input-decorator>
 
         <paper-input-decorator floatingLabel label="Date and time">
-            <input is="core-input" type="text" name="date_time" ng-model="meeting.date_and_time"/>
+            <input is="core-input" type="text" name="date_and_time" ng-model="meeting.date_and_time"/>
         </paper-input-decorator>
         <paper-input-decorator floatingLabel label="Address">
             <input is="core-input" required type="text" name="address" ng-model="meeting.address"/>
@@ -34,6 +34,8 @@
         </punkt-filter-box>
 
     </form>
-    <paper-button style="background: #009688; color:white" raised ng-click="save()">Register</paper-button>
-    <paper-button style="color: #009688" ng-click="goto('/login')">login</paper-button>
+    <div horizontal layout>
+        <paper-button style="background: #009688; color:white" raised ng-click="save(meetingForm)">Plan</paper-button>
+        <paper-button style="color: #009688" ng-click="goto('/timeline')">Cancel</paper-button>
+    </div>
 </div>
