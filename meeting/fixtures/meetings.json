@@ -1,0 +1,74 @@
+[
+    {
+        "pk": 1,
+        "fields": {
+            "name": "Overleg",
+            "description": "Overleg over Project Heisenberg",
+            "creator": 1,
+            "address": "Zwolle",
+            "location": "T0.09",
+            "date_and_time": "2014-11-17T08:23:19.120Z"
+        },
+        "model": "meeting.meeting"
+    },
+    {
+        "pk": 2,
+        "fields": {
+            "name": "Sprint planning",
+            "description": "Planning van Project Heisenberg",
+            "creator": 1,
+            "address": "Zwolle",
+            "location": "T0.07a",
+            "date_and_time": "2014-11-18T10:00:19.120Z"
+        },
+        "model": "meeting.meeting"
+    },
+    {
+        "pk": 3,
+        "fields": {
+            "name": "Overleg",
+            "description": "",
+            "creator": 1,
+            "address": "Zwolle",
+            "location": "T0.20",
+            "date_and_time": "2014-11-22T12:23:19.120Z"
+        },
+        "model": "meeting.meeting"
+    },
+    {
+        "pk": 4,
+        "fields": {
+            "name": "Sprint review",
+            "description": "",
+            "creator": 1,
+            "address": "Zwolle",
+            "location": "T3.33",
+            "date_and_time": "2014-11-24T11:23:19.120Z"
+        },
+        "model": "meeting.meeting"
+    },
+    {
+        "pk": 5,
+        "fields": {
+            "name": "Meetings vullen",
+            "description": "",
+            "creator": 1,
+            "address": "Zwolle",
+            "location": "Leon's appartement",
+            "date_and_time": "2014-11-26T08:23:19.120Z"
+        },
+        "model": "meeting.meeting"
+    },
+    {
+        "pk": 6,
+        "fields": {
+            "name": "Pakjesavond",
+            "description": "De Sint komt pakjes brengen.",
+            "creator": 1,
+            "address": "Zwolle",
+            "location": "T009",
+            "date_and_time": "2014-12-05T20:23:19.120Z"
+        },
+        "model": "meeting.meeting"
+    }
+]

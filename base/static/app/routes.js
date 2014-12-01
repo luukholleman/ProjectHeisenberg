@@ -7,16 +7,20 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
             state('index', {
                 url: '/',
                 views: {
-                    "body": {
-                        templateUrl: appPath + "templates/home.html",
-                        controller: 'HomeController'
+                    timeline: {
+                        templateUrl: appPath + 'templates/timeline.html',
+                        controller: 'TimelineController'
+                    },
+                    content: {
+                        templateUrl: appPath + 'templates/meeting-list.html',
+                        controller: 'TimelineController'
                     }
                 }
             }).
             state('login', {
                 url: '/login',
                 views: {
-                    'body': {
+                    body: {
                         templateUrl: appPath + 'templates/login.html',
                         controller: 'AuthenticationController'
                     }
@@ -25,25 +29,51 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
             state('register', {
                 url: '/register',
                 views: {
-                    'body': {
+                    body: {
                         templateUrl: appPath + 'templates/register.html',
                         controller: 'AuthenticationController'
                     }
                 }
             }).
             state('timeline', {
-                'url': '/timeline',
+                url: '/timeline',
                 views: {
-                    'body': {
+                    body: {
                         templateUrl: appPath + 'templates/timeline.html',
                         controller: 'TimelineController'
                     }
                 }
             }).
-            state('activate.token', {
-                'url': '/activate/:token',
+            state('meeting-create', {
+                url: '/meeting/create',
                 views: {
-                    'body': {
+                    timeline: {
+                        templateUrl: appPath + 'templates/timeline.html',
+                        controller: 'TimelineController'
+                    },
+                    content: {
+                        templateUrl: appPath + 'templates/meeting/form.html',
+                        controller: 'MeetingController'
+                    }
+                }
+            }).
+            state('meeting-update', {
+                url: '/meeting/:id/update',
+                views: {
+                    timeline: {
+                        templateUrl: appPath + 'templates/timeline.html',
+                        controller: 'TimelineController'
+                    },
+                    content: {
+                        templateUrl: appPath + 'templates/meeting/form.html',
+                        controller: 'MeetingUpdateController'
+                    }
+                }
+            }).
+            state('activate.token', {
+                url: '/activate/:token',
+                views: {
+                    body: {
                         templateUrl: appPath + 'templates/activate.html',
                         controller: 'ActivationController'
                     }
