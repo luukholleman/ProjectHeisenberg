@@ -22,7 +22,7 @@ angular.module('punktlichDep').controller('MeetingController', function ($scope,
     });
 
     $scope.save = function() {
-        $scope.meeting.invitations = _.map($scope._participants, function(participant){
+        $scope.meeting.invitations = _.map($scope._invitations, function(participant){
             return {user: participant.id};
         });
 
@@ -30,7 +30,7 @@ angular.module('punktlichDep').controller('MeetingController', function ($scope,
     };
 
     box.addEventListener('core-activate', function(){
-        $scope._participants = box.getSelection();
+        $scope._invitations = box.getSelection();
 
         $scope.$apply();
     });
@@ -66,7 +66,7 @@ angular.module('punktlichDep').controller('MeetingUpdateController', function($s
     });
 
     $scope.save = function() {
-        $scope.meeting.invitations = _.map($scope._participants, function(participant){
+        $scope.meeting.invitations = _.map($scope._invitations, function(participant){
             return {user: participant.id};
         });
 
@@ -74,7 +74,7 @@ angular.module('punktlichDep').controller('MeetingUpdateController', function($s
     };
 
     box.addEventListener('core-activate', function(){
-        $scope._participants = box.getSelection();
+        $scope._invitations = box.getSelection();
 
         $scope.$apply();
     });
