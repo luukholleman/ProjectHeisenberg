@@ -54,7 +54,7 @@
                         item.meta.show = this.startsWith(item.meta.name, newVal);
                     }
 
-                    this.$.filterList.updateSize();
+                    this.$.filterList.refresh();
                 },
                 startsWith: function(str, start){
                     return (str.toLowerCase().indexOf(start.toLowerCase()) == 0);
