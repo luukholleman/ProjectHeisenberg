@@ -1,13 +1,7 @@
-angular.module('punktlichDep').controller('TimelineController', function ($scope, $timeout, TimelineService) {
+angular.module('punktlichDep').controller('TimelineController', function ($scope, $timeout, $rootScope, MeetingService) {
     $scope.meetings = [];
 
-    var init = function () {
-        document.getElementById('timeline').addEventListener('timeline-request-items', function (event) {
-            $scope.getMeetingsForTimeSpan(event.detail.start, event.detail.end);
-        });
-    }
-
-    $scope.addMeeting = function (id, color, date) {
+    function addMeeting(id, color, date) {
         $scope.meetings.push({
             id: id,
             color: color,
@@ -18,26 +12,29 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
         $timeout(function () {
             document.getElementById('timeline').refresh();
         })
-    };
+    }
 
-    $scope.getMeetingsForTimeSpan = function (from, to) {
-        TimelineService.getMeetingsForTimeSpan(from, to, $scope.addMeetings)
-    };
-
-    $scope.addMeetings = function (meetings) {
+    function addMeetings(meetings) {
+        meetings = _.toArray(meetings);
         meetings.forEach(function (meeting) {
             var found = $scope.meetings.filter(function (m) {
                 return m.id == meeting.id
             });
             if (found.length == 0) {
-                $scope.addMeeting(meeting.id, 'pink', new Date(meeting.date_and_time).getTime() / 1000);
+                addMeeting(meeting.id, 'pink', new Date(meeting.date_and_time).getTime() / 1000);
             }
             else {
                 found[0].color = 'pink';
                 found[0].date = new Date(meeting.date_and_time).getTime() / 1000;
             }
         })
-    };
+    }
+
+    function getMeetingsForTimeSpan(from, to) {
+        $rootScope.$emit('timelineViewPortChanged', from, to);
+
+        MeetingService.getMeetingsForTimeSpan(from, to, addMeetings)
+    }
 
     $scope.toggleGroupVisible = function (color) {
         $scope.meetings.filter(function (e) {
@@ -51,5 +48,7 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
         return new Date(year, month - 1, day, h, m, s).getTime() / 1000;
     };
 
-    init();
+    document.getElementById('timeline').addEventListener('timeline-request-items', function (event) {
+        getMeetingsForTimeSpan(event.detail.start, event.detail.end);
+    });
 });

@@ -1,0 +1,70 @@
+<link rel="import" href="../bower/polymer/polymer.html">
+<link rel="import" href="../bower/paper-shadow/paper-shadow.html">
+
+<polymer-element name="punkt-card" attributes="header, subheader, abbr">
+    <template>
+        <style>
+            .card {
+                width: 660px;
+                height: 90px;
+                background-color: #009688;
+                padding: 0px 10px;
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+            .card h1 {
+                color: #ffffff;
+                font-size: 29px;
+                font-family: 'Roboto';
+                font-weight: 100;
+                margin: 0px;
+                margin-top: 10px;
+            }
+
+            .card h1 small {
+                font-size: 19px;
+                color: rgba(255, 255, 255, 0.75);
+            }
+
+            .card .abbr {
+                float: right;
+                font-size: 85px;
+                color: rgba(255, 255, 255, 0.3);
+                font-weight: 100;
+            }
+
+            .card .content {
+                display: none;
+            }
+
+        </style>
+        <div vertical layout center>
+            <paper-shadow class="card">
+                <div class="header">
+                    <div class="abbr">
+                        {{ abbr }}
+                    </div>
+                    <h1>
+                        {{ header }}
+                        <br />
+                        <small>
+                            {{ subheader }}
+                        </small>
+                    </h1>
+                </div>
+                <div class="content">
+                    <content select="p"></content>
+                </div>
+            </paper-shadow>
+        </div>
+    </template>
+    <script>
+        (function(){
+            Polymer('punkt-card', {
+                ready: function() {
+
+                }
+            });
+        })();
+    </script>
+</polymer-element>

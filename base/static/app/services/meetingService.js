@@ -7,6 +7,14 @@ angular.module('punktlichDep').service('MeetingService', function (MeetingModel)
         MeetingModel.post(meeting).then(success, error);
     }
 
+    function getMeetingsForTimeSpan(from, to, success, error) {
+        MeetingModel.getList({from: from, to: to}).then(function(data){
+            success(data);
+        }, function(response){
+            error(response);
+        });
+    }
+
     return {
         read: function(){
 
@@ -16,6 +24,7 @@ angular.module('punktlichDep').service('MeetingService', function (MeetingModel)
         get: function(id)
         {
             return MeetingModel.one(id);
-        }
+        },
+        getMeetingsForTimeSpan: getMeetingsForTimeSpan
     };
 });
