@@ -15,9 +15,8 @@
     display: block;
     border-radius: 50%;
 
-
-    -webkit-transition: -webkit-transform .3s ease-in-out, background-color 0.3s ease;
-    transition: transform .3s ease-in-out, background-color 0.3s ease;
+    -webkit-transition: -webkit-transform .3s ease-in-out, background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+    transition: transform .3s ease-in-out, background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 
     -webkit-animation: popup .2s linear 0s 1 alternate;
     animation: popup .2s linear 0s 1 alternate;
@@ -26,6 +25,7 @@
 .container[condensed] {
     -webkit-transform: scale(0.5);
     transform: scale(0.5);
+    color: rgba(0,0,0,0);
 }
 
 @-webkit-keyframes popup {

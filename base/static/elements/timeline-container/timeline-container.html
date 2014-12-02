@@ -1,5 +1,4 @@
 <link rel="import" href="../../bower/polymer/polymer.html">
-<link rel="import" href="timeline-label.html">
 
 <polymer-element name="timeline-container">
     <template>
@@ -40,7 +39,7 @@
              */
             DAY: 1 * 24 * 60 * 60,
             LABEL_MONTH_BUFFER: 40,
-            LABEL_DAY_BUFFER: 10,
+            LABEL_DAY_BUFFER: 2,
             MONTH_NAMES: ["January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"],
 
@@ -71,14 +70,18 @@
             keepRendering: false,
             monthLabels: {},
             dayLabels: {},
-
             /*
              * **********************************
              * Public methods
              * **********************************
              */
 
-            //none.
+            moveTo: function(date) {
+                /*
+                 * Move to specified date (date in seconds).
+                 */
+
+            },
 
             /*
              * **********************************
@@ -174,12 +177,23 @@
              * **********************************
              */
 
+            //@todo
 
             /*
              * **********************************
              * Private month label methods
              * **********************************
              */
+            isMonthLabelVisible: function (frequency, label) {
+                switch (frequency) {
+                    case this.FREQUENCY_YEAR:
+                        return label.month == 0;
+                    case this.FREQUENCY_MONTH_HALF:
+                        return label.month % 2;
+                    default:
+                        return true;
+                }
+            },
             createNewMonthLabels: function (frequency) {
                 var dateMonth = this.getMonth(this.timeSpan.start - this.DAY * this.LABEL_MONTH_BUFFER);
                 var dateYear = this.getYear(this.timeSpan.start - this.DAY * this.LABEL_MONTH_BUFFER);
@@ -199,20 +213,8 @@
                     label.element.innerHTML = '<em>' + this.MONTH_NAMES[dateMonth] +
                     (dateMonth == 0 ? '<br/>' + dateYear : '') + '</em>';
 
-                    switch (frequency) {
-                        case this.FREQUENCY_YEAR:
-                            if (label.month == 0 && !label.element.classList.contains('visible')) {
-                                label.element.classList.add('visible');
-                            }
-                            break;
-                        case this.FREQUENCY_MONTH_HALF:
-                            if (!(label.month % 2) && !label.element.classList.contains('visible')) {
-                                label.element.classList.add('visible');
-                            }
-                            break;
-                        default:
-                            label.element.classList.add('visible');
-                            break;
+                    if (this.isMonthLabelVisible(frequency, label)) {
+                        label.element.classList.add('visible');
                     }
 
                     this.$.timeline.appendChild(label.element);
@@ -223,38 +225,38 @@
                 }
             },
             updateMonthLabels: function (frequency) {
+                var startYear = this.getYear(this.timeSpan.start);
+                var startMonth = this.getMonth(this.timeSpan.start);
+                var startDate = new Date(startYear, startMonth, 1).getTime() / 1000;
+                var startPosition = this.getPositionForDate(startDate);
+
                 for (var key in this.monthLabels) {
                     var label = this.monthLabels[key];
 
-                    label.element.style.left = this.getPositionForDate(label.date) + 'px';
+                    var position = this.getPositionForDate(label.date);
 
-                    switch (frequency) {
-                        case this.FREQUENCY_YEAR:
-                            if (label.month == 0 && !label.element.classList.contains('visible')) {
-                                label.element.classList.add('visible');
-                            }
-                            else if (label.month != 0 && label.element.classList.contains('visible')) {
-                                label.element.classList.remove('visible');
-                            }
-                            break;
-                        case this.FREQUENCY_MONTH_HALF:
-                            if (!(label.month % 2) && !label.element.classList.contains('visible')) {
-                                label.element.classList.add('visible');
-                            }
-                            else if ((label.month % 2) && label.element.classList.contains('visible')) {
-                                label.element.classList.remove('visible');
-                            }
-                            break;
-                        default:
-                            if (!label.element.classList.contains('visible')) {
-                                label.element.classList.add('visible');
-                            }
-                            break;
+                    if(frequency >= this.FREQUENCY_MONTH_FULL && startPosition < 0 && startYear * 12 + startMonth == key) {
+                        startYear += Math.floor(++startMonth / 12);
+                        startMonth %= 12;
+
+                        startDate = new Date(startYear, startMonth, 1).getTime() / 1000;
+                        startPosition = this.getPositionForDate(startDate);
+
+                        position = Math.min(startPosition - 200, 0);
                     }
+                    label.element.style.left = position + 'px';
 
+                    if (this.isMonthLabelVisible(frequency, label)) {
+                        if (!label.element.classList.contains('visible')) {
+                            label.element.classList.add('visible');
+                        }
+                    }
+                    else if (label.element.classList.contains('visible')) {
+                        label.element.classList.remove('visible');
+                    }
                 }
             },
-            clearMonthLabels: function() {
+            clearMonthLabels: function () {
                 var startMonth = this.getMonth(this.timeSpan.start - this.DAY * this.LABEL_MONTH_BUFFER);
                 var startYear = this.getYear(this.timeSpan.start - this.DAY * this.LABEL_MONTH_BUFFER);
 
@@ -266,9 +268,8 @@
                     var dateMonth = key % 12;
                     var dateYear = Math.floor(key / 12);
 
-                    if(dateYear < startYear || dateYear == startYear && dateMonth < startMonth ||
-                    dateYear > endYear || dateYear == endYear && dateMonth > endMonth) {
-                        console.log('remove', this.monthLabels[key]);
+                    if (dateYear < startYear || dateYear == startYear && dateMonth < startMonth ||
+                            dateYear > endYear || dateYear == endYear && dateMonth > endMonth) {
                         this.$.timeline.removeChild(this.monthLabels[key].element);
                         delete this.monthLabels[key];
                     }
@@ -280,9 +281,17 @@
              * Private day label methods
              * **********************************
              */
+            isDayLabelVisible: function (frequency, label) {
+                switch (frequency) {
+                    case this.FREQUENCY_DAY_QUARTER:
+                        return !(label.day % 4);
+                    case this.FREQUENCY_DAY_HALF:
+                        return !(label.day % 2);
+                    default:
+                        return true;
+                }
+            },
             createNewDayLabels: function (frequency) {
-                return;
-
                 var date = new Date((this.timeSpan.start - this.DAY * this.LABEL_DAY_BUFFER) * 1000);
                 var endDate = (this.timeSpan.end + this.DAY * this.LABEL_DAY_BUFFER) * 1000;
 
@@ -299,19 +308,43 @@
                     var label = this.createLabel(date);
                     label.element.innerHTML = '<em>' + date.getDate() + '</em>';
                     label.element.classList.add('small');
+                    if (this.isDayLabelVisible(frequency, label)) {
+                        label.element.classList.add('visible');
+                    }
 
                     label.element.style.left = this.getPositionForDate(label.date) + 'px';
                     this.$.timeline.appendChild(label.element);
+
                     this.dayLabels[date.getTime()] = label;
 
                     date.setDate(date.getDate() + 1);
                 }
             },
             updateDayLabels: function (frequency) {
-                //@todo
+                for (var key in this.dayLabels) {
+                    var label = this.dayLabels[key];
+                    label.element.style.left = this.getPositionForDate(label.date) + 'px';
+
+                    if (this.isDayLabelVisible(frequency, label)) {
+                        if (!label.element.classList.contains('visible')) {
+                            label.element.classList.add('visible');
+                        }
+                    }
+                    else if (label.element.classList.contains('visible')) {
+                        label.element.classList.remove('visible');
+                    }
+                }
             },
             clearDayLabels: function () {
-                //@todo
+                var start = (this.timeSpan.start - this.DAY * this.LABEL_DAY_BUFFER) * 1000;
+                var end = (this.timeSpan.end + this.DAY * this.LABEL_DAY_BUFFER) * 1000;
+
+                for (var key in this.dayLabels) {
+                    if (key < start || key > end) {
+                        this.$.timeline.removeChild(this.dayLabels[key].element);
+                        delete this.dayLabels[key];
+                    }
+                }
             },
             deleteDayLabels: function () {
                 for (var key in this.dayLabels) {
@@ -334,13 +367,13 @@
                 if (width < 16) {
                     return this.FREQUENCY_MONTH_HALF;
                 }
-                if (width < 80) {
+                if (width < 90) {
                     return this.FREQUENCY_MONTH_FULL;
                 }
-                if (width < 130) {
+                if (width < 150) {
                     return this.FREQUENCY_DAY_QUARTER;
                 }
-                if (width < 200) {
+                if (width < 190) {
                     return this.FREQUENCY_DAY_HALF;
                 }
                 return this.FREQUENCY_DAY_FULL;
@@ -370,10 +403,9 @@
                     this.createNewDayLabels(frequency);
                     this.updateDayLabels(frequency);
                 }
-                else if (this.dayLabels.length > 0) {
+                else {
                     this.deleteDayLabels();
                 }
-
             },
             /*
              * **********************************
@@ -384,8 +416,9 @@
                 /*
                  * Zooms to the target level at a specific focus ratio.
                  */
-                this.timeSpan.start -= (target - this.getSize()) * focusRatio;
-                this.timeSpan.end += (target - this.getSize()) * (1 - focusRatio);
+                var difference = target - this.getSize();
+                this.timeSpan.start -= difference * focusRatio;
+                this.timeSpan.end += difference * (1 - focusRatio);
 
                 this.render();
             },
@@ -394,14 +427,15 @@
                 /*
                  * Zooms at the given velocity at a specific focus ratio.
                  */
-                this.timeSpan.start += zoomVelocity * this.getMass() * focusRatio;
-                this.timeSpan.end -= zoomVelocity * this.getMass() * (1 - focusRatio);
+                var movement = zoomVelocity * this.getMass();
+                this.timeSpan.start += movement * focusRatio;
+                this.timeSpan.end -= movement * (1 - focusRatio);
 
                 /*
                  * Limit the zoom level.
                  */
-                var maxTimeSpan = (this.clientWidth / 3) * (3600 * 24);
-                var minTimeSpan = (this.clientWidth / 230) * (3600 * 24)
+                var maxTimeSpan = (this.clientWidth / 3) * this.DAY;
+                var minTimeSpan = (this.clientWidth / 300) * this.DAY;//was 230
                 if (this.getSize() > maxTimeSpan) {
                     this.zoomToTimeSpan(maxTimeSpan, focusRatio);
                 }
@@ -415,8 +449,9 @@
                 /*
                  * Moves at the given velocity.
                  */
-                this.timeSpan.start -= velocity * this.getMass();
-                this.timeSpan.end -= velocity * this.getMass();
+                var movement = velocity * this.getMass();
+                this.timeSpan.start -= movement;
+                this.timeSpan.end -= movement;
 
                 this.render();
             },
@@ -496,7 +531,7 @@
                     var minX = Math.min(event.touches[0].pageX, event.touches[1].pageX);
                     var maxX = Math.max(event.touches[0].pageX, event.touches[1].pageX);
                     var focus = minX + (maxX - minX) / 2;
-                    this.zoom(1.5 *(now - previous), focus / this.clientWidth);
+                    this.zoom(1.5 * (now - previous), focus / this.clientWidth);
 
                     event.preventDefault();
                 }
