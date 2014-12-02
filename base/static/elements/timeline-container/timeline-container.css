@@ -1,0 +1,200 @@
+* {
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+:host {
+    overflow-x: hidden;
+    overflow-y: auto;
+    touch-action: none;
+}
+
+.container {
+    white-space: nowrap;
+    padding: 10px 0;
+    height: 256px;
+}
+
+.timeline {
+    height: 8px;
+    background: #cdcdcd;
+    width: 100%;
+    position: absolute;
+    bottom: 64px;
+}
+
+.past {
+    position: relative;
+    left: 0px;
+    top: 0px;
+    background-color: #4592E6;
+    height: 100%;
+}
+.now {
+    color: #009688;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    margin: -100px -20px 0 0;
+    font-size: 16px;
+}
+
+.now:after {
+    content: '';
+    display: block;
+    width: 2px;
+    height: 80px;
+    background-color: #979797;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    margin: 20px;
+}
+
+/*
+ * Label
+ */
+.label {
+    height: 0px;
+    position: absolute;
+    z-index: -1;
+    margin-top: -50px;
+    /*margin-top: -140px;*/
+    width: 200px;
+}
+
+.label:after {
+    content: '';
+    display: block;
+    width: 2px;
+    background-color: #979797;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: -1;
+    height: 42px;
+    /*height: 132px;*/
+}
+
+.label > em {
+    margin: 0 5px;
+    font-weight: 100;
+    font-size: 36px;
+    opacity: 0;
+}
+
+/*
+ * Label visibility / condensing
+ *
+ * @todo:
+ * x Label
+ * condensed label
+ * x label visible
+ * condensed label visible
+ *
+ * x label small
+ * condensed label small
+ * x label visible small
+ * condensed labele visible small
+ * +++ SMALL
+ */
+
+.label.small {
+    margin-top: -80px;
+}
+.label.small > em {
+    font-size: 24px;
+}
+
+.label.small:after {
+    height: 72px;
+}
+
+.label.visible {
+    margin-top: -140px;
+}
+
+.label.visible:after {
+    height: 132px;
+}
+
+.label.visible > em {
+    opacity: 1;
+}
+
+
+/*
+ * Transitions
+ */
+.container {
+    -webkit-transition: height 0.2s ease-in-out;
+    transition: height 0.2s ease-in-out;
+}
+
+.timeline {
+    -webkit-transition: bottom 0.2s ease-in-out, height 0.2s ease-in-out;
+    transition: bottom 0.2s ease-in-out, height 0.2s ease-in-out;
+}
+
+.now {
+    -webkit-transition: font-size 0.2s ease-in-out, margin 0.2s ease-in-out;
+    transition: font-size 0.2s ease-in-out, margin 0.2s ease-in-out;
+}
+
+.now:after {
+    -webkit-transition: margin 0.2s ease-in-out, height 0.2s ease-in-out;
+    transition: margin 0.2s ease-in-out, height 0.2s ease-in-out;
+}
+
+.label {
+    -webkit-transition: margin-top 0.2s ease-in-out;
+    transition: margin-top 0.2s ease-in-out;
+}
+
+.label:after {
+    -webkit-transition: height 0.2s ease-in-out;
+    transition: height 0.2s ease-in-out;
+}
+
+.label > em {
+    -webkit-transition: font-size 0.2s ease-in-out, opacity 0.1s ease-in-out;
+    transition: font-size 0.2s ease-in-out, opacity 0.1s ease-in-out;
+}
+
+/*
+ * Condensing
+ */
+.container[condensed] {
+    height: 128px;
+}
+
+.container[condensed] .timeline {
+    bottom: 32px;
+    height: 4px;
+}
+
+.container[condensed] .now {
+    font-size: 8px;
+    margin: -50px -10px 0 0;
+}
+
+.container[condensed] .now:after {
+    margin: 10px;
+    height: 40px;
+}
+
+/*
+ * Cursors
+ */
+.container {
+    cursor: ew-resize;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+    cursor: grab;
+}
+
+.container.grabbing {
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+    cursor: grabbing;
+}

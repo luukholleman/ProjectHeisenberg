@@ -8,7 +8,7 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
         $scope.addMeeting(0, 'green', $scope.generateDate(2014, 11, 29 , 0, 0, 0));
         $scope.addMeeting(0, 'yellow', $scope.generateDate(2014, 12, 3, 16, 0, 0));
         $timeout(function () {
-            document.getElementById('timeline').refresh();
+            //document.getElementById('timeline').refresh();
         })
     }
 
@@ -21,7 +21,7 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
         });
         //  Timeout takes care of a callback ofter $apply, this is needed because we want the added meeting to show.
         $timeout(function () {
-            document.getElementById('timeline').refresh();
+            //document.getElementById('timeline').refresh();
         })
     };
 
@@ -47,5 +47,8 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
         return new Date(year, month - 1, day, h, m, s).getTime() / 1000;
     };
 
+    $scope.test = function() {
+        document.getElementById('timeline').condensed = !document.getElementById('timeline').condensed;
+    };
     init();
 });
