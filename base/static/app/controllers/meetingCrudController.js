@@ -1,4 +1,4 @@
-angular.module('punktlichDep').controller('MeetingController', function ($scope, $location, $routeParams, Restangular, MeetingService, ValidationService) {
+angular.module('punktlichDep').controller('MeetingCreateController', function ($scope, $location, $routeParams, Restangular, MeetingService, ValidationService) {
 
     $scope.meeting = {};
 

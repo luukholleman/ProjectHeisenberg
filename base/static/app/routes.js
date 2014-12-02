@@ -53,7 +53,7 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                     },
                     content: {
                         templateUrl: appPath + 'templates/meeting/form.html',
-                        controller: 'MeetingController'
+                        controller: 'MeetingCreateController'
                     }
                 }
             }).
