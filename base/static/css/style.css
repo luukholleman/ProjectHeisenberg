@@ -16,9 +16,12 @@ body, html {
     height: 100%;
     width: 100%;
     padding: 0;
-    overflow:   hidden;
+    /*overflow:   hidden;*/
 }
 
+body {
+    background-color: #fafafa;
+}
 body > div { /* hack to prevent 'over-scrolling' on safari/chrome */
     height:     100%;
     overflow:   scroll;

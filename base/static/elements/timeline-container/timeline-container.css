@@ -11,8 +11,8 @@
 
 .container {
     white-space: nowrap;
-    padding: 10px 0;
-    height: 215px;
+    padding: 0;
+    height: 225px;
 }
 
 .timeline {
@@ -194,7 +194,7 @@
  * Condensing
  */
 .container[condensed] {
-    height: 95px;
+    height: 110px;
 }
 
 .container[condensed] .timeline {
