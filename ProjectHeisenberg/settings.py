@@ -111,6 +111,10 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = ''
 
+# Media files (User uploaded data)
+# https://docs.djangoproject.com/en/1.7/ref/settings/#media-root
+MEDIA_ROOT = '/media/'
+
 # Disable slash append, angular doesn't support this properly
 APPEND_SLASH = False
 

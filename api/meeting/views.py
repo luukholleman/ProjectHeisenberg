@@ -1,7 +1,8 @@
 from django.http import Http404
 from django.utils.dateparse import parse_datetime
 from rest_framework import generics, viewsets
-from api.meeting.serializers import MeetingSerializer
+from api.meeting.serializers import MeetingSerializer, AgendaSerializer
+from base.models import Agenda
 from meeting.models import Meeting
 
 
@@ -27,3 +28,9 @@ class MeetingViewSet(viewsets.ModelViewSet):
             return Meeting.objects.all()
 
         return Meeting.objects.filter(date_and_time__range=[self._from_date, self._to_date])
+
+
+class AgendaViewSet(viewsets.ModelViewSet):
+    serializer_class = AgendaSerializer
+    permission_classes = []
+    queryset = Agenda.objects.all()

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from authentication.models import User
+from base.models import Agenda
 from meeting.models import Meeting, MeetingInvitation
 
 
@@ -52,3 +53,11 @@ class MeetingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Meeting
         fields = ('id', 'name', 'description', 'location', 'address', 'date_and_time', 'invitations')
+
+
+class AgendaSerializer(serializers.ModelSerializer):
+    file = serializers.FileField(allow_empty_file=False)
+
+    class Meta:
+        model = Agenda
+        fields = ('file',)

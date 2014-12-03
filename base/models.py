@@ -2,7 +2,6 @@ from django.db import models
 
 
 class File(models.Model):
-    filename = models.CharField(max_length=200)
     upload_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -13,8 +12,12 @@ class File(models.Model):
 
 
 class Agenda(File):
-    date = models.DateTimeField()
+    file = models.FileField(upload_to='agendas')
 
 
 class Minute(File):
-    test = models.CharField(max_length=20)
+    file = models.FileField(upload_to='minutes')
+
+
+class Attachment(File):
+    file = models.FileField(upload_to='attachments')
