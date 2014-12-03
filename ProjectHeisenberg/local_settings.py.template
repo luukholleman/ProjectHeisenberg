@@ -13,3 +13,7 @@ if DEBUG:
 
 # Site url
 SITE_URL = ''
+
+# Media
+MEDIA_ROOT = ''
+MEDIA_URL = ''
