@@ -1,0 +1,63 @@
+<link rel="import" href="../../bower/polymer/polymer.html">
+<link rel="import" href="../../bower/paper-shadow/paper-shadow.html">
+
+<polymer-element name="timeline-node" attributes="date label color opened condensed">
+    <template>
+        <link href="timeline-node.css" rel="stylesheet">
+        <link href="/static/css/groups.css" rel="stylesheet">
+
+        <paper-shadow z="1" class="node-container group-{{ color }}" opened?="{{ opened }}" condensed?="{{ condensed }}"
+                      horizontal layout center>
+            <div flex vertical layout center>
+                {{ day }}
+            </div>
+        </paper-shadow>
+    </template>
+    <script>
+        Polymer('timeline-node', {
+            /*
+             * **********************************
+             * Public properties
+             * **********************************
+             */
+            date: 0,
+            color: '',
+            opened: false,
+            condensed: false,
+            /*
+             * **********************************
+             * Fields
+             * **********************************
+             */
+            day: '',
+            timeLine: null,
+            /*
+             * **********************************
+             * Private methods
+             * **********************************
+             */
+            attached: function () {
+                this.timeLine = this.parentNode;
+                while (this.timeLine && this.timeLine.nodeName != 'TIMELINE-CONTAINER') {
+                    this.timeLine = this.timeLine.parentNode;
+                }
+
+                if (this.timeLine) {
+                    this.timeLine.nodeAdded(this);
+                }
+            },
+            detached: function () {
+                if (this.timeLine) {
+                    this.timeLine.nodeRemoved(this);
+                }
+            },
+            dateChanged: function () {
+                this.day = new Date(this.date * 1000).getDate();
+
+                if (this.timeLine) {
+                    this.timeLine.nodeAttributeChanged(this);
+                }
+            }
+        });
+    </script>
+</polymer-element>

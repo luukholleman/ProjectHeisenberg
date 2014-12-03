@@ -2,11 +2,17 @@
     <core-toolbar style="background: #009688; color:white">
         <paper-icon-button icon="menu"></paper-icon-button>
         <strong flex>Punktlich.</strong>
-        <paper-fab icon="add" title="Create meeting" role="button" aria-label="Create meeting" ng-click="goto('/meeting/create')" style="background-color: #03A9F4;"></paper-fab>
+        <paper-fab icon="add" title="Create meeting" role="button" aria-label="Create meeting"
+                   ng-click="goto('^.create')" style="background-color: #03A9F4;"></paper-fab>
     </core-toolbar>
 </div>
+<timeline-container id="timeline" style="width: 100%" vertical layout>
+    <timeline-node ng-repeat="meeting in meetings | filter:visible=true" color="{{ meeting.color }}"
+                   date="{{ meeting.date }}"></timeline-node>
+</timeline-container>
 
-<timeline-line id="timeline" style="width: 100%" vertical layout>
-    <timeline-item ng-repeat="meeting in meetings | filter:visible=true"
-                   color="{{ meeting.color }}" date="{{ meeting.date }}"></timeline-item>
-</timeline-line>
+<!--timeline-line style="width: 100%" vertical layout></timeline-line-->
+<paper-button ng-click="test()" raised>Test</paper-button>
+<paper-button ng-click="test2()" raised>Test2</paper-button>
+
+<div ui-view="content" flex></div>

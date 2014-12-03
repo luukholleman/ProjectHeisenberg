@@ -80,6 +80,8 @@
 
     <link rel="import" href="{{ STATIC_URL }}elements/timeline-line.html">
     <link rel="import" href="{{ STATIC_URL }}elements/timeline-item.html">
+    <link rel="import" href="{{ STATIC_URL }}elements/timeline-container/timeline-container.html">
+    <link rel="import" href="{{ STATIC_URL }}elements/timeline-container/timeline-node.html">
     <link rel="import" href="{{ STATIC_URL }}elements/timeline-filter.html">
 
     <!-- Angular dependencies -->
@@ -126,7 +128,6 @@
     {% endverbatim %}
     <div ui-view="body">
         <div ui-view="timeline" flex></div>
-        <div ui-view="content" flex></div>
     </div>
 </div>
 </body>
