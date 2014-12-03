@@ -73,6 +73,8 @@
             dayLabels: {},
             moveVelocity: 0,
             moveLastFrame: 0,
+            lastMove: 0,
+            
             /*
              * **********************************
              * Public methods
@@ -87,7 +89,7 @@
                 this._moveTo(date);
             },
 
-            moveToNow: function() {
+            moveToNow: function () {
                 this.moveTo(this.getNow());
             },
 
@@ -108,7 +110,7 @@
                  */
                 return this.timeSpan.end - this.timeSpan.start;
             },
-            getCenter: function() {
+            getCenter: function () {
                 /*
                  * Returns the center date of the time span.
                  */
@@ -447,6 +449,24 @@
                     this.zoomToTimeSpan(minTimeSpan, focusRatio);
                 }
             },
+
+            hasMoved: function () {
+                var now = new Date().getTime();
+                this.lastMove = now;
+                var me = this;
+
+                setTimeout(function () {
+                    if (me.lastMove == now) {
+                        console.log('moved!');
+                        var startDate = new Date(me.timeSpan.start * 1000);
+                        var endDate = new Date(me.timeSpan.end * 1000);
+                        me.fire('timeline-request-items', {
+                            start: startDate.toISOString(),
+                            end: endDate.toISOString()
+                        });
+                    }
+                }, 150);
+            },
             zoom: function (zoomVelocity, focusRatio) {
                 /*
                  * Zooms at the given velocity at a specific focus ratio.
@@ -456,6 +476,10 @@
                 this.timeSpan.end -= movement * (1 - focusRatio);
 
                 this.enforceZoomLimits(focusRatio);
+
+                if (zoomVelocity < 0) {
+                    this.hasMoved();
+                }
                 this.render();
             },
             move: function (velocity) {
@@ -471,9 +495,10 @@
                 this.timeSpan.start -= movement;
                 this.timeSpan.end -= movement;
 
+                this.hasMoved();
                 this.render();
             },
-            _moveTo: function(date) {
+            _moveTo: function (date) {
 
                 var move = this.getCenter() - date;
 
@@ -490,7 +515,7 @@
                 this.move(velocity);
             },
             processMovement: function () {
-                if(this.moveVelocity == 0) {
+                if (this.moveVelocity == 0) {
                     return false;
                 }
 
@@ -500,8 +525,8 @@
                 this.timeSpan.start -= this.moveVelocity * mass;
                 this.timeSpan.end -= this.moveVelocity * mass;
 
-                if(Math.abs(this.moveVelocity) > 2) {
-                var frameTimeSpan = (now - this.moveLastFrame) / 1000;
+                if (Math.abs(this.moveVelocity) > 2) {
+                    var frameTimeSpan = (now - this.moveLastFrame) / 1000;
 
                     this.moveVelocity /= 1 + (this.getMass() * this.GRAVITY * frameTimeSpan);
                 }
