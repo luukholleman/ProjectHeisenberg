@@ -1,5 +1,6 @@
 from django.db import models
 from authentication.models import User
+from base.models import Agenda, Minute
 
 
 class Meeting(models.Model):
@@ -9,6 +10,8 @@ class Meeting(models.Model):
     location = models.CharField(null=True, max_length=90)
     address = models.CharField(null=True, max_length=200)
     date_and_time = models.DateTimeField()
+    agendas = models.ManyToManyField(Agenda)
+    minutes = models.ManyToManyField(Minute)
 
     def __str__(self):
         return self.name
