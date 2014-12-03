@@ -13,7 +13,7 @@ class File(models.Model):
 
 class Agenda(File):
     file = models.FileField(upload_to='agendas')
-    
+
 
 class Minute(File):
     file = models.FileField(upload_to='minutes')

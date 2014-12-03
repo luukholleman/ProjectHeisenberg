@@ -2,20 +2,12 @@ import mimetypes
 from rest_framework import serializers
 from authentication.models import User
 from base.models import Agenda
+from base.validators import validate_file_pdf
 from meeting.models import Meeting, MeetingInvitation
 
 
 class AgendaSerializer(serializers.ModelSerializer):
-    file = serializers.FileField(allow_empty_file=False)
-
-    def validate(self, attrs):
-        uploaded_file = attrs['file']
-        allowed_types = ['application/pdf', 'application/x-pdf']
-
-        if uploaded_file.content_type not in allowed_types:
-            raise serializers.ValidationError('File should be PDF')
-
-        return super(AgendaSerializer, self).validate(attrs)
+    file = serializers.FileField(allow_empty_file=False, validators=[validate_file_pdf])
 
     class Meta:
         model = Agenda
