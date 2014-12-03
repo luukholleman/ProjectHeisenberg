@@ -5,7 +5,7 @@ angular.module('punktlichDep').controller('MeetingCreateController', function ($
     $scope.groups = [
         'Windesheim',
         'Gumbo Millenium',
-        'Gemeente Zwolle',
+        'Gemeente Zwolle'
     ];
 
     var box = document.getElementById('filter-box');
@@ -46,7 +46,7 @@ angular.module('punktlichDep').controller('MeetingUpdateController', function($s
     $scope.groups = [
         'Windesheim',
         'Gumbo Millenium',
-        'Gemeente Zwolle',
+        'Gemeente Zwolle'
     ];
 
     MeetingService.get($stateParams.id).get().then(function(data){
