@@ -3,7 +3,7 @@
         <paper-icon-button icon="menu"></paper-icon-button>
         <strong flex>Punktlich.</strong>
         <paper-fab icon="add" title="Create meeting" role="button" aria-label="Create meeting"
-                   ng-click="goto('/meeting/create')" style="background-color: #03A9F4;"></paper-fab>
+                   ng-click="goto('^.create')" style="background-color: #03A9F4;"></paper-fab>
     </core-toolbar>
 </div>
 <timeline-container id="timeline" style="width: 100%" vertical layout>
@@ -13,3 +13,6 @@
 
 <!--timeline-line style="width: 100%" vertical layout></timeline-line-->
 <paper-button ng-click="test()" raised>Test</paper-button>
+<paper-button ng-click="test2()" raised>Test2</paper-button>
+
+<div ui-view="content" flex></div>

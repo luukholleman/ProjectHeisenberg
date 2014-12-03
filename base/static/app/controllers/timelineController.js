@@ -50,5 +50,8 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
     $scope.test = function() {
         document.getElementById('timeline').condensed = !document.getElementById('timeline').condensed;
     };
+    $scope.test2 = function() {
+        document.getElementById('timeline').moveToNow();
+    };
     init();
 });

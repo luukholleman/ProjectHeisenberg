@@ -6,7 +6,7 @@
     top: 50%;
 }
 
-.container {
+.node-container {
     margin: 0;
     padding: 0;
     width: 48px;
@@ -22,7 +22,7 @@
     animation: popup .2s linear 0s 1 alternate;
 }
 
-.container[condensed] {
+.node-container[condensed] {
     -webkit-transform: scale(0.5);
     transform: scale(0.5);
     color: rgba(0,0,0,0);

@@ -1,4 +1,4 @@
-angular.module('punktlichDep').controller('MeetingController', function ($scope, $location, $routeParams, Restangular, MeetingService, ValidationService) {
+angular.module('punktlichDep').controller('MeetingController', function ($scope, $state, $routeParams, Restangular, MeetingService, ValidationService) {
 
     $scope.meeting = {};
 
@@ -27,7 +27,7 @@ angular.module('punktlichDep').controller('MeetingController', function ($scope,
         });
 
         MeetingService.create($scope.meeting, function(data){
-            $location.path('meeting/'+data.id+'/update');
+            $state.go('^.update');
         }, function(errors){
             ValidationService.showErrors(form, errors.data)
         });
