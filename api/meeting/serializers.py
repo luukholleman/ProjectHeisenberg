@@ -1,7 +1,25 @@
+import mimetypes
 from rest_framework import serializers
 from authentication.models import User
 from base.models import Agenda
 from meeting.models import Meeting, MeetingInvitation
+
+
+class AgendaSerializer(serializers.ModelSerializer):
+    file = serializers.FileField(allow_empty_file=False)
+
+    def validate(self, attrs):
+        uploaded_file = attrs['file']
+        allowed_types = ['application/pdf', 'application/x-pdf']
+
+        if uploaded_file.content_type not in allowed_types:
+            raise serializers.ValidationError('File should be PDF')
+
+        return super(AgendaSerializer, self).validate(attrs)
+
+    class Meta:
+        model = Agenda
+        fields = ('file',)
 
 
 class MeetingInvitationSerializer(serializers.ModelSerializer):
@@ -21,6 +39,7 @@ class MeetingSerializer(serializers.ModelSerializer):
     address = serializers.CharField(required=False)
     date_and_time = serializers.DateTimeField(required=True)
     invitations = MeetingInvitationSerializer(source='meetinginvitation_set', read_only=False, many=True)
+    agendas = AgendaSerializer(many=True)
 
     def update(self, meeting, validated_attrs):
         invitations = meeting.meetinginvitation_set.all()
@@ -53,11 +72,3 @@ class MeetingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Meeting
         fields = ('id', 'name', 'description', 'location', 'address', 'date_and_time', 'invitations')
-
-
-class AgendaSerializer(serializers.ModelSerializer):
-    file = serializers.FileField(allow_empty_file=False)
-
-    class Meta:
-        model = Agenda
-        fields = ('file',)
