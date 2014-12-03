@@ -1,6 +1,9 @@
 from django.http import Http404
 from django.utils.dateparse import parse_datetime
 from rest_framework import generics, viewsets
+from rest_framework.decorators import list_route, detail_route
+from rest_framework.response import Response
+from rest_framework.serializers import ListSerializer
 from api.meeting.serializers import MeetingSerializer, AgendaSerializer
 from base.models import Agenda
 from meeting.models import Meeting
@@ -13,6 +16,11 @@ class MeetingViewSet(viewsets.ModelViewSet):
 
     _from_date = None
     _to_date = None
+
+    @detail_route(methods=['GET'])
+    def agendas(self):
+        meeting = self.get_object()
+        return Response(AgendaSerializer(meeting.agendas.all(), many=True).data)
 
     def list(self, request, *args, **kwargs):
         if 'from' not in request.QUERY_PARAMS or 'to' not in request.QUERY_PARAMS:
