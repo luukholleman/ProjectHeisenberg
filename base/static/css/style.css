@@ -6,22 +6,25 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-touch-callout: none;
 }
+
 html {
     -webkit-text-size-adjust: 100%;
 }
+
 body, html {
     height: 100%;
     width: 100%;
     padding: 0;
-    overflow:   hidden;
+    overflow: hidden;
 }
 
-body > div { /* hack to prevent 'over-scrolling' on safari/chrome */
-    height:     100%;
-    overflow:   scroll;
+body > div {
+    /* hack to prevent 'over-scrolling' on safari/chrome */
+    height: 100%;
+    overflow: scroll;
 }
 
 core-toolbar paper-fab {
@@ -29,14 +32,22 @@ core-toolbar paper-fab {
     right: 24px;
 }
 
-.filter-pane{
+.filter-pane {
     width: 90px;
 }
-.filter-pane > timeline-filter{
+
+.filter-pane > timeline-filter {
     margin-bottom: 10px;
 }
 
 paper-fab {
     cursor: pointer;
     z-index: 1;
+}
+
+hr.spacing {
+    background-color: #EBEBEB;
+    padding-top: 1px;
+    height: 0px;
+    border: none;
 }

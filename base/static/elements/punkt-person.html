@@ -1,0 +1,61 @@
+<link rel="import" href="../bower/polymer/polymer.html">
+<link rel="import" href="../bower/paper-shadow/paper-shadow.html">
+
+<polymer-element name="punkt-person" attributes="abbr name image status">
+    <template>
+        <style>
+            paper-shadow {
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                margin-right: 10px;
+            }
+
+            :host [status = "0"] {
+                background-color: gray;
+            }
+
+            :host [status = "1"] {
+                background-color: #66BB6A;
+            }
+
+            :host [status = "2"] {
+                background-color: #FFA726;
+            }
+
+            :host [status = "3"] {
+                background-color: #EF5350;
+            }
+
+            abbr {
+                color: #fff;
+                font-size: 26px;
+            }
+        </style>
+        <paper-shadow
+                vertical layout center
+                class="person" status="{{ status }}">
+            <div horizontal layout flex center>
+                <template if="{{ image == '' }}">
+                    <abbr title="{{ name }}">
+                        {{ abbr }}
+                    </abbr>
+                </template>
+                <template if="{{ image != '' }}">
+                    <img src="{{ image }}" alt="{{ name }}" style="height: 50px; border-radius: 50% ;"/>
+                </template>
+            </div>
+
+                <paper-ripple fit></paper-ripple>
+        </paper-shadow>
+    </template>
+    <script>
+        (function () {
+            Polymer('punkt-person', {
+                ready: function () {
+
+                }
+            });
+        })();
+    </script>
+</polymer-element>

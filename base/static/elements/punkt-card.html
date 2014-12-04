@@ -1,68 +1,163 @@
 <link rel="import" href="../bower/polymer/polymer.html">
 <link rel="import" href="../bower/paper-shadow/paper-shadow.html">
 
-<polymer-element name="punkt-card" attributes="header, subheader, abbr">
+<polymer-element name="punkt-card" attributes="header color groupname subheader abbr status detailsVisible location invitations description">
     <template>
         <style>
-            .card {
-                width: 660px;
-                height: 90px;
-                background-color: #009688;
-                padding: 0px 10px;
-                margin-top: 10px;
-                margin-bottom: 10px;
+            :host {
+                border-radius: 2px;
             }
+
+            .card {
+                margin-bottom: 20px;
+            }
+
+            .card .header {
+                width: 660px;
+                height: 70px;
+                padding: 15px 20px;
+            }
+
             .card h1 {
                 color: #ffffff;
-                font-size: 29px;
+                font-size: 32px;
                 font-family: 'Roboto';
                 font-weight: 100;
-                margin: 0px;
-                margin-top: 10px;
+                margin: 0 0 5px 0;
             }
 
-            .card h1 small {
-                font-size: 19px;
-                color: rgba(255, 255, 255, 0.75);
+            .card p {
+                font-size: 22px;
+                color: rgba(255, 255, 255, .5);
+                margin: 0;
             }
 
-            .card .abbr {
+            .card abbr {
                 float: right;
-                font-size: 85px;
-                color: rgba(255, 255, 255, 0.3);
+                font-size: 90px;
+                color: rgba(255, 255, 255, .3);
                 font-weight: 100;
+                position: relative;
+                top: -83px;
             }
 
             .card .content {
+                max-width: 660px;
+                padding: 3px 20px 0;
+            }
+
+            .rsvp {
+                padding: 7px 10px 7px 5px;
+            }
+
+            .btn-default {
+                color: #009688;
+            }
+
+            .btn-decline {
+                color: #EF5350;
+            }
+
+            .btn-maybe {
+                color: #FFA726;
+            }
+
+            .btn-accept {
+                color: #66BB6A;
+            }
+
+            .btn-decline[choice] {
+                background-color: #EF5350;
+            }
+
+            .btn-maybe[choice] {
+                background-color: #FFA726;
+            }
+
+            .btn-accept[choice] {
+                background-color: #66BB6A;
+            }
+
+            paper-button[choice] {
+                color: #fff !important;
+            }
+
+            .content {
                 display: none;
             }
 
+            .content[visible] {
+                display: block;
+            }
         </style>
-        <div vertical layout center>
-            <paper-shadow class="card">
-                <div class="header">
-                    <div class="abbr">
-                        {{ abbr }}
-                    </div>
-                    <h1>
-                        {{ header }}
-                        <br />
-                        <small>
-                            {{ subheader }}
-                        </small>
-                    </h1>
+        <paper-shadow
+                vertical layout
+                class="card">
+            <div relative
+                 on-click="{{toggleDetails}}"
+                 class="header"
+                 style="background-color: {{ color }};">
+                <h1>
+                    {{ header }}
+                </h1>
+
+                <p>
+                    {{ subheader }}
+                </p>
+                <abbr title="{{ groupname }}">
+                    {{ abbr }}
+                </abbr>
+                <paper-ripple fit></paper-ripple>
+            </div>
+            <template if="{{ detailsVisible }}">
+                <div vertical layout
+                     class="content">
+                    <content flex></content>
                 </div>
-                <div class="content">
-                    <content select="p"></content>
+            </template>
+            <div class="rsvp"
+                 horizontal layout>
+                <div flex>
+                    <paper-button on-click="{{variableAction}}"
+                                  class="btn-default">{{buttonText}}</paper-button>
                 </div>
-            </paper-shadow>
-        </div>
+                <paper-button class="btn-decline" choice?="{{ status==3 }}">DECLINE</paper-button>
+                <paper-button class="btn-maybe" choice?="{{ status==2 }}">MAYBE</paper-button>
+                <paper-button class="btn-accept" choice?="{{ status==1 }}">ACCEPT</paper-button>
+            </div>
+        </paper-shadow>
     </template>
     <script>
-        (function(){
+        (function () {
             Polymer('punkt-card', {
-                ready: function() {
+                //  Data properties
+                detailsVisible: false,
+                //  Visual properties
+                buttonText: this.detailsVisible ? "OPEN MEETING" : "SHOW DETAILS",
 
+                variableAction: function(e, detail, sender) {
+                    switch (sender.className) {
+                        case "btn-default":
+                            if (!this.detailsVisible) {
+                                this.toggleDetails(e, detail, sender);
+                            } else {
+                                this.openMeeting(e, detail, sender);
+                            }
+                            break;
+                        case "header":
+                            this.toggleDetails(e, detail,sender);
+                            break;
+                    };
+                },
+
+                toggleDetails: function (e, detail, sender) {
+                    console.log(sender);
+                    this.detailsVisible = !this.detailsVisible;
+                    this.buttonText = this.detailsVisible ? "OPEN MEETING" : "SHOW DETAILS";
+                },
+
+                openMeeting: function (e, detail, sender) {
+                    console.error("UNDEFINED IS NOT IMPLEMENTED");
                 }
             });
         })();

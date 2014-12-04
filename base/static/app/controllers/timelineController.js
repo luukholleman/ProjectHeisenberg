@@ -1,18 +1,23 @@
 angular.module('punktlichDep').controller('TimelineController', function ($scope, $timeout, $rootScope, MeetingService) {
     $scope.meetings = [];
 
-    function addMeeting(id, color, date) {
-        $scope.meetings.push({
-            id: id,
-            color: color,
-            date: date,
-            visible: true
-        });
+    function addMeeting(meeting) {
+        meeting.moment = moment(new Date(meeting.date_and_time));
+        meeting.future = function() {
+            return this.moment.isAfter(moment());
+        }
+        console.log(meeting, meeting.human_readable_time);
+        $scope.meetings.push(meeting);
         //  Timeout takes care of a callback ofter $apply, this is needed because we want the added meeting to show.
         $timeout(function () {
             document.getElementById('timeline').refresh();
         })
     }
+    function updateMeeting(meeting) {
+        meeting.color = 'pink';
+        meeting.date = new Date(meeting.date_and_time).getTime() / 1000;
+    }
+
 
     function addMeetings(meetings) {
         meetings = _.toArray(meetings);
@@ -21,17 +26,16 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
                 return m.id == meeting.id
             });
             if (found.length == 0) {
-                addMeeting(meeting.id, 'pink', new Date(meeting.date_and_time).getTime() / 1000);
+                addMeeting(meeting);
+            } else {
+                updateMeeting(found[0]);
             }
-            else {
-                found[0].color = 'pink';
-                found[0].date = new Date(meeting.date_and_time).getTime() / 1000;
-            }
-        })
+        });
+        $rootScope.$emit('timelineViewPortChanged', $scope.meetings);
     }
 
     function getMeetingsForTimeSpan(from, to) {
-        $rootScope.$emit('timelineViewPortChanged', from, to);
+
 
         MeetingService.getMeetingsForTimeSpan(from, to, addMeetings)
     }
