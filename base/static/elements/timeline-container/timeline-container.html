@@ -165,12 +165,12 @@
                     delete this.nodes[index];
                 }
             },
-            nodeOpened : function (node) {
-                if(node.opened) {
+            nodeOpened: function (node) {
+                if (node.opened) {
                     return;
                 }
 
-                this.nodes.forEach(function(cnode) {
+                this.nodes.forEach(function (cnode) {
                     cnode.opened = false;
                 });
 
@@ -596,11 +596,15 @@
              * **********************************
              */
             mouseWheel: function (event) {
-                var isTwoAxis = typeof event.wheelDeltaY !== 'undefined';
-                var differenceY = isTwoAxis ? event.wheelDeltaY : event.wheelDelta;
-                this.zoom(differenceY, event.clientX / this.clientWidth);
-                if (isTwoAxis) {
-                    this.move(event.wheelDeltaX / 3);
+                if (typeof event.wheelDeltaY !== 'undefined') {
+                    if (Math.abs(event.wheelDeltaY) > Math.abs(event.wheelDeltaX)) {
+                        this.zoom(event.wheelDeltaY, event.clientX / this.clientWidth);
+                    } else {
+                        this.move(event.wheelDeltaX / 3);
+                    }
+                }
+                else {
+                    this.zoom(event.wheelDelta, event.clientX / this.clientWidth);
                 }
                 event.preventDefault();
             },
@@ -676,7 +680,7 @@
                 this.timeSpan.start = this.getNow() - 7 * this.DAY;
                 this.timeSpan.end = this.getNow() + 14 * this.DAY;
             },
-            domReady: function() {
+            domReady: function () {
                 this.requestNodes();
             },
 
