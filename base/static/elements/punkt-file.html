@@ -1,0 +1,68 @@
+<link rel="import" href="../bower/polymer/polymer.html">
+<link rel="import" href="../bower/core-icon/core-icon.html">
+<link rel="import" href="../bower/paper-shadow/paper-shadow.html">
+
+<polymer-element name="punkt-file" attributes="type, groupColorTint, name, owner">
+    <template>
+        <style>
+            paper-shadow {
+                height: 50px;
+                margin-right: 15px;
+                min-width: 180px;
+            }
+
+            .icon-box {
+                height: 50px;
+                width: 50px;
+            }
+
+            core-icon {
+                color: #fff;
+                height: 40px !important;
+                width: 40px !important;
+                padding: 5px;
+            }
+
+            .file-info-box{
+                background: #E1E1E1;
+                padding: 5px;
+            }
+
+            .file-info-box h3, .file-info-box h4{
+                margin: 1px 0;
+                font-size: 14px;
+            }
+
+            .file-info-box h3{
+                font-weight: 400;
+            }
+            .file-info-box h4{
+                font-weight: 100;
+                margin-top: 4px;
+            }
+        </style>
+        <paper-shadow
+                class="file">
+            <div horizontal layout>
+                <div class="icon-box" style="background-color: {{ groupColorTint }};">
+                    <core-icon icon="{{ type }}"></core-icon>
+                </div>
+                <div class="file-info-box"
+                        flex>
+                    <h3>{{ name }}</h3>
+                    <h4>{{ owner }}</h4>
+                </div>
+            </div>
+            <paper-ripple fit></paper-ripple>
+        </paper-shadow>
+    </template>
+    <script>
+        (function () {
+            Polymer('punkt-file', {
+                ready: function () {
+
+                }
+            });
+        })();
+    </script>
+</polymer-element>

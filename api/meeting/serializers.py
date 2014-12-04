@@ -1,12 +1,38 @@
 from rest_framework import serializers
-from api.authentication.serializers import UserSerializer
-from meeting.models import Meeting, MeetingInvitation
+
+from authentication.models import User
+from meeting.validators import validate_file_pdf
+from meeting.models import Meeting, MeetingInvitation, Agenda
+
+
+class AgendaSerializer(serializers.ModelSerializer):
+    file = serializers.FileField(allow_empty_file=False, validators=[validate_file_pdf])
+
+    class Meta:
+        model = Agenda
+        fields = ('file',)
+
+
+class MinuteSerializer(serializers.ModelSerializer):
+    file = serializers.FileField(allow_empty_file=False, validators=[validate_file_pdf])
+
+    class Meta:
+        model = Agenda
+        fields = ('file',)
+
+
+class AttachmentSerializer(serializers.ModelSerializer):
+    file = serializers.FileField(allow_empty_file=False, validators=[validate_file_pdf])
+
+    class Meta:
+        model = Agenda
+        fields = ('file',)
 
 
 class MeetingInvitationSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(read_only=False, many=False)
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), read_only=False)
     present_at = serializers.DateTimeField(read_only=True)
-    state = serializers.ChoiceField(read_only=True)
+    state = serializers.ChoiceField(MeetingInvitation.CHOICES, read_only=True)
 
     class Meta:
         model = MeetingInvitation
@@ -19,8 +45,36 @@ class MeetingSerializer(serializers.ModelSerializer):
     location = serializers.CharField(required=False)
     address = serializers.CharField(required=False)
     date_and_time = serializers.DateTimeField(required=True)
-    invitations = MeetingInvitationSerializer(source='meetinginvitation_set', read_only=False, many=True,
-                                              allow_add_remove=True)
+    invitations = MeetingInvitationSerializer(source='meetinginvitation_set', read_only=False, many=True)
+    agendas = AgendaSerializer(many=True)
+
+    def update(self, meeting, validated_attrs):
+        invitations = meeting.meetinginvitation_set.all()
+        for invitation in invitations:
+            invitation.delete()
+
+        invitations = validated_attrs.pop('meetinginvitation_set')
+        self.save_inviations(meeting, invitations)
+        return meeting
+
+    def save_inviations(self, meeting, invitations):
+        for invitation in invitations:
+            meeting.meetinginvitation_set.create(
+                user=invitation['user'],
+            )
+
+    def create(self, validated_attrs):
+        meeting_invitations = validated_attrs.pop('meetinginvitation_set')
+
+        meeting = Meeting.objects.create(
+            name=validated_attrs['name'],
+            date_and_time=validated_attrs['date_and_time'],
+            location=validated_attrs['location'],
+            address=validated_attrs['address'],
+        )
+
+        self.save_inviations(meeting, meeting_invitations)
+        return meeting
 
     class Meta:
         model = Meeting

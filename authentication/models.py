@@ -52,5 +52,14 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def set_activation(self, expire_days):
         time_span = timedelta(days=expire_days)
+
+        self.is_active = False
         self.activation_token = hashlib.sha1(self.email).hexdigest()
         self.activation_expire = datetime.now() + time_span
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.set_password(self.password)
+            self.set_activation(expire_days=7)
+
+        return super(User, self).save(*args, **kwargs)

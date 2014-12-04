@@ -1,18 +1,7 @@
-angular.module('punktlichDep').controller('TimelineController', function ($scope, $timeout, TimelineService) {
+angular.module('punktlichDep').controller('TimelineController', function ($scope, $window, $timeout, $rootScope, MeetingService) {
     $scope.meetings = [];
 
-    var init = function () {
-        $scope.getMeetingsForTimeSpan($scope.generateDate(2013, 1, 1, 0, 0, 0), $scope.generateDate(2019, 12, 31, 0, 0, 0));
-
-        $scope.addMeeting(0, 'blue', $scope.generateDate(2014, 12, 1, 10, 0, 0));
-        $scope.addMeeting(0, 'green', $scope.generateDate(2014, 11, 29 , 0, 0, 0));
-        $scope.addMeeting(0, 'yellow', $scope.generateDate(2014, 12, 3, 16, 0, 0));
-        $timeout(function () {
-            document.getElementById('timeline').refresh();
-        })
-    }
-
-    $scope.addMeeting = function (id, color, date) {
+    function addMeeting(id, color, date) {
         $scope.meetings.push({
             id: id,
             color: color,
@@ -21,19 +10,31 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
         });
         //  Timeout takes care of a callback ofter $apply, this is needed because we want the added meeting to show.
         $timeout(function () {
-            document.getElementById('timeline').refresh();
+            //document.getElementById('timeline').refresh();
         })
     };
 
-    $scope.getMeetingsForTimeSpan = function (from, to) {
-        TimelineService.getMeetingsForTimeSpan(from, to, $scope.addMeetings)
-    };
-
-    $scope.addMeetings = function (meetings) {
+    function addMeetings(meetings) {
+        meetings = _.toArray(meetings);
         meetings.forEach(function (meeting) {
-            $scope.addMeeting(meeting.id, 'pink', new Date(meeting.date_and_time).getTime() / 1000);
+            var found = $scope.meetings.filter(function (m) {
+                return m.id == meeting.id
+            });
+            if (found.length == 0) {
+                addMeeting(meeting.id, 'pink', new Date(meeting.date_and_time).getTime() / 1000);
+            }
+            else {
+                found[0].color = 'pink';
+                found[0].date = new Date(meeting.date_and_time).getTime() / 1000;
+            }
         })
-    };
+    }
+
+    function getMeetingsForTimeSpan(from, to) {
+        $rootScope.$emit('timelineViewPortChanged', from, to);
+
+        MeetingService.getMeetingsForTimeSpan(from, to, addMeetings)
+    }
 
     $scope.toggleGroupVisible = function (color) {
         $scope.meetings.filter(function (e) {
@@ -47,5 +48,21 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
         return new Date(year, month - 1, day, h, m, s).getTime() / 1000;
     };
 
-    init();
+    document.getElementById('timeline').addEventListener('timeline-request-nodes', function (event) {
+        getMeetingsForTimeSpan(event.detail.start, event.detail.end);
+    });
+
+    var el = document.querySelector('#page');
+
+    var raw = angular.element(el);
+
+    raw.bind('scroll', function () {
+        if(el.scrollTop > 300 - 170) {
+            document.getElementById('timeline').condensed = true;
+                document.querySelector('.timeline-view').classList.add('condensed')
+        } else if(el.scrollTop == 0) {
+            document.getElementById('timeline').condensed = false;
+            document.querySelector('.timeline-view').classList.remove('condensed')
+        }
+    });
 });

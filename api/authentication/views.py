@@ -5,6 +5,7 @@ from django.template import Context
 from django.template.loader import get_template
 from django.utils.text import slugify
 from rest_framework import viewsets
+from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken as BaseObtainAuthToken
 from rest_framework.generics import RetrieveAPIView, get_object_or_404
 from rest_framework.response import Response
@@ -22,21 +23,14 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-    def pre_save(self, obj):
-        obj.username = slugify(obj.first_name + ' ' + obj.last_name)
+    def perform_create(self, serializer):
+        instance = serializer.save()
 
-    def post_save(self, user, created=False):
-        if created:
-            user.set_password(user.password)
-            user.set_activation(expire_days=7)
-
-            send_mail(subject="Welcome to Punktlich",
-                      html_message=get_template('base/emails/activate.html').render(Context({'site_url': SITE_URL, 'user': user})),
-                      recipient_list=[user.email],
-                      from_email=None,
-                      message=None)
-
-            user.save()
+        send_mail(subject="Welcome to Punktlich",
+                  html_message=get_template('base/emails/activate.html').render(Context({'site_url': SITE_URL, 'user': instance})),
+                  recipient_list=[instance.email],
+                  from_email=None,
+                  message=None)
 
 @permission_classes((IsSelf,))
 class AuthenticatedUser(RetrieveAPIView):
@@ -50,11 +44,13 @@ class ObtainAuthToken(BaseObtainAuthToken):
     serializer_class = AuthTokenSerializer
 
     def post(self, request):
-        # @todo username niet verplicht maken, dit is te lelijk
         request.DATA[u'username'] = 'todo'
+        serializer = AuthTokenSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
 
-        return super(ObtainAuthToken, self).post(request)
-
+        return Response({'token': token.key})
 
 obtain_auth_token = ObtainAuthToken.as_view()
 

@@ -1,5 +1,36 @@
+import hashlib
+import uuid
 from django.db import models
 from authentication.models import User
+
+
+class File(models.Model):
+    upload_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class RenameFileMixin(models.Model):
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        self.file.name = hashlib.sha1(str(uuid.uuid4())).hexdigest() + '.pdf'
+        super(RenameFileMixin, self).save()
+
+    class Meta:
+        abstract = True
+
+
+class Agenda(File, RenameFileMixin):
+    file = models.FileField(upload_to='agendas')
+
+
+class Minute(File, RenameFileMixin):
+    file = models.FileField(upload_to='minutes')
+
+
+class Attachment(File, RenameFileMixin):
+    file = models.FileField(upload_to='attachments')
 
 
 class Meeting(models.Model):
@@ -9,6 +40,8 @@ class Meeting(models.Model):
     location = models.CharField(null=True, max_length=90)
     address = models.CharField(null=True, max_length=200)
     date_and_time = models.DateTimeField()
+    agendas = models.ManyToManyField(Agenda)
+    minutes = models.ManyToManyField(Minute)
 
     def __str__(self):
         return self.name
@@ -29,5 +62,4 @@ class MeetingInvitation(models.Model):
     user = models.ForeignKey(User)
     state = models.IntegerField(max_length=1, default=UNKNOWN, choices=CHOICES)
     present_at = models.DateTimeField(null=True)
-
 
