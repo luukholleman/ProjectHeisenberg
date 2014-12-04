@@ -43,3 +43,10 @@ paper-fab {
     cursor: pointer;
     z-index: 1;
 }
+
+hr.spacing {
+    background-color: #D3D3D3;
+    padding-top: 1px;
+    height: 0px;
+    border: none;
+}

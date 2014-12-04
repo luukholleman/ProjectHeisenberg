@@ -1,39 +1,44 @@
 angular.module('punktlichDep').controller('TimelineController', function ($scope, $window, $timeout, $rootScope, MeetingService) {
     $scope.meetings = [];
 
-    function addMeeting(id, color, date) {
-        $scope.meetings.push({
-            id: id,
-            color: color,
-            date: date,
-            visible: true
-        });
+    function addMeeting(meeting) {
+        meeting.moment = moment(new Date(meeting.date_and_time));
+        meeting.future = function () {
+            return this.moment.isAfter(moment());
+        }
+        $scope.meetings.push(meeting);
+
         //  Timeout takes care of a callback ofter $apply, this is needed because we want the added meeting to show.
         $timeout(function () {
             //document.getElementById('timeline').refresh();
         })
     };
 
+    function updateMeeting(meeting) {
+        meeting.color = 'pink';
+        meeting.date = new Date(meeting.date_and_time).getTime() / 1000;
+    };
+
+
     function addMeetings(meetings) {
-        meetings = _.toArray(meetings);
+        //meetings = _.toArray(meetings);
         meetings.forEach(function (meeting) {
             var found = $scope.meetings.filter(function (m) {
                 return m.id == meeting.id
             });
             if (found.length == 0) {
-                addMeeting(meeting.id, 'pink', new Date(meeting.date_and_time).getTime() / 1000);
+                addMeeting(meeting);
             }
             else {
-                found[0].color = 'pink';
-                found[0].date = new Date(meeting.date_and_time).getTime() / 1000;
+                updateMeeting(found[0]);
             }
         })
     }
 
     function getMeetingsForTimeSpan(from, to) {
-        $rootScope.$emit('timelineViewPortChanged', from, to);
+        MeetingService.getMeetingsForTimeSpan(from, to, addMeetings);
 
-        MeetingService.getMeetingsForTimeSpan(from, to, addMeetings)
+        $rootScope.$emit('timelineViewPortChanged', $scope.meetings);
     }
 
     $scope.toggleGroupVisible = function (color) {
@@ -57,10 +62,10 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
     var raw = angular.element(el);
 
     raw.bind('scroll', function () {
-        if(el.scrollTop > 300 - 170) {
+        if (el.scrollTop > 300 - 170) {
             document.getElementById('timeline').condensed = true;
-                document.querySelector('.timeline-view').classList.add('condensed')
-        } else if(el.scrollTop == 0) {
+            document.querySelector('.timeline-view').classList.add('condensed')
+        } else if (el.scrollTop == 0) {
             document.getElementById('timeline').condensed = false;
             document.querySelector('.timeline-view').classList.remove('condensed')
         }
