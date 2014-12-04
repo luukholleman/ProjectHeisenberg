@@ -64,5 +64,8 @@ ProjectHeisenberg/local_settings.py
 /base/static/bower/*
 !/base/static/bower/.gitkeep
 
+# Media
+/media/*
+
 # Database
 db.sqlite3
