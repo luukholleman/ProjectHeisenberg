@@ -6,7 +6,7 @@
         <link href="timeline-node.css" rel="stylesheet">
         <link href="/static/css/groups.css" rel="stylesheet">
 
-        <paper-shadow z="1" class="node-container group-{{ color }}" opened?="{{ opened }}" condensed?="{{ condensed }}"
+        <paper-shadow z="1" class="node-container group-{{ color }}" on-tap="{{ tapped }}" opened?="{{ opened }}" condensed?="{{ condensed }}"
                       horizontal layout center>
             <div flex vertical layout center>
                 {{ day }}
@@ -57,6 +57,9 @@
                 if (this.timeLine) {
                     this.timeLine.nodeAttributeChanged(this);
                 }
+            },
+            tapped: function() {
+                this.timeLine.nodeOpened(this);
             }
         });
     </script>

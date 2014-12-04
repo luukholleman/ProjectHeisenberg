@@ -48,7 +48,7 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
         return new Date(year, month - 1, day, h, m, s).getTime() / 1000;
     };
 
-    document.getElementById('timeline').addEventListener('timeline-request-items', function (event) {
+    document.getElementById('timeline').addEventListener('timeline-request-nodes', function (event) {
         getMeetingsForTimeSpan(event.detail.start, event.detail.end);
     });
 
@@ -64,7 +64,5 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
             document.getElementById('timeline').condensed = false;
             document.querySelector('.timeline-view').classList.remove('condensed')
         }
-
-        console.log('in scroll', el, [el], el.scrollTop , el.scrollHeight);
     });
 });
