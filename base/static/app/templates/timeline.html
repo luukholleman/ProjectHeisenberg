@@ -30,7 +30,7 @@
 <div class="top-sticker">
     <div>
         <core-toolbar class="top-toolbar">
-            <paper-icon-button icon="menu"></paper-icon-button>
+            <paper-icon-button icon="arrow-back" ng-click="goto('meetings.list')" ng-show="onHome"></paper-icon-button>
             <strong flex>Punktlich.</strong>
             <paper-fab icon="add" title="Create meeting" role="button" aria-label="Create meeting"
                        ng-click="goto('^.create')" style="background-color: #03A9F4;"></paper-fab>
