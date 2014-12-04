@@ -1,0 +1,41 @@
+body, html
+  height: 100%
+  width: 100%
+  padding: 0
+  font-family: $font-stack
+  color: #333
+  margin: 0
+  background-color: $color-backgound
+
+  -webkit-tap-highlight-color: rgba(0,0,0,0)
+  -webkit-touch-callout: none
+  -webkit-text-size-adjust: 100%
+
+  +user-select()
+
+  // hack to prevent 'over-scrolling' on safari/chrome
+  > div
+    height:     100%
+    overflow:   scroll
+
+core-toolbar
+  > paper-fab
+    top: 32px
+    right: 24px
+
+.filter-pane
+  width: 90px
+  > timeline-filter
+  margin-bottom: 10px
+
+paper-fab
+  cursor: pointer
+  z-index: 1
+
+
+hr
+  &.spacing
+    background-color: #D3D3D3
+    padding-top: 1px
+    height: 0px
+    border: none
