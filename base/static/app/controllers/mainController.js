@@ -1,9 +1,11 @@
-angular.module('punktlichDep').controller('MainController', function ($scope, FlashMessageService, AuthenticationService, $state) {
+angular.module('punktlichDep').controller('MainController', function ($scope, $location, FlashMessageService, AuthenticationService, $state) {
     $scope.flash = FlashMessageService;
 
     $scope.goto = function (route) {
+        $scope.onHome = $location.path() === '/';
+
         $state.go(route);
-    }
+    };
 
     var authToken = localStorage.getItem('authentication-token');
 
