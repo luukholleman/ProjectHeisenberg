@@ -1,7 +1,5 @@
 from django.conf.urls import include, url
 from rest_framework.routers import DefaultRouter
-from api.authentication.views import UserViewSet
-from api.meeting.views import MeetingViewSet
 
 router = DefaultRouter(trailing_slash=False)
 

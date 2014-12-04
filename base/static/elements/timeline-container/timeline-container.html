@@ -1,0 +1,673 @@
+<link rel="import" href="../../bower/polymer/polymer.html">
+
+<polymer-element name="timeline-container">
+    <template>
+        <link rel="stylesheet" href="timeline-container.css">
+
+        <div class="container" id="container" condensed?="{{ condensed }}"
+             on-touchstart="{{ touchStart }}" on-touchmove="{{ touchMove }}" on-touchend="{{ touchEnd }}"
+             on-trackstart="{{ trackStart }}" on-trackend="{{ trackEnd }}" on-track="{{ track }}"
+             on-mousewheel="{{ mouseWheel }}">
+            <div class="timeline" id="timeline">
+                <div class="past" id="past">
+                    <div class="now" id="now">
+                        NOW
+                    </div>
+                </div>
+                <content select="timeline-node"></content>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        //@todo: move shim
+        window.requestAnimFrame = (function () {
+            return window.requestAnimationFrame ||
+                    window.webkitRequestAnimationFrame ||
+                    window.mozRequestAnimationFrame ||
+                    function (callback) {
+                        window.setTimeout(callback, 1000 / 60);
+                    };
+        })();
+    </script>
+    <script>
+        Polymer({
+            /*
+             * **********************************
+             * Constants
+             * **********************************
+             */
+            DAY: 1 * 24 * 60 * 60,
+            LABEL_MONTH_BUFFER: 40,
+            LABEL_DAY_BUFFER: 2,
+            MONTH_NAMES: ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"],
+
+            GRAVITY: 9.18,
+            FREQUENCY_YEAR: 0,
+            FREQUENCY_MONTH_HALF: 1,
+            FREQUENCY_MONTH_FULL: 2,
+            FREQUENCY_DAY_FULL: 3,
+            FREQUENCY_DAY_HALF: 4,
+            FREQUENCY_DAY_QUARTER: 5,
+            /*
+             * **********************************
+             * Public properties
+             * **********************************
+             */
+            condensed: false,
+
+            /*
+             * **********************************
+             * Fields
+             * **********************************
+             */
+            nodes: [],
+            timeSpan: {start: 0, end: 0},
+            lastTrackX: 0,
+            isTracking: false,
+            isScaling: false,
+            isRendering: false,
+            keepRendering: false,
+            monthLabels: {},
+            dayLabels: {},
+            moveVelocity: 0,
+            moveLastFrame: 0,
+            lastMove: 0,
+
+            /*
+             * **********************************
+             * Public methods
+             * **********************************
+             */
+
+            moveTo: function (date) {
+                /*
+                 * Move to specified date (date in seconds).
+                 */
+
+                this._moveTo(date);
+            },
+
+            moveToNow: function () {
+                this.moveTo(this.getNow());
+            },
+
+            /*
+             * **********************************
+             * Private calculation methods
+             * **********************************
+             */
+            getNow: function () {
+                /*
+                 * Returns seconds since 1970.
+                 */
+                return new Date().getTime() / 1000;
+            },
+            getSize: function () {
+                /*
+                 * Returns size of time span.
+                 */
+                return this.timeSpan.end - this.timeSpan.start;
+            },
+            getCenter: function () {
+                /*
+                 * Returns the center date of the time span.
+                 */
+                return this.getSize() / 2 + this.timeSpan.start;
+            },
+            getMass: function () {
+                /*
+                 * Returns the size / width ratio.
+                 */
+                return this.getSize() / this.clientWidth;
+            },
+            calculatePinchLength: function (event) {
+                /*
+                 * Returns the distance between the first two fingers in the given event.
+                 */
+                var touches = event.touches;
+                return touches.length < 2 ? 0
+                        : Math.sqrt((touches[0].pageX - touches[1].pageX) * (touches[0].pageX - touches[1].pageX)
+                + (touches[0].pageY - touches[1].pageY) * (touches[0].pageY - touches[1].pageY));
+            },
+            getPositionForDate: function (date) {
+                return Math.floor((date - this.timeSpan.start) / this.getMass());
+            },
+            getMonth: function (date) {
+                return new Date(date * 1000).getMonth();
+            },
+            getYear: function (date) {
+                return new Date(date * 1000).getFullYear();
+            },
+            /*
+             * **********************************
+             * Private node methods
+             * **********************************
+             */
+            nodeAdded: function (node) {
+                /*
+                 * Called when a node was added to DOM.
+                 */
+                this.nodes.push(node);
+
+                this.render();
+            },
+            nodeRemoved: function (node) {
+                /*
+                 * Called when a node was removed from DOM.
+                 */
+                var index = this.nodes.indexOf(node);
+
+                if (index !== -1) {
+                    delete this.nodes[index];
+                }
+            },
+            nodeAttributeChanged: function (node) {
+                /*
+                 * Called when an attribute of a node was changed.
+                 */
+                this.render();
+            },
+
+            renderNodes: function () {
+                this.nodes.forEach(function (node) {
+                    node.style.left = this.getPositionForDate(node.date) + 'px';
+                }, this);
+            },
+
+            /*
+             * **********************************
+             * Private past methods
+             * **********************************
+             */
+            renderPast: function () {
+                var position = this.getPositionForDate(this.getNow());
+                this.$.now.style.display = position <= 0 ? 'none' : 'block';
+                this.$.past.style.width = (position < 0 ? 0 : position) + 'px';
+            },
+
+            /*
+             * **********************************
+             * Private clustering methods
+             * **********************************
+             */
+
+            //@todo
+
+            /*
+             * **********************************
+             * Private month label methods
+             * **********************************
+             */
+            isMonthLabelVisible: function (frequency, label) {
+                switch (frequency) {
+                    case this.FREQUENCY_YEAR:
+                        return label.month == 0;
+                    case this.FREQUENCY_MONTH_HALF:
+                        return label.month % 2;
+                    default:
+                        return true;
+                }
+            },
+            createNewMonthLabels: function (frequency) {
+                var dateMonth = this.getMonth(this.timeSpan.start - this.DAY * this.LABEL_MONTH_BUFFER);
+                var dateYear = this.getYear(this.timeSpan.start - this.DAY * this.LABEL_MONTH_BUFFER);
+
+                var endMonth = this.getMonth(this.timeSpan.end + this.DAY * this.LABEL_MONTH_BUFFER);
+                var endYear = this.getYear(this.timeSpan.end + this.DAY * this.LABEL_MONTH_BUFFER);
+
+                while (dateYear < endYear || (dateYear == endYear && dateMonth <= endMonth)) {
+                    if (this.monthLabels[dateYear * 12 + dateMonth]) {
+                        dateYear += Math.floor(++dateMonth / 12);
+                        dateMonth %= 12;
+                        continue;
+                    }
+
+                    var label = this.createLabel(new Date(dateYear, dateMonth, 1, 0, 0, 0));
+                    label.element.style.left = this.getPositionForDate(label.date) + 'px';
+                    label.element.innerHTML = '<em>' + this.MONTH_NAMES[dateMonth] +
+                    (dateMonth == 0 ? '<br/>' + dateYear : '') + '</em>';
+
+                    if (this.isMonthLabelVisible(frequency, label)) {
+                        label.element.classList.add('visible');
+                    }
+
+                    this.$.timeline.appendChild(label.element);
+                    this.monthLabels[dateYear * 12 + dateMonth] = label;
+
+                    dateYear += Math.floor(++dateMonth / 12);
+                    dateMonth %= 12;
+                }
+            },
+            updateMonthLabels: function (frequency) {
+                var startYear = this.getYear(this.timeSpan.start);
+                var startMonth = this.getMonth(this.timeSpan.start);
+                var startDate = new Date(startYear, startMonth, 1).getTime() / 1000;
+                var startPosition = this.getPositionForDate(startDate);
+
+                for (var key in this.monthLabels) {
+                    var label = this.monthLabels[key];
+
+                    var position = this.getPositionForDate(label.date);
+
+                    if (frequency >= this.FREQUENCY_MONTH_FULL && startPosition < 0 && startYear * 12 + startMonth == key) {
+                        startYear += Math.floor(++startMonth / 12);
+                        startMonth %= 12;
+
+                        startDate = new Date(startYear, startMonth, 1).getTime() / 1000;
+                        startPosition = this.getPositionForDate(startDate);
+
+                        position = Math.min(startPosition - 200, 0);
+                    }
+                    label.element.style.left = position + 'px';
+
+                    if (this.isMonthLabelVisible(frequency, label)) {
+                        if (!label.element.classList.contains('visible')) {
+                            label.element.classList.add('visible');
+                        }
+                    }
+                    else if (label.element.classList.contains('visible')) {
+                        label.element.classList.remove('visible');
+                    }
+                }
+            },
+            clearMonthLabels: function () {
+                var startMonth = this.getMonth(this.timeSpan.start - this.DAY * this.LABEL_MONTH_BUFFER);
+                var startYear = this.getYear(this.timeSpan.start - this.DAY * this.LABEL_MONTH_BUFFER);
+
+                var endMonth = this.getMonth(this.timeSpan.end + this.DAY * this.LABEL_MONTH_BUFFER);
+                var endYear = this.getYear(this.timeSpan.end + this.DAY * this.LABEL_MONTH_BUFFER);
+
+
+                for (var key in this.monthLabels) {
+                    var dateMonth = key % 12;
+                    var dateYear = Math.floor(key / 12);
+
+                    if (dateYear < startYear || dateYear == startYear && dateMonth < startMonth ||
+                            dateYear > endYear || dateYear == endYear && dateMonth > endMonth) {
+                        this.$.timeline.removeChild(this.monthLabels[key].element);
+                        delete this.monthLabels[key];
+                    }
+                }
+            },
+
+            /*
+             * **********************************
+             * Private day label methods
+             * **********************************
+             */
+            isDayLabelVisible: function (frequency, label) {
+                switch (frequency) {
+                    case this.FREQUENCY_DAY_QUARTER:
+                        return !(label.day % 4);
+                    case this.FREQUENCY_DAY_HALF:
+                        return !(label.day % 2);
+                    default:
+                        return true;
+                }
+            },
+            createNewDayLabels: function (frequency) {
+                var date = new Date((this.timeSpan.start - this.DAY * this.LABEL_DAY_BUFFER) * 1000);
+                var endDate = (this.timeSpan.end + this.DAY * this.LABEL_DAY_BUFFER) * 1000;
+
+                date.setHours(0);
+                date.setMinutes(0);
+                date.setSeconds(0);
+                date.setMilliseconds(0);
+
+                while (date.getTime() < endDate) {
+                    if (this.dayLabels[date.getTime()] || date.getDate() == 1) {
+                        date.setDate(date.getDate() + 1);
+                        continue;
+                    }
+                    var label = this.createLabel(date);
+                    label.element.innerHTML = '<em>' + date.getDate() + '</em>';
+                    label.element.classList.add('small');
+                    if (this.isDayLabelVisible(frequency, label)) {
+                        label.element.classList.add('visible');
+                    }
+
+                    label.element.style.left = this.getPositionForDate(label.date) + 'px';
+                    this.$.timeline.appendChild(label.element);
+
+                    this.dayLabels[date.getTime()] = label;
+
+                    date.setDate(date.getDate() + 1);
+                }
+            },
+            updateDayLabels: function (frequency) {
+                for (var key in this.dayLabels) {
+                    var label = this.dayLabels[key];
+                    label.element.style.left = this.getPositionForDate(label.date) + 'px';
+
+                    if (this.isDayLabelVisible(frequency, label)) {
+                        if (!label.element.classList.contains('visible')) {
+                            label.element.classList.add('visible');
+                        }
+                    }
+                    else if (label.element.classList.contains('visible')) {
+                        label.element.classList.remove('visible');
+                    }
+                }
+            },
+            clearDayLabels: function () {
+                var start = (this.timeSpan.start - this.DAY * this.LABEL_DAY_BUFFER) * 1000;
+                var end = (this.timeSpan.end + this.DAY * this.LABEL_DAY_BUFFER) * 1000;
+
+                for (var key in this.dayLabels) {
+                    if (key < start || key > end) {
+                        this.$.timeline.removeChild(this.dayLabels[key].element);
+                        delete this.dayLabels[key];
+                    }
+                }
+            },
+            deleteDayLabels: function () {
+                for (var key in this.dayLabels) {
+                    this.$.timeline.removeChild(this.dayLabels[key].element);
+                    delete this.dayLabels[key];
+                }
+            },
+
+            /*
+             * **********************************
+             * Private labeling methods
+             * **********************************
+             */
+            getLabelFrequency: function () {
+                var width = this.clientWidth / (this.getSize() / this.DAY);
+
+                if (width < 4) {
+                    return this.FREQUENCY_YEAR;
+                }
+                if (width < 16) {
+                    return this.FREQUENCY_MONTH_HALF;
+                }
+                if (width < 90) {
+                    return this.FREQUENCY_MONTH_FULL;
+                }
+                if (width < 150) {
+                    return this.FREQUENCY_DAY_QUARTER;
+                }
+                if (width < 190) {
+                    return this.FREQUENCY_DAY_HALF;
+                }
+                return this.FREQUENCY_DAY_FULL;
+            },
+            createLabel: function (dateObj) {
+                var element = document.createElement('div');
+
+                this.appendChild(element);
+                element.classList.add('label');
+                return {
+                    date: dateObj.getTime() / 1000,
+                    element: element,
+                    month: dateObj.getMonth(),
+                    year: dateObj.getFullYear(),
+                    day: dateObj.getDate()
+                };
+            },
+            renderLabels: function () {
+                var frequency = this.getLabelFrequency();
+
+                this.clearMonthLabels();
+                this.createNewMonthLabels(frequency);
+                this.updateMonthLabels(frequency);
+
+                if (frequency >= this.FREQUENCY_DAY_FULL) {
+                    this.clearDayLabels();
+                    this.createNewDayLabels(frequency);
+                    this.updateDayLabels(frequency);
+                }
+                else {
+                    this.deleteDayLabels();
+                }
+            },
+            /*
+             * **********************************
+             * Private movement methods
+             * **********************************
+             */
+            zoomToTimeSpan: function (target, focusRatio) {
+                /*
+                 * Zooms to the target level at a specific focus ratio.
+                 */
+                var difference = target - this.getSize();
+                this.timeSpan.start -= difference * focusRatio;
+                this.timeSpan.end += difference * (1 - focusRatio);
+
+                this.render();
+            },
+
+            enforceZoomLimits: function (focusRatio) {
+                var maxTimeSpan = (this.clientWidth / 3) * this.DAY;
+                var minTimeSpan = (this.clientWidth / 300) * this.DAY;//was 230
+                if (this.getSize() > maxTimeSpan) {
+                    this.zoomToTimeSpan(maxTimeSpan, focusRatio);
+                }
+                if (this.getSize() < minTimeSpan) {
+                    this.zoomToTimeSpan(minTimeSpan, focusRatio);
+                }
+            },
+
+            requestItems: function () {
+                var startDate = new Date(this.timeSpan.start * 1000);
+                var endDate = new Date(this.timeSpan.end * 1000);
+                this.fire('timeline-request-items', {
+                    start: startDate.toISOString(),
+                    end: endDate.toISOString()
+                });
+            },
+            hasMoved: function () {
+                var now = new Date().getTime();
+                this.lastMove = now;
+                var me = this;
+
+                setTimeout(function () {
+                    if (me.lastMove == now) {
+                        me.requestItems();
+                    }
+                }, 150);
+            },
+            zoom: function (zoomVelocity, focusRatio) {
+                /*
+                 * Zooms at the given velocity at a specific focus ratio.
+                 */
+                var movement = zoomVelocity * this.getMass();
+                this.timeSpan.start += movement * focusRatio;
+                this.timeSpan.end -= movement * (1 - focusRatio);
+
+                this.enforceZoomLimits(focusRatio);
+
+                if (zoomVelocity < 0) {
+                    this.hasMoved();
+                }
+                this.render();
+            },
+            move: function (velocity) {
+                /*
+                 * Moves at the given velocity.
+                 */
+                var movement = velocity * this.getMass();
+
+                //@todo
+                //this.moveVelocity = movement;
+                //this.moveLastFrame = new Date().getTime();
+
+                this.timeSpan.start -= movement;
+                this.timeSpan.end -= movement;
+
+                this.hasMoved();
+                this.render();
+            },
+            _moveTo: function (date) {
+
+                var move = this.getCenter() - date;
+
+                this.move(move / this.getMass());
+                return;
+
+                //@todo
+                var distance = this.getCenter() - date;
+                var velocity = distance * this.getMass();
+
+                velocity /= this.GRAVITY;
+
+                console.log(distance, velocity)
+                this.move(velocity);
+            },
+            processMovement: function () {
+                if (this.moveVelocity == 0) {
+                    return false;
+                }
+
+                var now = new Date().getTime();
+
+                var mass = this.getMass();
+                this.timeSpan.start -= this.moveVelocity * mass;
+                this.timeSpan.end -= this.moveVelocity * mass;
+
+                if (Math.abs(this.moveVelocity) > 2) {
+                    var frameTimeSpan = (now - this.moveLastFrame) / 1000;
+
+                    this.moveVelocity /= 1 + (this.getMass() * this.GRAVITY * frameTimeSpan);
+                }
+                else {
+                    this.moveVelocity = 0;
+                }
+                this.moveLastFrame = now;
+
+                return this.moveVelocity != 0;
+            },
+
+            /*
+             * **********************************
+             * Private rendering methods
+             * **********************************
+             */
+            requestRender: function (callback) {
+                var me = this;
+                window.requestAnimationFrame(function () {
+                    if (callback.call(me)) {
+                        me.requestRender(callback);
+                    }
+                    else {
+                        me.isRendering = false;
+                    }
+                });
+            },
+            toggleRendering: function (toggle) {
+                if (this.keepRendering = toggle) {
+                    this.render();
+                }
+            },
+            render: function () {
+                if (this.isRendering) {
+                    return;
+                }
+                this.isRendering = true;
+
+                this.requestRender(function () {
+                    var keepMoving = false;//this.processMovement();
+                    this.renderPast();
+                    this.renderNodes();
+                    this.renderLabels();
+                    return keepMoving || this.keepRendering;
+                });
+            },
+
+            /*
+             * **********************************
+             * Input events
+             * **********************************
+             */
+            mouseWheel: function (event) {
+                var isTwoAxis = typeof event.wheelDeltaY !== 'undefined';
+                var differenceY = isTwoAxis ? event.wheelDeltaY : event.wheelDelta;
+                this.zoom(differenceY, event.clientX / this.clientWidth);
+                if (isTwoAxis) {
+                    this.move(event.wheelDeltaX / 3);
+                }
+                event.preventDefault();
+            },
+            touchStart: function (event) {
+                if (event.touches.length == 2) {
+                    this.isScaling = true;
+                    this.isTracking = false;
+
+                    this.lastPinchLength = this.calculatePinchLength(event);
+
+                    this.toggleRendering(true);
+                    event.preventDefault();
+                }
+            },
+            touchEnd: function (event) {
+                if (this.isScaling) {
+                    this.isScaling = this.isScaling && event.touches.length >= 2;
+
+                    this.toggleRendering(false);
+                    event.preventDefault();
+                }
+            },
+            touchMove: function (event) {
+                if (this.isScaling || event.touches.length >= 2) {
+                    var previous = this.lastPinchLength;
+                    var now = this.lastPinchLength = this.calculatePinchLength(event);
+                    var minX = Math.min(event.touches[0].pageX, event.touches[1].pageX);
+                    var maxX = Math.max(event.touches[0].pageX, event.touches[1].pageX);
+                    var focus = minX + (maxX - minX) / 2;
+                    this.zoom(1.5 * (now - previous), focus / this.clientWidth);
+
+                    event.preventDefault();
+                }
+            },
+            trackStart: function (event) {
+                this.lastTrackX = event.clientX;
+                if (this.isTracking = !this.isScaling) {
+                    this.$.container.classList.add('grabbing');
+
+                    this.toggleRendering(true);
+                }
+            },
+            trackEnd: function () {
+                this.$.container.classList.remove('grabbing');
+                this.isTracking = false;
+
+                this.toggleRendering(false);
+            },
+            track: function (event) {
+                if (this.isTracking) {
+                    this.move(event.clientX - this.lastTrackX);
+                    this.lastTrackX = event.clientX;
+                }
+            },
+
+            /*
+             * **********************************
+             * Change trackers
+             * **********************************
+             */
+            condensedChanged: function () {
+                this.nodes.forEach(function (node) {
+                    node.condensed = this.condensed;
+                }, this);
+            },
+
+            /*
+             * **********************************
+             * Polymer events
+             * **********************************
+             */
+            ready: function () {
+                this.timeSpan.start = this.getNow() - 7 * this.DAY;
+                this.timeSpan.end = this.getNow() + 14 * this.DAY;
+            },
+            domReady: function() {
+                this.requestItems();
+            },
+
+            //end of code
+            __end: true
+        });
+    </script>
+</polymer-element>

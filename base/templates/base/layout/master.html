@@ -80,6 +80,8 @@
 
     <link rel="import" href="{{ STATIC_URL }}elements/timeline-line.html">
     <link rel="import" href="{{ STATIC_URL }}elements/timeline-item.html">
+    <link rel="import" href="{{ STATIC_URL }}elements/timeline-container/timeline-container.html">
+    <link rel="import" href="{{ STATIC_URL }}elements/timeline-container/timeline-node.html">
     <link rel="import" href="{{ STATIC_URL }}elements/timeline-filter.html">
 
     <!-- Angular CSS dependencies -->
@@ -124,14 +126,12 @@
     <base href="/">
 </head>
 <body ng-app="punktlich" ng-controller="MainController" fullbleed vertical layout>
-<div flex fullbleed vertical layout>
+<div id="page" div fullbleed vertical layout>
     {% verbatim %}
     <paper-toast text="{{ flash.getMessage() }}"></paper-toast>
     {% endverbatim %}
-    <div ui-view="body">
-        <div ui-view="timeline" flex></div>
-        <div ui-view="content" flex></div>
-    </div>
+
+    <div ui-view flex></div>
 </div>
 </body>
 </html>
