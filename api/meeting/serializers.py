@@ -1,9 +1,8 @@
-import mimetypes
 from rest_framework import serializers
+
 from authentication.models import User
-from base.models import Agenda
-from base.validators import validate_file_pdf
-from meeting.models import Meeting, MeetingInvitation
+from meeting.validators import validate_file_pdf
+from meeting.models import Meeting, MeetingInvitation, Agenda
 
 
 class AgendaSerializer(serializers.ModelSerializer):

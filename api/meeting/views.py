@@ -1,12 +1,13 @@
-from django.http import Http404
+from rexec import FileWrapper
+from django.http import Http404, HttpResponse
 from django.utils.dateparse import parse_datetime
+from django.utils.encoding import smart_str
 from rest_framework import generics, viewsets
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework.serializers import ListSerializer
 from api.meeting.serializers import MeetingSerializer, AgendaSerializer
-from base.models import Agenda
-from meeting.models import Meeting
+from meeting.models import Meeting, Agenda
 
 
 class MeetingViewSet(viewsets.ModelViewSet):
@@ -18,7 +19,7 @@ class MeetingViewSet(viewsets.ModelViewSet):
     _to_date = None
 
     @detail_route(methods=['GET'])
-    def agendas(self):
+    def agendas(self, request, pk=None):
         meeting = self.get_object()
         return Response(AgendaSerializer(meeting.agendas.all(), many=True).data)
 
@@ -42,3 +43,13 @@ class AgendaViewSet(viewsets.ModelViewSet):
     serializer_class = AgendaSerializer
     permission_classes = []
     queryset = Agenda.objects.all()
+
+    @detail_route(methods=['get'])
+    def download(self, request, pk=None):
+        agenda = self.get_object()
+        response = HttpResponse(agenda.file, content_type='application/pdf')
+        response['Content-Disposition'] = 'inline; filename=%s' % smart_str(agenda.file)
+        response['X-Sendfile'] = smart_str(agenda.file)
+        # It's usually a good idea to set the 'Content-Length' header too.
+        # You can also set any other required headers: Cache-Control, etc.
+        return response
