@@ -87,3 +87,7 @@ angular.module('punktlichDep').controller('MeetingUpdateController', function($s
         $scope.$apply();
     });
 });
+
+angular.module('punktlichDep').controller('MeetingDetailController', function($scope, $rootScope, MeetingService, MeetingModel){
+
+});

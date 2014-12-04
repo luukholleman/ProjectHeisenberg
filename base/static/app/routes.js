@@ -64,6 +64,15 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                     }
                 }
             }).
+            state('meetings.detail', {
+                url: '/meeting/:id',
+                views: {
+                    '@': {
+                        templateUrl: appPath + 'templates/meeting/detail.html',
+                        controller: 'MeetingDetailController'
+                    }
+                }
+            }).
             state('meetings.update', {
                 url: '/meeting/:id/update',
                 views: {
@@ -72,6 +81,5 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                         controller: 'MeetingUpdateController'
                     }
                 }
-            })
-;
+            });
     }]);

@@ -1,0 +1,85 @@
+<style>
+    core-submenu {
+        background-color: #EEEEEE;
+    }
+
+    punkt-person {
+        padding: 10px;
+    }
+
+    .invited {
+        padding-top: 30px;
+    }
+
+    .pdf {
+        background-color: #BDBDBD;
+    }
+
+    .meeting-info {
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+</style>
+
+<core-toolbar class="top-toolbar" style="background-color: #E91E63;">
+    <paper-icon-button icon="arrow-back" ng-click="goto('meetings.list')" ng-show="onHome"></paper-icon-button>
+    <strong flex style="color:#fff;">Blaat</strong>
+    <paper-fab icon="add" title="Create meeting" role="button" aria-label="Create meeting"
+               ng-click="" style="background-color: #E91E63;"></paper-fab>
+</core-toolbar>
+
+<div horizontal flex layout>
+
+    <core-submenu icon="settings" label="Files" class="core-selected" active="">
+        <core-item label="" horizontal="" center="" layout="">
+            <punkt-file-revision
+                    type="subject"
+                    groupColorTint="#F06292"
+                    name="Agenda"
+                    owner="Christian Benstein"
+                    ></punkt-file-revision>
+
+        </core-item>
+        <core-item label="" horizontal="" center="" layout="">
+            <punkt-file
+                    type="subject"
+                    groupColorTint="#F06292"
+                    name="Agenda"
+                    owner="Christian Benstein"
+                    ></punkt-file>
+        </core-item>
+    </core-submenu>
+    <div flex vertical layout>
+            <punkt-file-revision
+                    type="subject"
+                    groupColorTint="#F06292"
+                    name="Agenda"
+                    owner="Christian Benstein"
+                    ></punkt-file-revision>
+        <div class="meeting-info">
+            <h1>In blabla days at Windesheim</h1>
+
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce placerat ligula id ultricies vulputate.
+                Pellentesque venenatis nunc convallis est malesuada lobortis. Nullam nulla tortor, mattis sit amet
+                tellus non, pharetra sodales lacus. Proin maximus turpis metus, sit amet dignissim libero finibus et.
+                Maecenas eget iaculis sapien. Nam dui mauris, porta lacinia erat a, maximus rhoncus odio. Nulla
+                fermentum porta tortor, ut consequat sapien lacinia et. Phasellus congue leo velit, vitae porta tortor
+                maximus eget. Curabitur a viverra enim, a dignissim velit. Sed feugiat scelerisque massa et lobortis.
+                Etiam suscipit sollicitudin sem, eget luctus ante suscipit vitae. Fusce congue sapien ligula, eu
+                lobortis nunc venenatis id. Pellentesque nec ligula nec elit ornare fermentum ut id orci.
+            </p>
+        </div>
+        <div flex class="pdf">
+        </div>
+    </div>
+    <core-submenu icon="settings" label="Files" class="core-selected invited" active="">
+        <core-item label="" horizontal="" center="" layout="">
+            <punkt-person abbr="DH" name="Daan Houweling" image="" status="1"></punkt-person>
+        </core-item>
+        <core-item label="" horizontal="" center="" layout="">
+            <punkt-person abbr="CB" name="Christian Benstein"
+                          image="https://lh3.googleusercontent.com/-itFogd4s6aA/AAAAAAAAAAI/AAAAAAAABfo/f0ecU39bZFc/s120-c/photo.jpg"
+                          status="2"></punkt-person>
+        </core-item>
+    </core-submenu>
+</div>

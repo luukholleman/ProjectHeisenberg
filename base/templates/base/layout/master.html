@@ -78,6 +78,7 @@
     <link rel="import" href="{{ STATIC_URL }}elements/punkt-filter-box.html">
     <link rel="import" href="{{ STATIC_URL }}elements/punkt-card.html">
     <link rel="import" href="{{ STATIC_URL }}elements/punkt-file.html">
+    <link rel="import" href="{{ STATIC_URL }}elements/punkt-file-revision.html">
     <link rel="import" href="{{ STATIC_URL }}elements/punkt-person.html">
 
     <link rel="import" href="{{ STATIC_URL }}elements/timeline-container/timeline-container.html">
@@ -127,7 +128,7 @@
     <base href="/">
 </head>
 <body ng-app="punktlich" ng-controller="MainController" fullbleed vertical layout>
-<div id="page" div fullbleed vertical layout>
+<div id="" ui-view fit vertical layout>
     {% verbatim %}
     <paper-toast text="{{ flash.getMessage() }}"></paper-toast>
     {% endverbatim %}
