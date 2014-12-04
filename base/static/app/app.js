@@ -13,5 +13,6 @@ angular.module('punktlichDep', [
     'ngRoute',
     'ngResource',
     'ui.router',
-    'restangular'
+    'restangular',
+    'angular-loading-bar'
 ]);

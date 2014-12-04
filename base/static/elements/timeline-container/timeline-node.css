@@ -1,0 +1,65 @@
+:host {
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 50%;
+}
+
+.node-container {
+    margin: 0;
+    padding: 0;
+    width: 48px;
+    height: 48px;
+    margin: -24px;
+    display: block;
+    border-radius: 50%;
+    font-size: 16px;
+
+    -webkit-transition: -webkit-transform .3s ease-in-out, background-color .3s ease-in-out, color .3s ease-in-out, width .3s ease-in-out, height .3s ease-in-out, margin .3s ease-in-out, font-size .3s ease-in-out;
+    transition: transform .3s ease-in-out, background-color .3s ease-in-out, color .3s ease-in-out, width .3s ease-in-out, height .3s ease-in-out, margin .3s ease-in-out, font-size .3s ease-in-out;
+
+    -webkit-animation: popup .2s linear 0s 1 alternate;
+    animation: popup .2s linear 0s 1 alternate;
+}
+
+.node-container[condensed]:not([opened]) {
+    color: rgba(0, 0, 0, 0);
+}
+
+.node-container[condensed] {
+    width: 24px;
+    height: 24px;
+    margin: -12px;
+    font-size: 8px;
+}
+
+.node-container[opened] {
+    -webkit-transform: scale(1.5);
+    transform: scale(1.5);
+    z-index: 10;
+}
+
+@-webkit-keyframes popup {
+    0% {
+        -webkit-transform: scale(0);
+    }
+    73% {
+        -webkit-transform: scale(1.5);
+    }
+    100% {
+        -webkit-transform: scale(1);
+    }
+}
+
+@keyframes popup {
+    0% {
+        transform: scale(0);
+    }
+    73% {
+        transform: scale(1.5);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
