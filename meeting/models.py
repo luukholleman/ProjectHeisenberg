@@ -10,24 +10,26 @@ class File(models.Model):
     class Meta:
         abstract = True
 
-    def __str__(self):
-        return self.filename
 
-
-class Agenda(File):
-    file = models.FileField(upload_to='agendas')
-
+class RenameFileMixin(models.Model):
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         self.file.name = hashlib.sha1(str(uuid.uuid4())).hexdigest() + '.pdf'
-        super(Agenda, self).save()
+        super(RenameFileMixin, self).save()
+
+    class Meta:
+        abstract = True
 
 
-class Minute(File):
+class Agenda(File, RenameFileMixin):
+    file = models.FileField(upload_to='agendas')
+
+
+class Minute(File, RenameFileMixin):
     file = models.FileField(upload_to='minutes')
 
 
-class Attachment(File):
+class Attachment(File, RenameFileMixin):
     file = models.FileField(upload_to='attachments')
 
 

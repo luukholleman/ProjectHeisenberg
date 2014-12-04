@@ -6,13 +6,13 @@ from rest_framework import generics, viewsets
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework.serializers import ListSerializer
-from api.meeting.serializers import MeetingSerializer, AgendaSerializer
+from api.meeting.serializers import MeetingSerializer, AgendaSerializer, AttachmentSerializer, MinuteSerializer
 from meeting.models import Meeting, Agenda
 
 
 class MeetingViewSet(viewsets.ModelViewSet):
     serializer_class = MeetingSerializer
-    #todo add logged in permission here
+    # todo add logged in permission here
     permission_classes = []
 
     _from_date = None
@@ -22,6 +22,16 @@ class MeetingViewSet(viewsets.ModelViewSet):
     def agendas(self, request, pk=None):
         meeting = self.get_object()
         return Response(AgendaSerializer(meeting.agendas.all(), many=True).data)
+
+    @detail_route(methods=['GET'])
+    def minutes(self, request, pk=None):
+        meeting = self.get_object()
+        return Response(MinuteSerializer(meeting.minutes.all(), many=True).data)
+
+    @detail_route(methods=['GET'])
+    def attachments(self, request, pk=None):
+        meeting = self.get_object()
+        return Response(AttachmentSerializer(meeting.minutes.all(), many=True).data)
 
     def list(self, request, *args, **kwargs):
         if 'from' not in request.QUERY_PARAMS or 'to' not in request.QUERY_PARAMS:
@@ -50,6 +60,4 @@ class AgendaViewSet(viewsets.ModelViewSet):
         response = HttpResponse(agenda.file, content_type='application/pdf')
         response['Content-Disposition'] = 'inline; filename=%s' % smart_str(agenda.file)
         response['X-Sendfile'] = smart_str(agenda.file)
-        # It's usually a good idea to set the 'Content-Length' header too.
-        # You can also set any other required headers: Cache-Control, etc.
         return response

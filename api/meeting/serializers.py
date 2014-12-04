@@ -13,6 +13,22 @@ class AgendaSerializer(serializers.ModelSerializer):
         fields = ('file',)
 
 
+class MinuteSerializer(serializers.ModelSerializer):
+    file = serializers.FileField(allow_empty_file=False, validators=[validate_file_pdf])
+
+    class Meta:
+        model = Agenda
+        fields = ('file',)
+
+
+class AttachmentSerializer(serializers.ModelSerializer):
+    file = serializers.FileField(allow_empty_file=False, validators=[validate_file_pdf])
+
+    class Meta:
+        model = Agenda
+        fields = ('file',)
+
+
 class MeetingInvitationSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), read_only=False)
     present_at = serializers.DateTimeField(read_only=True)
