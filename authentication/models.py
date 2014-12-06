@@ -59,7 +59,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_initials(self):
         "Returns the first letters of the first and last name of the user in uppercase."
-        return self.first_name[0] + self.last_name[0].upper()
+        initials = self.first_name[0]
+        if self.last_name is not None:
+            initials += self.last_name[0]
+        return initials.upper()
 
     def save(self, *args, **kwargs):
         if not self.pk:
