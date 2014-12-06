@@ -57,6 +57,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.activation_token = hashlib.sha1(self.email).hexdigest()
         self.activation_expire = datetime.now() + time_span
 
+    def get_initials(self):
+        "Returns the first letters of the first and last name of the user in uppercase."
+        return self.first_name[0] + self.last_name[0].upper()
+
     def save(self, *args, **kwargs):
         if not self.pk:
             self.set_password(self.password)

@@ -6,10 +6,14 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class UserSerializer(serializers.ModelSerializer):
+    initials = serializers.SerializerMethodField()
+
+    def get_initials(self, user):
+        return user.get_initials()
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'password',)
+        fields = ('id', 'email', 'first_name', 'last_name', 'password', 'initials')
         write_only_fields = ('password',)
 
 
