@@ -90,4 +90,14 @@ angular.module('punktlichDep').controller('MeetingUpdateController', function($s
 
 angular.module('punktlichDep').controller('MeetingDetailController', function($scope, $rootScope, MeetingService, MeetingModel){
 
+    // attach eventlistener to custom polymer element
+    _.each(document.querySelectorAll('.select-revision'), function(element, i) {
+        element.addEventListener('revision-selection-changed', function(event) {
+            console.log('loading new pdf file');
+        });
+    });
+
+    $scope.loadPdf = function() {
+
+    }
 });

@@ -29,7 +29,6 @@
 </core-toolbar>
 
 <div horizontal flex layout>
-
     <core-submenu icon="settings" label="Files" class="core-selected" active="">
         <core-item label="" horizontal="" center="" layout="">
             <punkt-file-revision
@@ -37,25 +36,18 @@
                     groupColorTint="#F06292"
                     name="Agenda"
                     owner="Christian Benstein"
-                    ></punkt-file-revision>
-
+                    class="select-revision"></punkt-file-revision>
         </core-item>
         <core-item label="" horizontal="" center="" layout="">
-            <punkt-file
-                    type="subject"
-                    groupColorTint="#F06292"
-                    name="Agenda"
-                    owner="Christian Benstein"
-                    ></punkt-file>
-        </core-item>
-    </core-submenu>
-    <div flex vertical layout>
             <punkt-file-revision
                     type="subject"
                     groupColorTint="#F06292"
                     name="Agenda"
                     owner="Christian Benstein"
-                    ></punkt-file-revision>
+                    class="select-revision"></punkt-file-revision>
+        </core-item>
+    </core-submenu>
+    <div flex vertical layout>
         <div class="meeting-info">
             <h1>In blabla days at Windesheim</h1>
 
