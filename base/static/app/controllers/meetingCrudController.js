@@ -88,7 +88,11 @@ angular.module('punktlichDep').controller('MeetingUpdateController', function($s
     });
 });
 
-angular.module('punktlichDep').controller('MeetingDetailController', function($scope, $rootScope, MeetingService, MeetingModel){
+angular.module('punktlichDep').controller('MeetingDetailController', function($scope, $stateParams, $rootScope, MeetingService, MeetingModel){
+
+    MeetingService.get($stateParams.id).get().then(function(data){
+        $scope.meeting = data;
+    });
 
     // attach eventlistener to custom polymer element
     _.each(document.querySelectorAll('.select-revision'), function(element, i) {

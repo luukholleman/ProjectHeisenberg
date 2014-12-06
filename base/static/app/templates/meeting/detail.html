@@ -23,7 +23,7 @@
 
 <core-toolbar class="top-toolbar" style="background-color: #E91E63;">
     <paper-icon-button icon="arrow-back" ng-click="goto('meetings.list')" ng-show="onHome"></paper-icon-button>
-    <strong flex style="color:#fff;">Blaat</strong>
+    <strong flex style="color:#fff;">{{ meeting.name }}</strong>
     <paper-fab icon="add" title="Create meeting" role="button" aria-label="Create meeting"
                ng-click="" style="background-color: #E91E63;"></paper-fab>
 </core-toolbar>
@@ -49,16 +49,9 @@
     </core-submenu>
     <div flex vertical layout>
         <div class="meeting-info">
-            <h1>In blabla days at Windesheim</h1>
-
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce placerat ligula id ultricies vulputate.
-                Pellentesque venenatis nunc convallis est malesuada lobortis. Nullam nulla tortor, mattis sit amet
-                tellus non, pharetra sodales lacus. Proin maximus turpis metus, sit amet dignissim libero finibus et.
-                Maecenas eget iaculis sapien. Nam dui mauris, porta lacinia erat a, maximus rhoncus odio. Nulla
-                fermentum porta tortor, ut consequat sapien lacinia et. Phasellus congue leo velit, vitae porta tortor
-                maximus eget. Curabitur a viverra enim, a dignissim velit. Sed feugiat scelerisque massa et lobortis.
-                Etiam suscipit sollicitudin sem, eget luctus ante suscipit vitae. Fusce congue sapien ligula, eu
-                lobortis nunc venenatis id. Pellentesque nec ligula nec elit ornare fermentum ut id orci.
+            <h1>In {{ location }} at {{ date_and_time }}</h1>
+            <p>
+                {{ description }}
             </p>
         </div>
         <div flex class="pdf">
