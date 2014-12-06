@@ -4,43 +4,7 @@
 
 <polymer-element name="punkt-file" attributes="type, groupColorTint, name, owner">
     <template>
-        <style>
-            paper-shadow {
-                height: 50px;
-                margin-right: 15px;
-                min-width: 180px;
-            }
-
-            .icon-box {
-                height: 50px;
-                width: 50px;
-            }
-
-            core-icon {
-                color: #fff;
-                height: 40px !important;
-                width: 40px !important;
-                padding: 5px;
-            }
-
-            .file-info-box{
-                background: #E1E1E1;
-                padding: 5px;
-            }
-
-            .file-info-box h3, .file-info-box h4{
-                margin: 1px 0;
-                font-size: 14px;
-            }
-
-            .file-info-box h3{
-                font-weight: 400;
-            }
-            .file-info-box h4{
-                font-weight: 100;
-                margin-top: 4px;
-            }
-        </style>
+        <link href="../sass/punkt-file.css" rel="stylesheet">
         <paper-shadow
                 class="file">
             <div horizontal layout>
