@@ -99,13 +99,12 @@ angular.module('punktlichDep').controller('MeetingDetailController', function ($
 
         // fetch all user data
         $scope.meeting.invitations.forEach(function (invitation, i) {
-            Restangular.one('users').get(function (user) {
+            Restangular.one('users', invitation.user).get().then(function (user) {
                 $scope.users.push(user);
             });
         });
 
-            $scope.loadPdf();
-
+        $scope.loadPdf();
     });
 
     // attach eventlistener to custom polymer element
@@ -115,10 +114,9 @@ angular.module('punktlichDep').controller('MeetingDetailController', function ($
         });
     });
 
-
     $scope.loadPdf = function () {
         agenda = $scope.meeting.agendas[0];
-        $http.get(agenda.file, {responseType: 'arraybuffer'}).success(function(response) {
+        $http.get(agenda.file, {responseType: 'arraybuffer'}).success(function (response) {
             var file = new Blob([response], {type: 'application/pdf'});
             var fileURL = URL.createObjectURL(file);
             $scope.pdf = $sce.trustAsResourceUrl(fileURL);
