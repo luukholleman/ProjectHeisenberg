@@ -1,7 +1,7 @@
 <div vertical layout center>
     <punkt-card ng-repeat="meeting in meetings"
                 header="{{ meeting.name }}"
-                subheader="{{ meeting.future() ? 'Starts' : 'Started' }} {{ meeting.moment.fromNow() }}"
+                subheader="{{ meeting.humanReadableDate() }}"
                 location="{{ meeting.location }}"
                 invitations="{{ meeting.invitations }}"
                 abbr="P"

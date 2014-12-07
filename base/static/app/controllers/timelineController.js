@@ -2,10 +2,6 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
     $scope.meetings = [];
 
     function addMeeting(meeting) {
-        meeting.moment = moment(new Date(meeting.date_and_time));
-        meeting.future = function () {
-            return this.moment.isAfter(moment());
-        }
         $scope.meetings.push(meeting);
 
         //  Timeout takes care of a callback ofter $apply, this is needed because we want the added meeting to show.

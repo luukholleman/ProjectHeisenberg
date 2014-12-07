@@ -7,6 +7,10 @@
         padding: 10px;
     }
 
+    punkt-file-revision {
+        padding:10px;
+    }
+
     .invited {
         padding-top: 30px;
     }
@@ -22,7 +26,7 @@
 </style>
 
 <core-toolbar class="top-toolbar" style="background-color: #E91E63;">
-    <paper-icon-button icon="arrow-back" ng-click="goto('meetings.list')"></paper-icon-button>
+    <paper-icon-button style="color:#fff;" icon="arrow-back" ng-click="goto('meetings.list')"></paper-icon-button>
     <strong flex style="color:#fff;">{{ meeting.name }}</strong>
     <paper-fab icon="add" title="Create meeting" role="button" aria-label="Create meeting"
                ng-click="" style="background-color: #E91E63;"></paper-fab>
@@ -36,7 +40,7 @@
                     groupColorTint="#F06292"
                     name="Agenda"
                     owner="Christian Benstein"
-                    revisions='{test: "test"}'
+                    revisions=''
                     class="select-revision"></punkt-file-revision>
         </core-item>
         <core-item label="" horizontal="" center="" layout="">
@@ -51,7 +55,7 @@
     </core-submenu>
     <div flex vertical layout>
         <div class="meeting-info">
-            <h1>In {{ meeting.location }} at {{ meeting.date_and_time }}</h1>
+            <h1>In {{ meeting.location }} {{ meeting.humanReadableDate() }}</h1>
             <p>
                 {{ meeting.description }}
             </p>
