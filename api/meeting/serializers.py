@@ -11,7 +11,7 @@ class AgendaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Agenda
-        fields = ('file',)
+        fields = ('file', 'upload_at')
 
 
 class MinuteSerializer(serializers.ModelSerializer):
