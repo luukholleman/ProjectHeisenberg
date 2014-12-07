@@ -1,7 +1,11 @@
 import json
 from datetime import datetime, timedelta
+from django.core.exceptions import ValidationError
+from django.core.files import File
 from django.test import TestCase
+import mock
 from meeting.models import Meeting
+from meeting.validators import validate_file_pdf
 
 
 class MeetingTestCase(TestCase):
@@ -13,6 +17,18 @@ class MeetingTestCase(TestCase):
             Meeting.objects.create(name="test", description="testdescription", location="t009", address="windesheim",
                                     date_and_time=dt)
             dt += delta
+
+    def test_file_pdf_validator(self):
+        """Test if pdf validator validates correctly"""
+        file_mock = mock.MagicMock(spec=File, name='FileMock')
+        file_mock.content_type = 'application/pdf'
+        self.assertIsNone(validate_file_pdf(file_mock))
+
+        file_mock.content_type = 'application/x-pdf'
+        self.assertIsNone(validate_file_pdf(file_mock))
+
+        file_mock.content_type = 'application/xml'
+        self.assertRaises(ValidationError, validate_file_pdf, file_mock)
 
     def test_get_meetings_based_on_filter(self):
         """Test if correct meetings are filtered"""

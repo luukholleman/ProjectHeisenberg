@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from api.authentication.serializers import UserSerializer
 
 from authentication.models import User
 from meeting.validators import validate_file_pdf
@@ -10,7 +11,7 @@ class AgendaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Agenda
-        fields = ('file',)
+        fields = ('file', 'upload_at')
 
 
 class MinuteSerializer(serializers.ModelSerializer):
@@ -46,7 +47,7 @@ class MeetingSerializer(serializers.ModelSerializer):
     address = serializers.CharField(required=False)
     date_and_time = serializers.DateTimeField(required=True)
     invitations = MeetingInvitationSerializer(source='meetinginvitation_set', read_only=False, many=True)
-    agendas = AgendaSerializer(many=True)
+    agendas = AgendaSerializer(many=True, read_only=True)
 
     def update(self, meeting, validated_attrs):
         invitations = meeting.meetinginvitation_set.all()
@@ -78,4 +79,4 @@ class MeetingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Meeting
-        fields = ('id', 'name', 'description', 'location', 'address', 'date_and_time', 'invitations')
+        fields = ('id', 'name', 'description', 'location', 'address', 'date_and_time', 'invitations', 'agendas')

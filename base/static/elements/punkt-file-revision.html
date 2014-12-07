@@ -1,0 +1,83 @@
+<link rel="import" href="../bower/polymer/polymer.html">
+<link rel="import" href="../bower/core-icon/core-icon.html">
+<link rel="import" href="../bower/paper-shadow/paper-shadow.html">
+
+<polymer-element name="punkt-file-revision" attributes="type, groupColorTint, name, owner">
+    <template>
+        <style>
+
+            .file-info-box {
+                padding: 5px;
+            }
+
+            .file-type-icon {
+                height: 40px !important;
+                width: 40px !important;
+            }
+
+            .file-info-box h3, .file-info-box h4 {
+                margin: 1px 0;
+                font-size: 14px;
+            }
+
+            .file-info-box h3 {
+                font-weight: 400;
+            }
+
+            .file-info-box h4 {
+                font-weight: 100;
+                margin-top: 4px;
+            }
+        </style>
+        <div horizontal layout justified>
+            <div class="icon-box" style=>
+                <core-icon class="file-type-icon" icon="{{ type }}"></core-icon>
+            </div>
+            <div class="file-info-box" flex>
+                <h3>{{ name }}</h3>
+                <h4>{{ owner }}</h4>
+            </div>
+
+            <div>
+                <div hidden?="{{ hideRevisions }}">
+                    <core-icon icon="restore" on-tap="{{ toggle }}">
+                        <paper-dropdown id="dropdown" class="revision-select" on-core-select="{{ revisionChanged }}">
+                            <core-menu>
+                                <template repeat="{{ item in revisions }}">
+                                    <core-item repeat="">Revisie 1</core-item>
+                                </template>
+                            </core-menu>
+                        </paper-dropdown>
+                    </core-icon>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        (function () {
+            Polymer('punkt-file-revision', {
+                ready: function () {
+                    this.revisions = ['test1', 'test2'];
+                    this.hideRevisions = this.revisions.length == 0;
+                },
+
+                revisionChanged: function() {
+                    console.log('firing event');
+                    this.fire('revision-selection-changed', {
+                        revision: 'test'
+                    });
+                },
+
+                toggle: function () {
+                    console.log(this);
+                    if (!this.$.dropdown) {
+                        this.$.dropdown = this.querySelector('core-dropdown');
+                    }
+                    console.log(this.$.dropdown);
+                    this.$.dropdown && this.$.dropdown.toggle();
+                }
+            });
+        })();
+    </script>
+</polymer-element>
