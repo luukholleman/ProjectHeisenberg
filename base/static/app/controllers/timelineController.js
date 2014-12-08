@@ -6,12 +6,6 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
         meeting.date = new Date(meeting.date_and_time).getTime() / 1000;
 
         $scope.meetings.push(meeting);
-
-        console.log('adding meeting', meeting);
-        //  Timeout takes care of a callback ofter $apply, this is needed because we want the added meeting to show.
-        $timeout(function () {
-            //document.getElementById('timeline').refresh();
-        });
     };
 
     function updateMeeting(meeting) {
@@ -20,7 +14,6 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
     };
 
     function addMeetings(meetings) {
-        //meetings = _.toArray(meetings);
         meetings.forEach(function (meeting) {
             var found = $scope.meetings.filter(function (m) {
                 return m.id == meeting.id
