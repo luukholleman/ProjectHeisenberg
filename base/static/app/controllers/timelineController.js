@@ -7,14 +7,13 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
         //  Timeout takes care of a callback ofter $apply, this is needed because we want the added meeting to show.
         $timeout(function () {
             //document.getElementById('timeline').refresh();
-        })
+        });
     };
 
     function updateMeeting(meeting) {
         meeting.color = 'pink';
         meeting.date = new Date(meeting.date_and_time).getTime() / 1000;
     };
-
 
     function addMeetings(meetings) {
         //meetings = _.toArray(meetings);
@@ -54,9 +53,7 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
     });
 
     var el = document.querySelector('#page');
-
     var raw = angular.element(el);
-
     raw.bind('scroll', function () {
         if (el.scrollTop > 300 - 170) {
             document.getElementById('timeline').condensed = true;
