@@ -64,7 +64,7 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                     }
                 }
             }).
-            state('meetings.detail', {
+            state('meeting-detail', {
                 url: '/meeting/:id',
                 views: {
                     '@': {
