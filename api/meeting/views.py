@@ -7,7 +7,7 @@ from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from api.meeting.serializers import MeetingSerializer, AgendaSerializer, AttachmentSerializer, MinuteSerializer
 from meeting.models import Meeting, Agenda
-
+from rest_framework import status
 
 class MeetingViewSet(viewsets.ModelViewSet):
     serializer_class = MeetingSerializer
@@ -31,6 +31,18 @@ class MeetingViewSet(viewsets.ModelViewSet):
     def attachments(self, request, pk=None):
         meeting = self.get_object()
         return Response(AttachmentSerializer(meeting.minutes.all(), many=True).data)
+
+    @detail_route(methods=['POST'])
+    def agenda(self, request, pk=None):
+        serializer = AgendaSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        agenda = serializer.save()
+
+        meeting = self.get_object()
+        meeting.agendas.add(agenda)
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def list(self, request, *args, **kwargs):
         if 'from' not in request.QUERY_PARAMS or 'to' not in request.QUERY_PARAMS:
