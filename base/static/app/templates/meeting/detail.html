@@ -2,14 +2,19 @@
     core-submenu {
         background-color: #EEEEEE;
     }
-
-    .sidebar {
-        width: 200px;
-        height: 500px;
+    punkt-person {
+        padding: 10px;
+    }
+    .invited {
+        padding-top: 30px;
     }
 
     .content {
-        background-color: white;
+        backgroun-color: white;
+    }
+    .meeting-info {
+        margin-right: 10px;
+        margin-left: 10px;
     }
 </style>
 
@@ -17,18 +22,35 @@
     <paper-icon-button style="color:#fff;" icon="arrow-back" ng-click="goto('meetings.list')"></paper-icon-button>
     <strong flex style="color:#fff;">{{ meeting.name }}</strong>
     <paper-fab icon="add" title="Create meeting" role="button" aria-label="Create meeting"
-               ng-click="" style="background-color: #03a9f4;"></paper-fab>
+               ng-click style="background-color: #E91E63;"></paper-fab>
 </core-toolbar>
-<div horizontal layout flex>
-    <div class="sidebar">
-        left
+
+<div horizontal flex layout>
+    <core-submenu icon="settings" label="Files" class="core-selected" active>
+        <core-item label horizontal center layout>
+        </core-item>
+        <core-item label horizontal center layout>
+            <punkt-file-revision
+                    type="subject"
+                    groupColorTint="#F06292"
+                    name="Minute"
+                    owner="Christian Benstein"
+                    revisions='{{ meeting.agendas }}'
+                    class="select-revision"></punkt-file-revision>
+        </core-item>
+    </core-submenu>
+    <div flex vertical layout>
+        <div class="meeting-info">
+            <h1>In {{ meeting.location }} {{ meeting.humanReadableDate() }}</h1>
+            <p>
+                {{ meeting.description }}
+            </p>
+        </div>
+        <div flex class="content">
+            CONTENT
+        </div>
     </div>
-
-    <div flex class="content">
-
-    </div>
-
-    <div class="sidebar">
-        right
+    <div>
+        <punkt-person ng-repeat="user in users" abbr="{{ user.initials }}" name="{{ user.full_name }}" image status="1"></punkt-person>
     </div>
 </div>

@@ -126,12 +126,10 @@
     <base href="/">
 </head>
 <body ng-app="punktlich" ng-controller="MainController" fullbleed vertical layout>
-<div id="page" fit vertical layout>
     {% verbatim %}
     <paper-toast text="{{ flash.getMessage() }}"></paper-toast>
     {% endverbatim %}
 
-    <div ui-view flex></div>
-</div>
+    <div id="page" fit vertical layout ui-view></div>
 </body>
 </html>
