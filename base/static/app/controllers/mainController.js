@@ -4,7 +4,7 @@ angular.module('punktlichDep').controller('MainController', function ($scope, $l
     if (authToken != null) {
         AuthenticationService.setToken(authToken);
     } else {
-        if(window.location.pathname != '/login') {
+        if(window.location.pathname != '/login' && window.location.pathname != '/register') {
             window.location = '/login';
         }
     }
