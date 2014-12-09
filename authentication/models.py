@@ -70,3 +70,12 @@ class User(AbstractBaseUser, PermissionsMixin):
             self.set_activation(expire_days=7)
 
         return super(User, self).save(*args, **kwargs)
+
+
+class Color(models.Model):
+    color = models.CharField(max_length=6, blank=True)
+
+
+class UserColor(models.Model):
+    user = models.ForeignKey(User)
+    color = models.ForeignKey(Color)
