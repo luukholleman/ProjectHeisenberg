@@ -2,7 +2,7 @@ import hashlib
 import uuid
 from django.db import models
 from authentication.models import User
-from validators import validate_file_pdf
+from validators import MimetypeValidator
 
 
 class File(models.Model):
@@ -23,7 +23,7 @@ class RenameFileMixin(models.Model):
 
 
 class Agenda(File, RenameFileMixin):
-    file = models.FileField(upload_to='agendas', validators=[validate_file_pdf])
+    file = models.FileField(upload_to='agendas')
 
 
 class Minute(File, RenameFileMixin):

@@ -1,13 +1,14 @@
 from rest_framework import serializers
 from api.authentication.serializers import UserSerializer
-
 from authentication.models import User
-from meeting.validators import validate_file_pdf
 from meeting.models import Meeting, MeetingInvitation, Agenda
+from meeting.validators import MimetypeValidator
 
 
 class AgendaSerializer(serializers.ModelSerializer):
-    file = serializers.FileField(allow_empty_file=False, validators=[validate_file_pdf])
+    file = serializers.FileField(allow_empty_file=False,
+                                 validators=[MimetypeValidator(allowed_mimetypes=['application/pdf',
+                                                                                  'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])])
 
     class Meta:
         model = Agenda
@@ -15,7 +16,9 @@ class AgendaSerializer(serializers.ModelSerializer):
 
 
 class MinuteSerializer(serializers.ModelSerializer):
-    file = serializers.FileField(allow_empty_file=False, validators=[validate_file_pdf])
+    file = serializers.FileField(allow_empty_file=False,
+                                 validators=[MimetypeValidator(allowed_mimetypes=['application/pdf',
+                                                                                  'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])])
 
     class Meta:
         model = Agenda
@@ -23,7 +26,8 @@ class MinuteSerializer(serializers.ModelSerializer):
 
 
 class AttachmentSerializer(serializers.ModelSerializer):
-    file = serializers.FileField(allow_empty_file=False, validators=[validate_file_pdf])
+    file = serializers.FileField(allow_empty_file=False,
+                                 validators=[MimetypeValidator(allowed_mimetypes=['application/pdf'])])
 
     class Meta:
         model = Agenda
