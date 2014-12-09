@@ -49,7 +49,7 @@ angular.module('punktlichDep').controller('MeetingUpdateController', function ($
         'Gemeente Zwolle'
     ];
 
-    MeetingService.get($stateParams.id).get().then(function (data) {
+    MeetingService.get($stateParams.meetingid).get().then(function (data) {
         $scope.meeting = data;
 
         Restangular.all('users').getList().then(function (users) {
@@ -94,7 +94,7 @@ angular.module('punktlichDep').controller('MeetingDetailController', function ($
 
     $scope.users = [];
 
-    MeetingService.get($stateParams.id).get().then(function (data) {
+    MeetingService.get($stateParams.meetingid).get().then(function (data) {
         $scope.meeting = data;
 
         // fetch all user data
@@ -103,6 +103,7 @@ angular.module('punktlichDep').controller('MeetingDetailController', function ($
                 $scope.users.push(user);
             });
         });
+
     });
 
     $scope.uploadAgenda = function (file) {

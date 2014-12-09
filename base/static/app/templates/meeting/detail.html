@@ -7,17 +7,45 @@
         padding: 10px;
     }
 
-    .invited {
-        padding-top: 30px;
-    }
-
     .content {
-        backgroun-color: white;
+        background-color: white;
+        padding:10px;
     }
 
-    .meeting-info {
-        margin-right: 10px;
-        margin-left: 10px;
+    .file-detail-heading > core-icon {
+        width: 48px;
+        height: 48px;
+        vertical-align: top;
+    }
+
+    .file-detail-heading > h2 {
+        display: inline;
+        font-size: 23px;
+        line-height: 48px;
+        font-weight: 100;
+    }
+
+    .sidebar {
+        padding: 15px;
+    }
+
+    .sidebar.right {
+        border-left: 1px solid #d9d9d9;
+        width: 350px;
+        box-sizing: border-box;
+    }
+
+    .sidebar hr {
+        width: 100%;
+    }
+
+    .sidebar .placeholder {
+        margin-top: 20px;
+        color: #f0f0f0;
+        font-weight: 300;
+        font-size: 24px;
+        width: 100%;
+        text-align: center;
     }
 
     .create-button {
@@ -29,7 +57,7 @@
     }
 
     punkt-dropdown {
-        margin:10px;
+        margin: 10px;
     }
 
 </style>
@@ -42,7 +70,6 @@
 </core-toolbar>
 
 <div horizontal flex layout>
-
     <core-submenu icon="settings" label="Files" class="core-selected" active>
         <core-item label horizontal center layout>
         </core-item>
@@ -54,21 +81,32 @@
             </punkt-dropdown>
         </core-item>
     </core-submenu>
-    <div flex vertical layout>
-        <div class="meeting-info">
-            <h1>In {{ meeting.location }} {{ meeting.humanReadableDate() }}</h1>
+    <div flex vertical layout class="content">
+        <h1>In {{ meeting.location }} {{ meeting.humanReadableDate() }}</h1>
 
-            <p>
-                {{ meeting.description }}
-            </p>
+        <p>
+            {{ meeting.description }}
+        </p>
+        <h4 class="heading">
+            Files
+        </h4>
+
+        <div horizontal layout>
+            <punkt-file type="subject" ng-click="goto('meeting-detail.file-detail', {fileid: 101})"
+                        groupColorTint="#B0BEC5" name="Agenda" owner="Christian Benstein"></punkt-file>
+            <punkt-file type="subject" ng-click="goto('meeting-detail.file-detail', {fileid: 102})"
+                        groupColorTint="#B0BEC5" name="Minutes" owner="Luuk Holleman"></punkt-file>
         </div>
-        <div flex class="content">
-            CONTENT
-        </div>
-    </div>
-    <div>
+        <h4 class="heading">
+            Participants
+        </h4>
         <punkt-person ng-repeat="user in users" abbr="{{ user.initials }}" name="{{ user.full_name }}" image
                       status="1"></punkt-person>
+    </div>
+
+
+    <div vertical layout class="sidebar right" ui-view="right-sidebar">
+        <span class="placeholder">Details</span>
     </div>
 
     <div hidden>
