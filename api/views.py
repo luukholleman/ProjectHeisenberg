@@ -11,7 +11,8 @@ class APIRoot(APIView):
             'login': reverse('api.v1.login', request=request),
             'get-authenticated-user': reverse('api.v1.get-authenticated-user', request=request),
             'users': reverse('api.v1.user-list', request=request),
-            'meetings': reverse('api.v1.meeting-list', request=request)
+            'meetings': reverse('api.v1.meeting-list', request=request),
+            'teams': reverse('api.v1.team-list', request=request)
         })
 
 api_root = APIRoot.as_view()

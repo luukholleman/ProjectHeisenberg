@@ -49,7 +49,7 @@ INSTALLED_APPS = (
     'base',
     'authentication',
     'meeting',
-    'group',
+    'team',
 
     'rest_framework',
     'rest_framework.authtoken',
