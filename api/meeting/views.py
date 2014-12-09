@@ -7,12 +7,11 @@ from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from api.meeting.serializers import MeetingSerializer, AgendaSerializer, AttachmentSerializer, MinuteSerializer
 from meeting.models import Meeting, Agenda
-from rest_framework import status
+from rest_framework import status, permissions
 
 class MeetingViewSet(viewsets.ModelViewSet):
     serializer_class = MeetingSerializer
-    # todo add logged in permission here
-    permission_classes = []
+    permission_classes = (permissions.IsAuthenticated,)
 
     _from_date = None
     _to_date = None
@@ -62,7 +61,7 @@ class MeetingViewSet(viewsets.ModelViewSet):
 
 class AgendaViewSet(viewsets.ModelViewSet):
     serializer_class = AgendaSerializer
-    permission_classes = []
+    permission_classes = (permissions.IsAuthenticated,)
     queryset = Agenda.objects.all()
 
     @detail_route(methods=['get'])
