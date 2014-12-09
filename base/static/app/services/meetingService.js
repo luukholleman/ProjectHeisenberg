@@ -20,15 +20,15 @@ angular.module('punktlichDep').service('MeetingService', function (MeetingModel,
                 .customPOST(formData, 'agenda', undefined, {'Content-Type': undefined}).then(success, error);
         };
 
-        meeting.postAgenda = function(file, success, error) {
+        meeting.postAgenda = function (file, success, error) {
             postFile('agenda', file, success, error);
         };
 
-        meeting.postMinute = function(file, success, error) {
+        meeting.postMinute = function (file, success, error) {
             postFile('minute', file, success, error);
         };
 
-        meeting.postAttachment = function(file, success, error) {
+        meeting.postAttachment = function (file, success, error) {
             postFile('attachment', file, success, error);
         };
 
