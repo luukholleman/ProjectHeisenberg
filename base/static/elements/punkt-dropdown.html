@@ -1,0 +1,34 @@
+<link rel="import" href="../bower/polymer/polymer.html">
+<style>
+    paper-button {
+        background-color: #E91E63;
+        color: white;
+    }
+</style>
+<polymer-element name="punkt-dropdown" attributes="type, groupColorTint, name, owner">
+    <template>
+        <paper-button raised on-tap="{{ toggle }}">New
+            <core-dropdown id="dropdown">
+                <core-menu>
+                    <content></content>
+                </core-menu>
+            </core-dropdown>
+        </paper-button>
+    </template>
+    <script>
+        (function () {
+            Polymer('punkt-dropdown', {
+                ready: function () {
+
+                },
+
+                toggle: function () {
+                    if (!this.$.dropdown) {
+                        this.$.dropdown = this.querySelector('core-dropdown');
+                    }
+                    this.$.dropdown && this.$.dropdown.toggle();
+                }
+            });
+        })();
+    </script>
+</polymer-element>

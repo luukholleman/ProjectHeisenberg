@@ -2,9 +2,11 @@
     core-submenu {
         background-color: #EEEEEE;
     }
+
     punkt-person {
         padding: 10px;
     }
+
     .invited {
         padding-top: 30px;
     }
@@ -12,10 +14,24 @@
     .content {
         backgroun-color: white;
     }
+
     .meeting-info {
         margin-right: 10px;
         margin-left: 10px;
     }
+
+    .create-button {
+        background-color: #E91E63;
+        color: white;
+        width: 150px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    punkt-dropdown {
+        margin:10px;
+    }
+
 </style>
 
 <core-toolbar class="top-toolbar" style="background-color: #E91E63;">
@@ -26,22 +42,22 @@
 </core-toolbar>
 
 <div horizontal flex layout>
+
     <core-submenu icon="settings" label="Files" class="core-selected" active>
         <core-item label horizontal center layout>
         </core-item>
         <core-item label horizontal center layout>
-            <punkt-file-revision
-                    type="subject"
-                    groupColorTint="#F06292"
-                    name="Minute"
-                    owner="Christian Benstein"
-                    revisions='{{ meeting.agendas }}'
-                    class="select-revision"></punkt-file-revision>
+            <punkt-dropdown>
+                <core-item ng-click="uploadAgenda()">Add new agenda</core-item>
+                <core-item ng-click="uploadMinute()">Add new minute</core-item>
+                <core-item ng-click="uploadAttachment()">Add new attachment</core-item>
+            </punkt-dropdown>
         </core-item>
     </core-submenu>
     <div flex vertical layout>
         <div class="meeting-info">
             <h1>In {{ meeting.location }} {{ meeting.humanReadableDate() }}</h1>
+
             <p>
                 {{ meeting.description }}
             </p>
@@ -51,6 +67,13 @@
         </div>
     </div>
     <div>
-        <punkt-person ng-repeat="user in users" abbr="{{ user.initials }}" name="{{ user.full_name }}" image status="1"></punkt-person>
+        <punkt-person ng-repeat="user in users" abbr="{{ user.initials }}" name="{{ user.full_name }}" image
+                      status="1"></punkt-person>
+    </div>
+
+    <div hidden>
+        <input type="file" id="agenda-file" file-model="file.agenda" name="agenda"/>
+        <input type="file" id="minute-file" name="minute"/>
+        <input type="file" id="attachment-file" name="attachment"/>
     </div>
 </div>
