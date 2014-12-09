@@ -110,7 +110,11 @@ angular.module('punktlichDep').controller('MeetingDetailController', function ($
         agendaFileElement.click();
 
         agendaFileElement.addEventListener('change', function (e) {
-            $scope.meeting.postAgenda($scope.file.agenda);
+            $scope.meeting.postAgenda($scope.file.agenda, function() {
+                console.log('wee');
+            }, function() {
+                console.log('mee');
+            });
         });
     };
 
