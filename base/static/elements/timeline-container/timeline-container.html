@@ -1,4 +1,4 @@
-<link rel="import" href="../../bower/polymer/polymer.html">
+  <link rel="import" href="../../bower/polymer/polymer.html">
 
 <polymer-element name="timeline-container">
     <template>
@@ -187,7 +187,8 @@
 
             renderNodes: function () {
                 this.nodes.forEach(function (node) {
-                    node.style.left = this.getPositionForDate(node.date) + 'px';
+                    var position = this.getPositionForDate(node.date);
+                    node.style.left = position + 'px';
                 }, this);
             },
 

@@ -2,12 +2,10 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
     $scope.meetings = [];
 
     function addMeeting(meeting) {
-        $scope.meetings.push(meeting);
+        meeting.color = 'pink';
+        meeting.date = new Date(meeting.date_and_time).getTime() / 1000;
 
-        //  Timeout takes care of a callback ofter $apply, this is needed because we want the added meeting to show.
-        $timeout(function () {
-            //document.getElementById('timeline').refresh();
-        })
+        $scope.meetings.push(meeting);
     };
 
     function updateMeeting(meeting) {
@@ -15,9 +13,7 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
         meeting.date = new Date(meeting.date_and_time).getTime() / 1000;
     };
 
-
     function addMeetings(meetings) {
-        //meetings = _.toArray(meetings);
         meetings.forEach(function (meeting) {
             var found = $scope.meetings.filter(function (m) {
                 return m.id == meeting.id
@@ -54,9 +50,7 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
     });
 
     var el = document.querySelector('#page');
-
     var raw = angular.element(el);
-
     raw.bind('scroll', function () {
         if (el.scrollTop > 300 - 170) {
             document.getElementById('timeline').condensed = true;

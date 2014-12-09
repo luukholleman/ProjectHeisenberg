@@ -126,7 +126,8 @@
 
     <base href="/">
 </head>
-<body ng-app="punktlich" fullbleed vertical layout>
+<body ng-app="punktlich" ng-controller="MainController" fullbleed vertical layout>
+<div id="page" fit vertical layout>
 <div id="" fit vertical layout>
     {% verbatim %}
     <paper-toast text="{{ flash.getMessage() }}"></paper-toast>
