@@ -10,7 +10,7 @@ def seed_admin(apps, schema_editor):
     User = apps.get_model('authentication', 'User')
     User.objects.get_or_create(pk=1,
                                email='admin@punktli.ch',
-                               password='pbkdf2_sha256$12000$HioPsiaBxrqj$jNnLqrZK',
+                               password='admin',
                                first_name='Punktlich',
                                last_name='administrator',
                                is_staff=1,
