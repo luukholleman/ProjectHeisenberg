@@ -88,7 +88,7 @@ angular.module('punktlichDep').controller('MeetingUpdateController', function ($
     });
 });
 
-angular.module('punktlichDep').controller('MeetingDetailController', function ($scope, $http, $sce, Restangular, $stateParams, $rootScope, MeetingService, FileUploadService) {
+angular.module('punktlichDep').controller('MeetingDetailController', function ($scope, $http, $sce, Restangular, $stateParams, $rootScope, MeetingService) {
 
     $scope.meeting = [];
 
@@ -110,52 +110,25 @@ angular.module('punktlichDep').controller('MeetingDetailController', function ($
         agendaFileElement.click();
 
         agendaFileElement.addEventListener('change', function (e) {
-
-            var reader = new FileReader();
-            reader.onload = function(event) {
-                var contents = event.target.results;
-                console.log(content);
-            };
-
-            reader.readAsArrayBuffer($scope.file);
-
-            var fd = new FormData();
-            fd.append('file', $scope.file);
-            fd.append('name', 'wee');
-
-            console.log($scope.file);
-
-            console.log($scope.meeting.withHttpConfig({transformRequest: angular.identity}).customPOST(fd, 'agenda', undefined, {'Content-Type': undefined})).then(function (response) {
-                console.log('Weeeeee!!!');
-            });
-
-            //FileUploadService.uploadToUrl($scope.file.agenda, '/api/v1/meetings/' + $scope.meeting.id + '/agenda');
+            $scope.meeting.postAgenda($scope.file.agenda);
         });
     };
 
     $scope.uploadAttachment = function () {
         var attachmentFileElement = document.querySelector('#attachment-file');
         attachmentFileElement.click();
+
+        attachmentFileElement.addEventListener('change', function (e) {
+            $scope.meeting.postAttachment($scope.file.agenda);
+        });
     };
 
     $scope.uploadMinute = function () {
-        var attachmentFileElement = document.querySelector('#attachment-file');
-        attachmentFileElement.click();
-    };
-});
+        var minuteFileElement = document.querySelector('#minute-file');
+        minuteFileElement.click();
 
-angular.module('punktlichDep').directive('fileModel', function ($parse) {
-    return {
-        restrict: 'A',
-        link: function (scope, element, attrs) {
-            var model = $parse(attrs.fileModel);
-            var modelSetter = model.assign;
-
-            element.bind('change', function () {
-                scope.$apply(function () {
-                    modelSetter(scope, element[0].files[0]);
-                });
-            });
-        }
+        minuteFileElement.addEventListener('change', function (e) {
+            $scope.meeting.postMinute($scope.file.agenda);
+        });
     };
 });
