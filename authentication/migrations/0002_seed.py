@@ -8,13 +8,15 @@ from django.db import models, migrations
 def seed_admin(apps, schema_editor):
     # create user, password is: admin
     User = apps.get_model('authentication', 'User')
-    User.objects.get_or_create(pk=1,
+    user = User.objects.get_or_create(pk=1,
                                email='admin@punktli.ch',
-                               password='pbkdf2_sha256$12000$HioPsiaBxrqj$jNnLqrZK',
                                first_name='Punktlich',
                                last_name='administrator',
                                is_staff=1,
                                is_active=1)
+
+    user.set_password('admin')
+    user.save()
 
 
 class Migration(migrations.Migration):
