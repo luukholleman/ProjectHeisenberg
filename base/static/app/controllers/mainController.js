@@ -11,9 +11,9 @@ angular.module('punktlichDep').controller('MainController', function ($scope, $l
 
     $scope.flash = FlashMessageService;
 
-    $scope.goto = function (route) {
+    $scope.goto = function (route, params) {
         $scope.onHome = $location.path() === '/';
 
-        $state.go(route);
+        $state.go(route, params);
     };
 });
