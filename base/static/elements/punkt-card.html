@@ -1,7 +1,8 @@
 <link rel="import" href="../bower/polymer/polymer.html">
 <link rel="import" href="../bower/paper-shadow/paper-shadow.html">
 
-<polymer-element name="punkt-card" attributes="header color groupname subheader abbr status detailsVisible location invitations description">
+<polymer-element name="punkt-card"
+                 attributes="header color groupname subheader abbr status detailsVisible location invitations description">
     <template>
         <style>
             :host {
@@ -94,7 +95,7 @@
                 vertical layout
                 class="card">
             <div relative
-                 on-click="{{toggleDetails}}"
+                 on-click="{{ toggleDetails }}"
                  class="header"
                  style="background-color: {{ color }};">
                 <h1>
@@ -112,53 +113,33 @@
             <template if="{{ detailsVisible }}">
                 <div vertical layout
                      class="content">
-                    <content flex></content>
+                    <content select=".info" flex></content>
                 </div>
             </template>
             <div class="rsvp"
                  horizontal layout>
                 <div flex>
-                    <paper-button on-click="{{variableAction}}"
-                                  class="btn-default">{{buttonText}}</paper-button>
+                    <template if="{{ detailsVisible }}">
+                        <content select=".button"></content>
+                    </template>
+                    <template if="{{ !detailsVisible }}">
+                        <paper-button on-tap="{{ toggleDetails }}"
+                                      class="btn-default">show details
+                        </paper-button>
+                    </template>
                 </div>
-                <paper-button class="btn-decline" choice?="{{ status==3 }}">DECLINE</paper-button>
-                <paper-button class="btn-maybe" choice?="{{ status==2 }}">MAYBE</paper-button>
-                <paper-button class="btn-accept" choice?="{{ status==1 }}">ACCEPT</paper-button>
+                <paper-button class="btn-decline" choice?="{{ status==3 }}">decline</paper-button>
+                <paper-button class="btn-maybe" choice?="{{ status==2 }}">maybe</paper-button>
+                <paper-button class="btn-accept" choice?="{{ status==1 }}">accept</paper-button>
             </div>
         </paper-shadow>
     </template>
     <script>
-        (function () {
-            Polymer('punkt-card', {
-                //  Data properties
-                detailsVisible: false,
-                //  Visual properties
-                buttonText: this.detailsVisible ? "OPEN MEETING" : "SHOW DETAILS",
-
-                variableAction: function(e, detail, sender) {
-                    switch (sender.className) {
-                        case "btn-default":
-                            if (!this.detailsVisible) {
-                                this.toggleDetails(e, detail, sender);
-                            } else {
-                                this.openMeeting(e, detail, sender);
-                            }
-                            break;
-                        case "header":
-                            this.toggleDetails(e, detail,sender);
-                            break;
-                    };
-                },
-
-                toggleDetails: function (e, detail, sender) {
-                    this.detailsVisible = !this.detailsVisible;
-                    this.buttonText = this.detailsVisible ? "OPEN MEETING" : "SHOW DETAILS";
-                },
-
-                openMeeting: function (e, detail, sender) {
-                    console.error("UNDEFINED IS NOT IMPLEMENTED");
-                }
-            });
-        })();
+        Polymer('punkt-card', {
+            detailsVisible: false,
+            toggleDetails: function (e, detail, sender) {
+                this.detailsVisible = !this.detailsVisible;
+            }
+        });
     </script>
 </polymer-element>
