@@ -9,9 +9,9 @@ class Group(models.Model):
     created_at = models.DateTimeField(auto_now=True)
 
     creator = models.ForeignKey(User, related_name='group_creator_set')
-    user_color = models.ManyToManyField(UserColor)
-    invitations = models.ManyToManyField(User)
-    meetings = models.ManyToManyField(Meeting)
+    user_color = models.ManyToManyField(UserColor, blank=True)
+    invitations = models.ManyToManyField(User, blank=True)
+    meetings = models.ManyToManyField(Meeting, blank=True)
 
     @property
     def abbreviation(self):
