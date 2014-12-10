@@ -3,15 +3,15 @@ from django.utils.translation import ugettext_lazy as _
 from authentication.models import User, UserColor
 from meeting.models import Meeting
 
-class Group(models.Model):
+class Team(models.Model):
     name = models.CharField(max_length=255, blank=False)
     description = models.CharField(max_length=4096, blank=True)
     created_at = models.DateTimeField(auto_now=True)
 
     creator = models.ForeignKey(User, related_name='group_creator_set')
-    user_color = models.ManyToManyField(UserColor)
-    invitations = models.ManyToManyField(User)
-    meetings = models.ManyToManyField(Meeting)
+    user_color = models.ManyToManyField(UserColor, blank=True)
+    invitations = models.ManyToManyField(User, blank=True)
+    meetings = models.ManyToManyField(Meeting, blank=True)
 
     @property
     def abbreviation(self):
