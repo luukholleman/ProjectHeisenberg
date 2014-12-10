@@ -12,6 +12,8 @@ angular.module('punktlich').config(function ($httpProvider, $locationProvider, R
     $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
 
     cfpLoadingBarProvider.includeSpinner = false;
+
+    $httpProvider.interceptors.push('AccessInterceptor');
 });
 
 angular.module('punktlichDep', [
