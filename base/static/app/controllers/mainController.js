@@ -1,4 +1,4 @@
-angular.module('punktlichDep').controller('MainController', function ($scope, $location, FlashMessageService, AuthenticationService, $state) {
+angular.module('punktlichDep').controller('MainController', function ($scope, $rootScope, $location, FlashMessageService, AuthenticationService, $state) {
     var authToken = localStorage.getItem('authentication-token');
 
     if (authToken != null) {
@@ -10,6 +10,11 @@ angular.module('punktlichDep').controller('MainController', function ($scope, $l
     }
 
     $scope.flash = FlashMessageService;
+
+    $rootScope.$on('unauthorizedRequest', function() {
+        AuthenticationService.resetToken();
+        $scope.goto('login');
+    });
 
     $scope.goto = function (route, params) {
         $scope.onHome = $location.path() === '/';
