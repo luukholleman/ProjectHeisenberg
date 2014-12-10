@@ -13,7 +13,7 @@ angular.module('punktlichDep').factory('MeetingModel', function (Restangular) {
             return meeting.future() ? 'Starts' : 'Started' + ' ' + meeting.date_and_time_moment.fromNow();
         };
 
-        var postFile = function (type, file, success, error) {
+        meeting.postFile = function (type, file, success, error) {
             var formData = new FormData();
             formData.append('file', file);
             meeting.withHttpConfig({transformRequest: angular.identity})
