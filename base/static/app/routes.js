@@ -77,7 +77,7 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                 url: '/agenda/:agendaid',
                 views: {
                     'right-sidebar@meeting-detail': {
-                        templateUrl: appPath + 'templates/meeting/file-detail.html',
+                        templateUrl: appPath + 'templates/meeting/agenda.html',
                         controller: 'AgendaDetailController'
                     }
                 }
@@ -86,7 +86,7 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                 url: '/minutes/:minutesid',
                 views: {
                     'right-sidebar@meeting-detail': {
-                        templateUrl: appPath + 'templates/meeting/file-detail.html',
+                        templateUrl: appPath + 'templates/meeting/agenda.html',//todo
                         controller: 'MinutesDetailController'
                     }
                 }
@@ -95,7 +95,7 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                 url: '/attachments/:attachmentid',
                 views: {
                     'right-sidebar@meeting-detail': {
-                        templateUrl: appPath + 'templates/meeting/file-detail.html',
+                        templateUrl: appPath + 'templates/meeting/agenda.html',//todo
                         controller: 'AttachementDetailController'
                     }
                 }

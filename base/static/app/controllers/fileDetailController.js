@@ -3,22 +3,7 @@ angular.module('punktlichDep').controller('MinutesDetailController', function ($
 });
 
 angular.module('punktlichDep').controller('AgendaDetailController', function ($scope) {
-    $scope.file = {};
-
-    if($scope.meeting) {
-        loadForMeeting($scope.meeting);
-    }
-    $scope.$on('meetingLoaded', function () {
-        loadForMeeting($scope.meeting);
-    });
-
-    function loadForMeeting(meeting) {
-        var agendas = meeting.agendas;
-
-        if(agendas && agendas.length) {
-            $scope.file = agendas[0];
-        }
-    }
+    //@todo
 });
 
 angular.module('punktlichDep').controller('AttachmentDetailController', function ($scope, $stateParams, AttachmentModel) {

@@ -1,0 +1,44 @@
+<style>
+    .file-details {
+        font-weight: 100;
+        padding-top: 15px;
+
+    }
+
+    .file-details > dt {
+        display: inline-block;
+        float: left;
+        text-align: left;
+        width: 100px;
+        clear: left;
+        margin: 5px auto;
+        padding: 0;
+    }
+
+    .file-details > dd {
+        display: inline-block;
+        float: left;
+        text-align: left;
+        width: 200px;
+        margin: 5px auto;
+        padding: 0;
+    }
+</style>
+
+<div ng-show="meeting && meeting.hasAgenda">
+    <div class="file-detail-heading">
+        <core-icon icon="subject" role="img"></core-icon>
+        <h2>Agenda</h2>
+    </div>
+
+    <hr class="spacing"/>
+
+    <dl class="file-details">
+        <dt>Name</dt>
+        <dd>{{ meeting.latestAgenda.name }}</dd>
+        <dt>Owner</dt>
+        <dd>{{ meeting.latestAgenda.owner.full_name }}</dd>
+        <dt>Created</dt>
+        <dd>{{ meeting.latestAgenda.humanReadableDate() }}</dd>
+    </dl>
+</div>

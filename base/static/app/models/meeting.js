@@ -13,6 +13,30 @@ angular.module('punktlichDep').factory('MeetingModel', function (Restangular) {
             return meeting.future() ? 'Starts' : 'Started' + ' ' + meeting.date_and_time_moment.fromNow();
         };
 
+        function createRevision(agenda) {
+            console.log(agenda);
+            return {
+                owner: agenda.created_by,
+                name: agenda.file_name,
+                humanReadableDate: function () {
+                    return moment(new Date(agenda.uploaded_at)).fromNow()
+                }
+            };
+        };
+
+        meeting.hasAgenda = meeting.agendas && meeting.agendas.length > 0;
+        meeting.latestAgenda = meeting.hasAgenda ? createRevision(meeting.agendas[0]) : null;
+
+        meeting.getAgendaRevisions = function () {
+            var revisions = [];
+
+            meeting.agendas.forEach(function (agenda) {
+                revision.push(createRevision(agenda));
+            });
+
+            return revisions;
+        };
+
         meeting.postFile = function (type, file, success, error) {
             var formData = new FormData();
             formData.append('file', file);
