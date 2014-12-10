@@ -63,7 +63,7 @@
 </style>
 
 <core-toolbar class="top-toolbar" style="background-color: #E91E63;">
-    <paper-icon-button style="color:#fff;" icon="arrow-back" ng-click="goto('meetings.list')"></paper-icon-button>
+    <paper-icon-button style="color:#fff" icon="arrow-back" ng-click="goto('meetings.list')"></paper-icon-button>
     <strong flex style="color:#fff;">{{ meeting.name }}</strong>
     <paper-fab icon="add" title="Create meeting" role="button" aria-label="Create meeting"
                ng-click style="background-color: #E91E63;"></paper-fab>
@@ -75,6 +75,7 @@
         </core-item>
         <core-item label horizontal center layout>
             <punkt-dropdown>
+                <paper-button style="background-color: #E91E63; color: white;" raised>new</paper-button>
                 <core-item ng-click="uploadAgenda()">Add new agenda</core-item>
                 <core-item ng-click="uploadMinute()">Add new minute</core-item>
                 <core-item ng-click="uploadAttachment()">Add new attachment</core-item>
