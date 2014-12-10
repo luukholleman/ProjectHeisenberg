@@ -97,6 +97,8 @@ angular.module('punktlichDep').controller('MeetingDetailController', function ($
     MeetingService.get($stateParams.meetingid).get().then(function (data) {
         $scope.meeting = data;
 
+        $scope.$broadcast('meetingLoaded');
+
         // fetch all user data
         $scope.meeting.invitations.forEach(function (invitation, i) {
             Restangular.one('users', invitation.user).get().then(function (user) {

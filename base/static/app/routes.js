@@ -73,12 +73,30 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                     }
                 }
             }).
-            state('meeting-detail.file-detail', {
-                url: '/file/:fileid',
+            state('meeting-detail.agenda-detail', {
+                url: '/agenda/:agendaid',
                 views: {
                     'right-sidebar@meeting-detail': {
                         templateUrl: appPath + 'templates/meeting/file-detail.html',
-                        controller: 'FileDetailController'
+                        controller: 'AgendaDetailController'
+                    }
+                }
+            }).
+            state('meeting-detail.minutes-detail', {
+                url: '/minutes/:minutesid',
+                views: {
+                    'right-sidebar@meeting-detail': {
+                        templateUrl: appPath + 'templates/meeting/file-detail.html',
+                        controller: 'MinutesDetailController'
+                    }
+                }
+            }).
+            state('meeting-detail.attachement-detail', {
+                url: '/attachments/:attachmentid',
+                views: {
+                    'right-sidebar@meeting-detail': {
+                        templateUrl: appPath + 'templates/meeting/file-detail.html',
+                        controller: 'AttachementDetailController'
                     }
                 }
             }).
