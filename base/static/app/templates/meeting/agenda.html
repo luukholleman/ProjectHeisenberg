@@ -4,6 +4,19 @@
         padding-top: 15px;
     }
 
+    .file-detail-heading core-icon {
+        width: 48px;
+        height: 48px;
+        vertical-align: top;
+    }
+
+    .file-detail-heading h2 {
+        display: inline;
+        font-size: 23px;
+        line-height: 48px;
+        font-weight: 100;
+    }
+
     .file-details > dt {
         display: inline-block;
         float: left;
@@ -23,6 +36,14 @@
         padding: 0;
     }
 
+    .file-detail-heading paper-icon-button {
+        float: right;
+        width: 24px;
+        height: 24px;
+        padding: 12px;
+        color: #acacac;
+    }
+
     paper-button.download {
         width: 100%;
     }
@@ -30,8 +51,10 @@
 
 <div ng-show="meeting && meeting.hasAgenda">
     <div class="file-detail-heading">
+
         <core-icon icon="subject" role="img"></core-icon>
         <h2>Agenda</h2>
+        <paper-icon-button icon="close" title="Close" role="button" ng-click="goto('^')"></paper-icon-button>
     </div>
 
     <hr class="spacing"/>
