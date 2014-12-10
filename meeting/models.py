@@ -1,4 +1,5 @@
 import hashlib
+import os
 import uuid
 from django.db import models
 from authentication.models import User
@@ -7,6 +8,7 @@ from validators import MimetypeValidator
 
 class File(models.Model):
     upload_at = models.DateTimeField(auto_now=True)
+    file_name = models.CharField(max_length=200, null=True)
 
     class Meta:
         abstract = True
@@ -15,7 +17,9 @@ class File(models.Model):
 class RenameFileMixin(models.Model):
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
-        self.file.name = hashlib.sha1(str(uuid.uuid4())).hexdigest() + '.pdf'
+        file_name, file_extension = os.path.splitext(self.file.name)
+        self.file_name = file_name
+        self.file.name = hashlib.sha1(str(uuid.uuid4())).hexdigest() + file_extension
         super(RenameFileMixin, self).save()
 
     class Meta:

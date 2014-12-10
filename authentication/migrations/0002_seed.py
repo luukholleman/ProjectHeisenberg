@@ -13,10 +13,8 @@ def seed_admin(apps, schema_editor):
                                first_name='Punktlich',
                                last_name='administrator',
                                is_staff=1,
-                               is_active=1)
-
-    user.set_password('admin')
-    user.save()
+                               is_active=1,
+                               password='admin')
 
 
 class Migration(migrations.Migration):
