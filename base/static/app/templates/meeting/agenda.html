@@ -2,7 +2,6 @@
     .file-details {
         font-weight: 100;
         padding-top: 15px;
-
     }
 
     .file-details > dt {
@@ -32,6 +31,8 @@
     </div>
 
     <hr class="spacing"/>
+
+    <paper-button ng-click="$window.open(meeting.lastestAgenda.file)" raised>Download</paper-button>
 
     <dl class="file-details">
         <dt>Name</dt>
