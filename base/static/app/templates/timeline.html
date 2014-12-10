@@ -35,15 +35,16 @@
     }
 </style>
 <core-drawer-panel forceNarrow="true" style="position: static;">
-    <core-drawer-header drawer>
+    <core-drawer-header drawer ng-controller="OffCanvasMenuController">
         <core-toolbar class="top-toolbar">
-            <strong flex>Luuk Holleman</strong>
+            <strong flex>{{ user.full_name }}</strong>
         </core-toolbar>
 
-        <core-menu>
-            <core-item label="Content 1"></core-item>
-            <core-item label="Content 2"></core-item>
-        </core-menu>
+        <ul>
+            <li ng-repeat="team in user.teams">
+                <span ng-click="goto('group/' + team.id)">{{ team.name }}</span>
+            </li>
+        </ul>
     </core-drawer-header>
     <div main>
         <div class="timeline-view" ui-view></div>
