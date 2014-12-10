@@ -18,6 +18,8 @@ class Team(models.Model):
         """
         :return: Abbreviation of group (first letters of words, max. two words)
         """
+        abbr = ""
         words = self.name.split()
-        abbr = words[0][0] + words[1][0]
-        return abbr.upper()
+        for word in words:
+            abbr += word[0]
+        return abbr[0:2].upper()
