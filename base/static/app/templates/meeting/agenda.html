@@ -22,6 +22,10 @@
         margin: 5px auto;
         padding: 0;
     }
+
+    paper-button.download {
+        width: 100%;
+    }
 </style>
 
 <div ng-show="meeting && meeting.hasAgenda">
@@ -32,7 +36,7 @@
 
     <hr class="spacing"/>
 
-    <paper-button ng-click="$window.open(meeting.lastestAgenda.file)" raised>Download</paper-button>
+    <paper-button class="download" style="background-color: #E91E63; color: white;" ng-click="download(meeting.latestAgenda.file)" raised>Download</paper-button>
 
     <dl class="file-details">
         <dt>Name</dt>

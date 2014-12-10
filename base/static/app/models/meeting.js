@@ -14,7 +14,7 @@ angular.module('punktlichDep').factory('MeetingModel', function (Restangular) {
         };
 
         function createRevision(agenda) {
-            console.log(agenda);
+            test = agenda;
             return {
                 file: agenda.file,
                 owner: agenda.created_by,

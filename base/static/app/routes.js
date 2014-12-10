@@ -78,6 +78,7 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                 views: {
                     'right-sidebar@meeting-detail': {
                         templateUrl: appPath + 'templates/meeting/agenda.html',
+                        controller: 'FileDetailController'
                     }
                 }
             }).
@@ -86,6 +87,7 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                 views: {
                     'right-sidebar@meeting-detail': {
                         templateUrl: appPath + 'templates/meeting/agenda.html',//todo
+                        controller: 'FileDetailController'
                     }
                 }
             }).
