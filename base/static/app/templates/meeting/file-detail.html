@@ -27,18 +27,19 @@
 
 <div class="file-detail-heading">
     <core-icon icon="subject" role="img"></core-icon>
-    <h2>Title</h2>
+    <h2>{{ fileType }}</h2>
 </div>
 
 <hr class="spacing"/>
 
 <dl class="file-details">
     <dt>Name</dt>
-    <dd>Onderzoek automatisering Polymer</dd>
-    <dt>Type</dt>
-    <dd>Agenda</dd>
-    <dt>Owner</dt>
-    <dd>Heon Luzen</dd>
-    <dt>Created</dt>
-    <dd>12 December 14:02</dd>
+    <dd>{{ file.name }}</dd>
+    <dt>Uploaded by</dt>
+    <dd>{{ file.owner }}</dd>
+    <dt>Uploaded at</dt>
+    <dd>{{ file.created_at }}</dd>
 </dl>
+<pre>
+{{ file | json }}
+</pre>

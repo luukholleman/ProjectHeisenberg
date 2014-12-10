@@ -1,9 +1,10 @@
 angular.module('punktlichDep').controller('MinutesDetailController', function ($scope) {
-    console.log('MinutesDetailController');
+    //@todo
 });
 
 angular.module('punktlichDep').controller('AgendaDetailController', function ($scope) {
-    console.log('AgendaDetailController');
+    $scope.file = {};
+
     if($scope.meeting) {
         loadForMeeting($scope.meeting);
     }
@@ -12,11 +13,11 @@ angular.module('punktlichDep').controller('AgendaDetailController', function ($s
     });
 
     function loadForMeeting(meeting) {
-        console.log(meeting);
-
         var agendas = meeting.agendas;
 
-        console.log(agendas);
+        if(agendas && agendas.length) {
+            $scope.file = agendas[0];
+        }
     }
 });
 
@@ -27,4 +28,6 @@ angular.module('punktlichDep').controller('AttachmentDetailController', function
     AttachmentModel.one(id).get().then(function (data) {
         console.log(data);
     });
+
+    //@todo
 });
