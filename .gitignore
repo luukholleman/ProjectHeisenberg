@@ -71,4 +71,4 @@ ProjectHeisenberg/local_settings.py
 db.sqlite3
 
 # Sass
-base/static/sass
+base/static/sass/.sass-cache
