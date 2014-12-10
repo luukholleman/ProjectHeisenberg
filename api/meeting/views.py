@@ -1,13 +1,14 @@
-from rexec import FileWrapper
 from django.http import Http404, HttpResponse
 from django.utils.dateparse import parse_datetime
 from django.utils.encoding import smart_str
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
+from api.authentication.serializers import UserSerializer
 from api.meeting.serializers import MeetingSerializer, AgendaSerializer, AttachmentSerializer, MinuteSerializer
 from meeting.models import Meeting, Agenda
 from rest_framework import status, permissions
+
 
 class MeetingViewSet(viewsets.ModelViewSet):
     serializer_class = MeetingSerializer
@@ -15,6 +16,11 @@ class MeetingViewSet(viewsets.ModelViewSet):
 
     _from_date = None
     _to_date = None
+
+    @detail_route(methods=['GET'])
+    def invited(self, request, pk=None):
+        meeting = self.get_object()
+        return Response(UserSerializer(meeting.meetinginvitation_set.all(), many=True).data)
 
     @detail_route(methods=['GET'])
     def agendas(self, request, pk=None):
