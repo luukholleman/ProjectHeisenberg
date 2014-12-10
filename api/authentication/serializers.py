@@ -1,12 +1,13 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework.authtoken.serializers import AuthTokenSerializer as BaseAuthTokenSerializer
+from api.team.serializers import TeamSerializer
 from authentication.models import User
 from django.utils.translation import ugettext_lazy as _
 
 
 class UserSerializer(serializers.ModelSerializer):
-    teams = serializers.PrimaryKeyRelatedField(many=True, read_only=True, source='team_set')
+    teams = TeamSerializer(source='team_set', read_only=False, many=True)
 
     class Meta:
         model = User
