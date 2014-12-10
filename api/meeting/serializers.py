@@ -9,6 +9,7 @@ class AgendaSerializer(serializers.ModelSerializer):
     file = serializers.FileField(allow_empty_file=False,
                                  validators=[MimetypeValidator(allowed_mimetypes=['application/pdf',
                                                                                   'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])])
+    file_name = serializers.CharField(required=False, read_only=True)
 
     class Meta:
         model = Agenda
