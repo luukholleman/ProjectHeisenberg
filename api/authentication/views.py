@@ -11,7 +11,8 @@ from rest_framework.generics import RetrieveAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from ProjectHeisenberg.settings import SITE_URL
-from rest_framework.decorators import permission_classes
+from rest_framework.decorators import permission_classes, detail_route
+from api.team.serializers import TeamSerializer
 
 from authentication.models import User
 from base.rest.permissions import AuthenticatedOrAnonReadAndCreate, IsSelf
@@ -32,6 +33,10 @@ class UserViewSet(viewsets.ModelViewSet):
                   from_email=None,
                   message=None)
 
+    @detail_route(methods=['GET'])
+    def teams(self, request, pk=None):
+        return Response(TeamSerializer(request.user.team_set.all(), many=True).data)
+
 @permission_classes((IsSelf,))
 class AuthenticatedUser(RetrieveAPIView):
     serializer_class = UserSerializer
@@ -39,6 +44,9 @@ class AuthenticatedUser(RetrieveAPIView):
     def get_object(self, queryset=None):
         return self.request.user
 
+    @detail_route(methods=['GET'])
+    def teams(self, request, pk=None):
+        return Response(TeamSerializer(request.user.team_set.get()).data)
 
 class ObtainAuthToken(BaseObtainAuthToken):
     serializer_class = AuthTokenSerializer
