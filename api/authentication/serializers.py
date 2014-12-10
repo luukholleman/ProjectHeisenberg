@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class UserSerializer(serializers.ModelSerializer):
-    teams = TeamSerializer(source='team_set', read_only=False, many=True)
+    teams = TeamSerializer(source='team_set', read_only=True, many=True)
 
     class Meta:
         model = User
