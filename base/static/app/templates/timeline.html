@@ -3,12 +3,19 @@
         position: fixed;
         top: 0;
         width: 100%;
-        z-index: 100;
         background: white;
 
         /*height: 290px;*/
 
         box-shadow: 0 0 15px 0 rgba(0, 0, 0, .2);
+    }
+
+    [drawer] {
+        background-color: white;
+    }
+
+    [main] {
+        min-height: 0%;
     }
 
     .top-toolbar {
@@ -17,29 +24,40 @@
     }
 
     .timeline-view {
-        transition: margin-top .2s ease-in-out;
-        -webkit-transition: margin-top .2s ease-in-out;
-        margin-top: 290px; /*225+64*/
+        transition: padding-top .2s ease-in-out;
+        -webkit-transition: padding-top .2s ease-in-out;
         padding: 20px 0;
+        padding-top: 310px;
     }
 
     .timeline-view.condensed {
-        margin-top: 170px;
+        padding-top: 170px;
     }
 </style>
-<div class="top-sticker">
-    <div>
+<core-drawer-panel forceNarrow="true" style="position: static;">
+    <core-drawer-header drawer>
         <core-toolbar class="top-toolbar">
-            <paper-icon-button icon="arrow-back" ng-click="goto('meetings.list')" ng-show="onHome"></paper-icon-button>
-            <strong flex>Punktlich.</strong>
-            <paper-fab icon="add" title="Create meeting" role="button" aria-label="Create meeting"
-                       ng-click="goto('^.create')" style="background-color: #03A9F4;"></paper-fab>
+            <strong flex>Luuk Holleman</strong>
         </core-toolbar>
-    </div>
 
-    <timeline-container id="timeline" style="width: 100%" vertical layout>
-        <timeline-node ng-repeat="meeting in meetings | filter:visible=true" color="{{ meeting.color }}"
-                       date="{{ meeting.date }}"></timeline-node>
-    </timeline-container>
-</div>
-<div class="timeline-view" ui-view></div>
+        <core-menu>
+            <core-item label="Content 1"></core-item>
+            <core-item label="Content 2"></core-item>
+        </core-menu>
+    </core-drawer-header>
+    <div main>
+        <div class="timeline-view" ui-view></div>
+        <div class="top-sticker">
+            <core-toolbar class="top-toolbar">
+                <core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
+                <div flex>Punktlich</div>
+                    <paper-fab class="add" icon="add" title="Create meeting" role="button" aria-label="Create meeting" ng-click="goto('^.create')" style="background-color: #03A9F4;"></paper-fab>
+            </core-toolbar>
+            <timeline-container id="timeline" style="width: 100%" vertical layout>
+                    <timeline-node ng-repeat="meeting in meetings | filter:visible=true" color="{{ meeting.color }}"
+                                   date="{{ meeting.date }}"></timeline-node>
+                </timeline-container>
+        </div>
+    </div>
+</core-drawer-panel>
+
