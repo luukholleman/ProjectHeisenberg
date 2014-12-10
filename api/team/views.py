@@ -10,6 +10,7 @@ class TeamViewSet(viewsets.ModelViewSet):
     serializer_class = TeamSerializer
     # todo add logged in permission here
     permission_classes = []
+    queryset = Team.objects.all()
 
     @detail_route(methods=['GET'])
     def invitation(self, request, pk=None):
@@ -19,5 +20,3 @@ class TeamViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         return super(TeamViewSet, self).list(request)
 
-    def get_queryset(self):
-        return Team.objects.all()
