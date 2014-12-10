@@ -94,17 +94,11 @@ angular.module('punktlichDep').controller('MeetingDetailController', function ($
 
     $scope.users = [];
 
-    MeetingService.get($stateParams.meetingid).get().then(function (data) {
-        $scope.meeting = data;
-
-        $scope.$broadcast('meetingLoaded');
-
-        // fetch all user data
-        $scope.meeting.invitations.forEach(function (invitation, i) {
-            Restangular.one('users', invitation.user).get().then(function (user) {
-                $scope.users.push(user);
-            });
-        });
+    MeetingService.get($stateParams.meetingid).get().then(function (meeting) {
+        $scope.meeting = meeting;
+    }, function () {
+        FlashMessageService.setMessage('Meeting could not be found');
+        $scope.goto('meetings.list');
     });
 
     var fileElement = document.querySelector('.file-upload');
