@@ -110,8 +110,6 @@
     </div>
 
     <div hidden>
-        <input type="file" id="agenda-file" file-model="file.agenda" name="agenda"/>
-        <input type="file" id="minute-file" name="minute"/>
-        <input type="file" id="attachment-file" name="attachment"/>
+        <input type="file" class="file-upload" file-model="file" onchange="angular.element(this).scope().fileSelected(this)" name="agenda"/>
     </div>
 </div>
