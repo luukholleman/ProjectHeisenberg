@@ -52,7 +52,6 @@ class MeetingSerializer(serializers.ModelSerializer):
     location = serializers.CharField(required=False)
     address = serializers.CharField(required=False)
     date_and_time = serializers.DateTimeField(required=True)
-    invitations = MeetingInvitationSerializer(source='meetinginvitation_set', read_only=False, many=True)
     agendas = AgendaSerializer(many=True, read_only=True)
 
     def update(self, meeting, validated_attrs):
@@ -85,4 +84,4 @@ class MeetingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Meeting
-        fields = ('id', 'name', 'description', 'location', 'address', 'date_and_time', 'invitations', 'agendas')
+        fields = ('id', 'name', 'description', 'location', 'address', 'date_and_time', 'agendas')
