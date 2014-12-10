@@ -35,21 +35,23 @@
     }
 </style>
 <core-drawer-panel forceNarrow="true" style="position: static;">
-    <core-drawer-header drawer>
+    <core-drawer-header drawer ng-controller="OffCanvasMenuController">
         <core-toolbar class="top-toolbar">
-            <strong flex>Luuk Holleman</strong>
+            <strong flex>{{ user.full_name }}</strong>
         </core-toolbar>
 
-        <core-menu>
-            <core-item label="Content 1"></core-item>
-            <core-item label="Content 2"></core-item>
-        </core-menu>
+        <ul>
+            <li ng-repeat="team in user.teams">
+                <span ng-click="goto('team/' + team.id + '/update')">{{ team.name }}</span>
+            </li>
+        </ul>
     </core-drawer-header>
     <div main>
         <div class="timeline-view" ui-view></div>
         <div class="top-sticker">
             <core-toolbar class="top-toolbar">
-                <core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
+                <paper-icon-button icon="menu" core-drawer-toggle>
+                </paper-icon-button>
                 <div flex>Punktlich</div>
                     <paper-fab class="add" icon="add" title="Create meeting" role="button" aria-label="Create meeting" ng-click="goto('^.create')" style="background-color: #03A9F4;"></paper-fab>
             </core-toolbar>

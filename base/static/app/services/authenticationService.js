@@ -1,4 +1,4 @@
-angular.module('punktlichDep').factory('AuthenticationService', function ($http) {
+angular.module('punktlichDep').factory('AuthenticationService', function ($rootScope, $http, UserModel) {
     function login(email, password, success, error) {
         $http.post(apiBase + 'login', {
             email: email,
@@ -17,8 +17,17 @@ angular.module('punktlichDep').factory('AuthenticationService', function ($http)
         $http.defaults.headers.common['Authorization'] = 'Token ' + token;
     }
 
+    function getAuthenticatedUser(success, error) {
+        UserModel.one().customGET('get-authenticated-user').then(function(user){
+            success(user)
+        }, function(data){
+            error(data);
+        });
+    }
+
     return{
         login: login,
-        setToken: setToken
+        setToken: setToken,
+        getAuthenticatedUser: getAuthenticatedUser
     };
 });

@@ -1,8 +1,17 @@
-angular.module('punktlichDep').controller('MainController', function ($scope, $location, FlashMessageService, AuthenticationService, $state) {
+angular.module('punktlichDep').controller('MainController', function ($scope, $rootScope, $location, FlashMessageService, AuthenticationService, $state) {
     var authToken = localStorage.getItem('authentication-token');
 
     if (authToken != null) {
         AuthenticationService.setToken(authToken);
+
+        AuthenticationService.getAuthenticatedUser(function(user){
+            $rootScope.user = user;
+        }, function(){
+            if(window.location.pathname != '/login' && window.location.pathname != '/register') {
+                window.location = '/login';
+            }
+        });
+
     } else {
         if(window.location.pathname != '/login' && window.location.pathname != '/register') {
             window.location = '/login';
