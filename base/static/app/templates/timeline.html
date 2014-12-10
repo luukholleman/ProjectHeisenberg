@@ -42,7 +42,7 @@
 
         <ul>
             <li ng-repeat="team in user.teams">
-                <span ng-click="goto('group/' + team.id)">{{ team.name }}</span>
+                <span ng-click="goto('team/' + team.id + '/update')">{{ team.name }}</span>
             </li>
         </ul>
     </core-drawer-header>
