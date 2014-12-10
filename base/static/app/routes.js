@@ -81,5 +81,27 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                         controller: 'MeetingUpdateController'
                     }
                 }
+            }).
+
+            /*
+             * Teams
+             */
+            state('teams', {
+                url: '/team',
+                views: {
+                    '@': {
+                        templateUrl: appPath + 'templates/team/base.html',
+                        controller: 'TimelineController'
+                    }
+                }
+            }).
+            state('teams.update', {
+                url: '/:id/update',
+                views: {
+                    '@teams': {
+                        templateUrl: appPath + 'templates/team/form.html',
+                        controller: 'TeamUpdateController'
+                    }
+                }
             });
     }]);

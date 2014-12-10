@@ -1,0 +1,37 @@
+<div vertical layout center>
+    <paper-shadow vertical layout
+                  class="form">
+        <h2>
+            {{ team.name }}
+        </h2>
+
+        <form name="teamForm">
+            <paper-input-decorator floatingLabel label="Team Name">
+                <input is="core-input" type="text" name="TeamName" ng-model="team.name"/>
+            </paper-input-decorator>
+
+            <paper-input-decorator floatinglabel label="Description">
+                <textarea id="t1" rows="5" name="description" ng-model="team.description"></textarea>
+            </paper-input-decorator>
+
+            <span class="label">Members</span>
+
+            <div horizontal layout
+                 class="member-box">
+                <div horizontal layout center
+                     ng-repeat=""
+                     class="member">
+                    <punkt-person abbr="DH" name="Daan Houweling" image="" status="0"></punkt-person>
+                    <div vertical layout>
+                        <h4>Daan Houweling</h4>
+                        <h5>Member</h5>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div horizontal layout reverse>
+                <paper-button class="primary" raised ng-click="save(teamForm)">Save</paper-button>
+                <paper-button ng-click="">Cancel</paper-button>
+        </div>
+    </paper-shadow>
+</div>

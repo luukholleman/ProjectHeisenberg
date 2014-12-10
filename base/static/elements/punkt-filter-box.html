@@ -32,7 +32,9 @@
         <div class="punkt-filter-box-list">
             <core-list data="{{data}}" height="100" id="filterList" multi="true">
               <template>
-                <core-item src="{{ model.meta.img }}" label="{{ model.meta.name }}" class="{{ {selected: selected} | tokenList }} {{ model.meta.show ? '' : 'hide' }}">
+                <core-item src="{{ model.meta.img }}"
+                           label="{{ model.meta.name }}"
+                           class="{{ {selected: selected} | tokenList }} {{ model.meta.show ? '' : 'hide' }}">
                 </core-item>
               </template>
             </core-list>
