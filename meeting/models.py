@@ -7,8 +7,9 @@ from validators import MimetypeValidator
 
 
 class File(models.Model):
-    upload_at = models.DateTimeField(auto_now=True)
+    uploaded_at = models.DateTimeField(auto_now=True)
     file_name = models.CharField(max_length=200, null=True)
+    created_by = models.ForeignKey(User)
 
     class Meta:
         abstract = True

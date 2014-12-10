@@ -10,10 +10,11 @@ class AgendaSerializer(serializers.ModelSerializer):
                                  validators=[MimetypeValidator(allowed_mimetypes=['application/pdf',
                                                                                   'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])])
     file_name = serializers.CharField(required=False, read_only=True)
+    created_by = UserSerializer(read_only=True)
 
     class Meta:
         model = Agenda
-        fields = ('file', 'upload_at', 'file_name')
+        fields = ('file', 'uploaded_at', 'file_name', 'created_by')
 
 
 class MinuteSerializer(serializers.ModelSerializer):
