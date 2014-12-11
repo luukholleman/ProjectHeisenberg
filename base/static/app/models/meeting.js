@@ -26,17 +26,11 @@ angular.module('punktlichDep').factory('MeetingModel', function (Restangular) {
         };
 
         meeting.hasAgenda = meeting.agendas && meeting.agendas.length > 0;
-        meeting.latestAgenda = meeting.hasAgenda ? createRevision(meeting.agendas[0]) : null;
+        meeting.latestAgenda = meeting.hasAgenda ? createRevision(meeting.agendas[meeting.agendas.length - 1]) : null;
 
-        meeting.getAgendaRevisions = function () {
-            var revisions = [];
-
-            meeting.agendas.forEach(function (agenda) {
-                revision.push(createRevision(agenda));
-            });
-
-            return revisions;
-        };
+        meeting.agendaRevisions = _.map(meeting.agendas, function(agenda){
+            return createRevision(agenda);
+        }).reverse();
 
         meeting.postFile = function (type, file, success, error) {
             var formData = new FormData();
