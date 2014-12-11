@@ -16,6 +16,17 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                     }
                 }
             }).
+            state('logout', {
+                url: '/logout',
+                views: {
+                    '@': {
+                        controller: function (AuthenticationService, $scope) {
+                            AuthenticationService.resetToken();
+                            $scope.goto('login');
+                        }
+                    }
+                }
+            }).
             state('register', {
                 url: '/register',
                 views: {
@@ -78,7 +89,7 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                 views: {
                     'right-sidebar@meeting-detail': {
                         templateUrl: appPath + 'templates/meeting/agenda.html',
-                        controller: 'AgendaDetailController'
+                        controller: 'FileDetailController'
                     }
                 }
             }).
@@ -87,7 +98,7 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                 views: {
                     'right-sidebar@meeting-detail': {
                         templateUrl: appPath + 'templates/meeting/agenda.html',//todo
-                        controller: 'MinutesDetailController'
+                        controller: 'FileDetailController'
                     }
                 }
             }).

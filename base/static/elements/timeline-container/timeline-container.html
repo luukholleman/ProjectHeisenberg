@@ -684,7 +684,17 @@
             domReady: function () {
                 this.requestNodes();
             },
+            attached: function () {
+                this.timeSpan.start = this.getNow() - 7 * this.DAY;
+                this.timeSpan.end = this.getNow() + 14 * this.DAY;
 
+                _.each(this.$.timeline.querySelector('.label'), function(element) {
+                    this.$.timeline.removeChild(element);
+                });
+
+                this.dayLabels = {};
+                this.monthLabels = {};
+            },
             //end of code
             __end: true
         });
