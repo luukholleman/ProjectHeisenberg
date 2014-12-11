@@ -15,11 +15,6 @@ body, html
 
   +user-select()
 
-  // hack to prevent 'over-scrolling' on safari/chrome
-  > div
-    height:     100%
-    overflow:   scroll
-
 core-toolbar
   > paper-fab
     top: 32px
@@ -44,3 +39,6 @@ hr
     padding-top: 1px
     height: 0px
     border: none
+
+.content
+  overflow-y: auto

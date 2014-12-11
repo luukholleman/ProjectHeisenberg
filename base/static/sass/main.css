@@ -19,9 +19,6 @@ body, html {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none; }
-  body > div, html > div {
-    height: 100%;
-    overflow: scroll; }
 
 core-toolbar > paper-fab {
   top: 32px;
@@ -43,6 +40,9 @@ hr.spacing {
   padding-top: 1px;
   height: 0px;
   border: none; }
+
+.content {
+  overflow-y: auto; }
 
 paper-shadow.form {
   padding: 20px;
