@@ -16,6 +16,17 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                     }
                 }
             }).
+            state('logout', {
+                url: '/logout',
+                views: {
+                    '@': {
+                        controller: function (AuthenticationService, $scope) {
+                            AuthenticationService.resetToken();
+                            $scope.goto('login');
+                        }
+                    }
+                }
+            }).
             state('register', {
                 url: '/register',
                 views: {
