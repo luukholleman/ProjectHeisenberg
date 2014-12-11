@@ -1,11 +1,12 @@
 <div vertical layout center>
     <punkt-card ng-repeat="meeting in meetings"
-                header="{{ meeting.name }}"
+                header="{{ meeting.name }} {{ meeting.date_and_time.substring(0,10) }}"
                 subheader="{{ meeting.humanReadableDate() }}"
                 location="{{ meeting.location }}"
                 invitations="{{ meeting.invitations }}"
                 abbr="P"
                 color="#E91E63"
+                id="meeting-{{ meeting.id }}"
                 status="1">
         <div class="info">
             <p>{{ meeting.description }}</p>
