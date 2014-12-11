@@ -16,13 +16,18 @@
 
             <span class="label">Members</span>
 
-            <div horizontal layout
+            <div vertical layout
                  class="member-box">
                 <div horizontal layout center
-                     class="member">
-                    <punkt-person abbr="DH" name="Daan Houweling" image="" status="0"></punkt-person>
+                     class="member"
+                        ng-repeat="member in members">
+                    <punkt-person
+                            abbr="{{ member.initials }}"
+                            name="{{ member.full_name }}"
+                            image=""
+                            status="0"></punkt-person>
                     <div vertical layout>
-                        <h4>Daan Houweling</h4>
+                        <h4>{{ member.full_name }}</h4>
                         <h5>Member</h5>
                     </div>
                 </div>

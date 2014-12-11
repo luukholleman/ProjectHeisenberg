@@ -16,7 +16,7 @@ class Team(models.Model):
     @property
     def abbreviation(self):
         """
-        :return: Abbreviation of group (first letters of words, max. two words)
+        Returns the abbreviation of the group (first letters of words, max. two words).
         """
         abbr = ""
         words = self.name.split()

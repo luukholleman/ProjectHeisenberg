@@ -6,8 +6,6 @@ angular.module('punktlichDep').controller('MainController', function ($scope, $r
 
         AuthenticationService.getAuthenticatedUser(function(user){
             $rootScope.user = user;
-
-            console.log(user.teams());
         }, function(){
             if(window.location.pathname != '/login' && window.location.pathname != '/register') {
                 window.location = '/login';
