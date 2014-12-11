@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from rest_framework import serializers
 from api.authentication.serializers import UserSerializer
 from authentication.models import User
@@ -6,15 +7,20 @@ from meeting.validators import MimetypeValidator
 
 
 class AgendaSerializer(serializers.ModelSerializer):
-    file = serializers.FileField(allow_empty_file=False,
+    id = serializers.IntegerField(read_only=True)
+    file = serializers.FileField(use_url=False, allow_empty_file=False,
                                  validators=[MimetypeValidator(allowed_mimetypes=['application/pdf',
                                                                                   'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])])
     file_name = serializers.CharField(required=False, read_only=True)
     created_by = UserSerializer(read_only=True)
+    download_url = serializers.SerializerMethodField()
+
+    def get_download_url(self, agenda):
+        return reverse('download_file', kwargs={'pk': agenda.pk, 'type': 'agenda'})
 
     class Meta:
         model = Agenda
-        fields = ('file', 'uploaded_at', 'file_name', 'created_by')
+        fields = ('id', 'file', 'uploaded_at', 'file_name', 'created_by', 'download_url')
 
 
 class MinuteSerializer(serializers.ModelSerializer):

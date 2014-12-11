@@ -11,6 +11,16 @@ class File(models.Model):
     file_name = models.CharField(max_length=200, null=True)
     created_by = models.ForeignKey(User, null=True)
 
+    def has_access(self, user):
+        """ Check if the user has access to this file """
+
+        #TODO: add group checks
+        return True
+
+    def get_extension(self):
+        name, extension = os.path.splitext(self.file.name)
+        return extension
+
     class Meta:
         abstract = True
 
@@ -28,15 +38,15 @@ class RenameFileMixin(models.Model):
 
 
 class Agenda(File, RenameFileMixin):
-    file = models.FileField(upload_to='agendas')
+    file = models.FileField(upload_to='meeting/agendas')
 
 
 class Minute(File, RenameFileMixin):
-    file = models.FileField(upload_to='minutes')
+    file = models.FileField(upload_to='meeting/minutes')
 
 
 class Attachment(File, RenameFileMixin):
-    file = models.FileField(upload_to='attachments')
+    file = models.FileField(upload_to='meeting/attachments')
 
 
 class Meeting(models.Model):

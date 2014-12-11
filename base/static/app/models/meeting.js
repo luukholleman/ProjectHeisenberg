@@ -14,11 +14,11 @@ angular.module('punktlichDep').factory('MeetingModel', function (Restangular) {
         };
 
         function createRevision(agenda) {
-            test = agenda;
             return {
                 file: agenda.file,
                 owner: agenda.created_by,
                 name: agenda.file_name,
+                download_url: agenda.download_url,
                 humanReadableDate: function () {
                     return moment(new Date(agenda.uploaded_at)).fromNow();
                 }

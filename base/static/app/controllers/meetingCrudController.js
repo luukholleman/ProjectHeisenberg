@@ -42,18 +42,25 @@ angular.module('punktlichDep').controller('MeetingUpdateController', function ($
 angular.module('punktlichDep').controller('MeetingDetailController', function ($scope, $http, $sce, Restangular, FlashMessageService, $stateParams, $rootScope, MeetingService) {
     $scope.users = [];
 
-    MeetingService.get($stateParams.meetingid).get().then(function (meeting) {
-        $scope.meeting = meeting;
-    }, function () {
-        FlashMessageService.setMessage('Meeting could not be found');
-        $scope.goto('meetings.list');
-    });
+
+    $scope.fetchMeeting = function () {
+        MeetingService.get($stateParams.meetingid).get().then(function (meeting) {
+            $scope.meeting = meeting;
+        }, function () {
+            FlashMessageService.setMessage('Meeting could not be found');
+            $scope.goto('meetings.list');
+        });
+    };
+
+    $scope.fetchMeeting();
+
 
     var fileElement = document.querySelector('.file-upload');
 
     $scope.fileSelected = function (e) {
         var type = fileElement.getAttribute('file-type');
         $scope.meeting.postFile(type, e.files[0], function (success) {
+            $scope.fetchMeeting();
             FlashMessageService.setMessage('Your file has been uploaded');
         }, function (error) {
             FlashMessageService.setMessage(error.data.file[0], false);
