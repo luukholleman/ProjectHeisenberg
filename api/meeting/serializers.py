@@ -6,7 +6,8 @@ from meeting.validators import MimetypeValidator
 
 
 class AgendaSerializer(serializers.ModelSerializer):
-    file = serializers.FileField(allow_empty_file=False,
+    id = serializers.IntegerField()
+    file = serializers.FileField(use_url=False, allow_empty_file=False,
                                  validators=[MimetypeValidator(allowed_mimetypes=['application/pdf',
                                                                                   'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])])
     file_name = serializers.CharField(required=False, read_only=True)
@@ -14,7 +15,7 @@ class AgendaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Agenda
-        fields = ('file', 'uploaded_at', 'file_name', 'created_by')
+        fields = ('id', 'file', 'uploaded_at', 'file_name', 'created_by')
 
 
 class MinuteSerializer(serializers.ModelSerializer):

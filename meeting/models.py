@@ -28,15 +28,15 @@ class RenameFileMixin(models.Model):
 
 
 class Agenda(File, RenameFileMixin):
-    file = models.FileField(upload_to='agendas')
+    file = models.FileField(upload_to='meeting/agendas')
 
 
 class Minute(File, RenameFileMixin):
-    file = models.FileField(upload_to='minutes')
+    file = models.FileField(upload_to='meeting/minutes')
 
 
 class Attachment(File, RenameFileMixin):
-    file = models.FileField(upload_to='attachments')
+    file = models.FileField(upload_to='meeting/attachments')
 
 
 class Meeting(models.Model):

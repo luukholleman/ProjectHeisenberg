@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from api.authentication.serializers import UserSerializer
 from api.meeting.serializers import MeetingSerializer, AgendaSerializer, AttachmentSerializer, MinuteSerializer
 from meeting.models import Meeting, Agenda
-from rest_framework import status, permissions
+from rest_framework import status, permissions, generics
 
 
 class MeetingViewSet(viewsets.ModelViewSet):
@@ -75,7 +75,7 @@ class AgendaViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['get'])
     def download(self, request, pk=None):
         agenda = self.get_object()
-        response = HttpResponse(agenda.file, content_type='application/pdf')
-        response['Content-Disposition'] = 'inline; filename=%s' % smart_str(agenda.file)
+        response = HttpResponse(agenda.file, content_type='application/force-download')
+        response['Content-Disposition'] = 'inline; filename=%s' % smart_str(agenda.file_name)
         response['X-Sendfile'] = smart_str(agenda.file)
         return response
