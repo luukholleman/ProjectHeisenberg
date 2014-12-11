@@ -1,3 +1,3 @@
-angular.module('punktlichDep').factory('UserModel', function(Restangular){
+angular.module('punktlichDep').factory('UserModel', function(Restangular, TeamModel){
     return Restangular.service('users');
 });

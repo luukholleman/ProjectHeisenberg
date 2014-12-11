@@ -7,9 +7,11 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class UserSerializer(serializers.ModelSerializer):
+    teams = serializers.PrimaryKeyRelatedField(many=True, read_only=True, source='team_set')
+
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'password', 'full_name', 'initials')
+        fields = ('id', 'email', 'first_name', 'last_name', 'password', 'full_name', 'initials', 'teams')
         write_only_fields = ('password',)
 
 

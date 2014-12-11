@@ -19,9 +19,6 @@ body, html {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none; }
-  body > div, html > div {
-    height: 100%;
-    overflow: scroll; }
 
 core-toolbar > paper-fab {
   top: 32px;
@@ -43,6 +40,9 @@ hr.spacing {
   padding-top: 1px;
   height: 0px;
   border: none; }
+
+.content {
+  overflow-y: auto; }
 
 paper-shadow.form {
   padding: 20px;
@@ -144,5 +144,35 @@ paper-shadow.form {
   .member h4 {
     margin-bottom: 4px;
     font-weight: 400; }
+
+.off-canvas {
+  background-color: #FAFAFA;
+  width: 355px; }
+  .off-canvas .line {
+    width: 100%;
+    height: 1px;
+    background-color: #979797;
+    margin: 10px 0; }
+  .off-canvas core-icon {
+    width: 32px;
+    height: 32px; }
+  .off-canvas ul {
+    list-style: none;
+    margin: 0;
+    padding: 0; }
+    .off-canvas ul li {
+      padding: 10px 20px;
+      color: #979797;
+      font-family: "Roboto", serif;
+      font-weight: 100;
+      font-size: 22px; }
+      .off-canvas ul li span {
+        padding-top: 5px; }
+
+.person-header {
+  padding: 20px; }
+
+.person-header punkt-person {
+  display: flex; }
 
 /*# sourceMappingURL=main.css.map */
