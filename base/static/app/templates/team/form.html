@@ -4,6 +4,11 @@
         <h2>
             {{ team.name }}
         </h2>
+        <div class="action-menu top right">
+            <paper-button
+                ng-click="leave()"
+                class="warning">Leave team</paper-button>
+        </div>
 
         <form name="teamForm">
             <paper-input-decorator floatingLabel label="Team Name">

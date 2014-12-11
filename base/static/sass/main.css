@@ -1,8 +1,15 @@
 paper-button {
   color: #009688; }
   paper-button.primary {
-    color: #fff;
-    background: #009688; }
+    color: #009688; }
+  paper-button.warning {
+    color: #F44336; }
+  paper-button[raised] {
+    color: #fff; }
+    paper-button[raised].primary {
+      background: #009688; }
+    paper-button[raised].warning {
+      background: #F44336; }
 
 body, html {
   height: 100%;
@@ -51,6 +58,14 @@ paper-shadow.form {
   -moz-border-radius: 3px;
   -ms-border-radius: 3px;
   border-radius: 3px; }
+
+.action-menu {
+  position: absolute;
+  margin: 10px;
+  top: 0;
+  right: 0; }
+  .action-menu paper-button {
+    font-size: 10px; }
 
 .group-punktlich {
   background-color: #009688;

@@ -9,25 +9,33 @@ angular.module('punktlichDep').factory('AuthenticationService', function ($rootS
         }).error(function (response) {
             error(response);
         });
-    }
+    };
 
-    function setToken(token)
-    {
+    function setToken(token) {
         localStorage.setItem('authentication-token', token);
         $http.defaults.headers.common['Authorization'] = 'Token ' + token;
-    }
+    };
 
     function getAuthenticatedUser(success, error) {
-        UserModel.one().customGET('get-authenticated-user').then(function(user){
+        UserModel.one().customGET('get-authenticated-user').then(function (user) {
             success(user)
-        }, function(data){
+        }, function (data) {
+            error(data);
+        });
+    };
+
+    function leaveTeam(team, success, error) {
+        $rootScope.user.one('teams', team.id).remove().then(function (user) {
+            success(user)
+        }, function (data) {
             error(data);
         });
     }
 
-    return{
+    return {
         login: login,
         setToken: setToken,
-        getAuthenticatedUser: getAuthenticatedUser
+        getAuthenticatedUser: getAuthenticatedUser,
+        leaveTeam: leaveTeam
     };
 });

@@ -28,7 +28,8 @@ class UserViewSet(viewsets.ModelViewSet):
         instance = serializer.save()
 
         send_mail(subject="Welcome to Punktlich",
-                  html_message=get_template('base/emails/activate.html').render(Context({'site_url': SITE_URL, 'user': instance})),
+                  html_message=get_template('base/emails/activate.html').render(
+                      Context({'site_url': SITE_URL, 'user': instance})),
                   recipient_list=[instance.email],
                   from_email=None,
                   message=None)
@@ -36,6 +37,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['GET'])
     def teams(self, request, pk=None):
         return Response(TeamSerializer(request.user.team_set.all(), many=True).data)
+
 
 @permission_classes((IsSelf,))
 class AuthenticatedUser(RetrieveAPIView):
@@ -47,6 +49,11 @@ class AuthenticatedUser(RetrieveAPIView):
     @detail_route(methods=['GET'])
     def teams(self, request, pk=None):
         return Response(TeamSerializer(request.user.team_set.get()).data)
+
+    @detail_route(methods=['DELETE'])
+    def teams(self, request, pk=None):
+        return Response(TeamSerializer(request.user.team_set.get()).data)
+
 
 class ObtainAuthToken(BaseObtainAuthToken):
     serializer_class = AuthTokenSerializer
@@ -60,11 +67,11 @@ class ObtainAuthToken(BaseObtainAuthToken):
 
         return Response({'token': token.key})
 
+
 obtain_auth_token = ObtainAuthToken.as_view()
 
 
 class ActivateUser(APIView):
-
     permission_classes = []
 
     def post(self, request):

@@ -2,12 +2,6 @@ angular.module('punktlichDep').service('TeamService', function (TeamModel, UserM
     Restangular.extendModel('teams', function (team) {
         //@todo maybe we should create somehing generic to parse dates
         team.created_on_moment = moment(new Date(team.created_on));
-
-        team.getMembers = function (members) {
-            team.getList('members').then(function (data) {
-                members(data);
-            });
-        };
         return team;
     });
 
@@ -15,15 +9,12 @@ angular.module('punktlichDep').service('TeamService', function (TeamModel, UserM
         team.put().then(success, error);
     }
 
-    function create(team, success, error) {
-        TeamModel.post(team).then(success, error);
-    }
-
     return {
         read: function () {
         },
         update: update,
-        create: create,
+        create: function () {
+        },
         get: function (id) {
             return TeamModel.one(id);
         }

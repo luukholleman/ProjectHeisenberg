@@ -28,7 +28,6 @@ class TeamViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['GET'])
     def color(self, request, pk=None):
         color = self.get_object().user_color.filter(user_id=request.user.id).get().color
-
         return Response(ColorSerializer(color).data)
 
     def get_queryset(self):
