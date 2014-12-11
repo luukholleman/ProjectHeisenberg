@@ -65,17 +65,3 @@ class MeetingViewSet(viewsets.ModelViewSet):
             return Meeting.objects.all()
 
         return Meeting.objects.filter(date_and_time__range=[self._from_date, self._to_date])
-
-
-class AgendaViewSet(viewsets.ModelViewSet):
-    serializer_class = AgendaSerializer
-    permission_classes = (permissions.IsAuthenticated,)
-    queryset = Agenda.objects.all()
-
-    @detail_route(methods=['get'])
-    def download(self, request, pk=None):
-        agenda = self.get_object()
-        response = HttpResponse(agenda.file, content_type='application/force-download')
-        response['Content-Disposition'] = 'inline; filename=%s' % smart_str(agenda.file_name)
-        response['X-Sendfile'] = smart_str(agenda.file)
-        return response

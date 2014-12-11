@@ -11,6 +11,16 @@ class File(models.Model):
     file_name = models.CharField(max_length=200, null=True)
     created_by = models.ForeignKey(User, null=True)
 
+    def has_access(self, user):
+        """ Check if the user has access to this file """
+
+        #TODO: add group checks
+        return True
+
+    def get_extension(self):
+        name, extension = os.path.splitext(self.file.name)
+        return extension
+
     class Meta:
         abstract = True
 
