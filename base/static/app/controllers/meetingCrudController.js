@@ -42,7 +42,6 @@ angular.module('punktlichDep').controller('MeetingUpdateController', function ($
 angular.module('punktlichDep').controller('MeetingDetailController', function ($scope, $http, $sce, Restangular, FlashMessageService, $stateParams, $rootScope, MeetingService) {
     $scope.users = [];
 
-
     $scope.fetchMeeting = function () {
         MeetingService.get($stateParams.meetingid).get().then(function (meeting) {
             $scope.meeting = meeting;
@@ -53,7 +52,6 @@ angular.module('punktlichDep').controller('MeetingDetailController', function ($
     };
 
     $scope.fetchMeeting();
-
 
     var fileElement = document.querySelector('.file-upload');
 
