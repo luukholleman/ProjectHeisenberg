@@ -45,6 +45,13 @@
         </div>
         <div class="line"></div>
         <ul>
+            <li>
+                <core-icon icon="home"></core-icon>
+                <span ng-click="goto('meetings.list')">Home</span>
+            </li>
+        </ul>
+        <div class="line"></div>
+        <ul>
             <li ng-repeat="team in user.teams">
                 <span ng-style="{'color' : '#' + team.color}">O</span>
                 <span ng-click="goto('team/' + team.id + '/update')">
