@@ -7,7 +7,7 @@ from meeting.validators import MimetypeValidator
 
 
 class AgendaSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField()
+    id = serializers.IntegerField(read_only=True)
     file = serializers.FileField(use_url=False, allow_empty_file=False,
                                  validators=[MimetypeValidator(allowed_mimetypes=['application/pdf',
                                                                                   'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])])
