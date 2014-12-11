@@ -11,7 +11,6 @@ class TeamViewSet(viewsets.ModelViewSet):
     serializer_class = TeamSerializer
     # todo add logged in permission here
     permission_classes = []
-    queryset = Team.objects.all()
 
     @detail_route(methods=['GET'])
     def invitation(self, request, pk=None):
@@ -26,3 +25,17 @@ class TeamViewSet(viewsets.ModelViewSet):
         color = self.get_object().user_color.filter(user_id=request.user.id).get().color
 
         return Response(ColorSerializer(color).data)
+
+    def get_queryset(self):
+        """
+        Override get_queryset() to filter on multiple values for 'id'
+        """
+
+        id_value = self.request.QUERY_PARAMS.get('ids', None)
+        if id_value:
+            id_list = id_value.split(',')
+            queryset = Team.objects.filter(id__in=id_list)
+
+            return queryset
+
+        return Team.objects.all()

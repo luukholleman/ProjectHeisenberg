@@ -33,16 +33,37 @@
     .timeline-view.condensed {
         padding-top: 170px;
     }
+
+    .off-canvas {
+        background-color: #FAFAFA;
+        width: 355px;
+    }
+
+    .person-header {
+        padding: 20px;
+    }
+
+    .person-header punkt-person {
+        display: flex;
+    }
+
+    .person-header h1 {
+        margin: 0px;
+        display: flex;
+    }
 </style>
-<core-drawer-panel forceNarrow="true" style="position: static;">
-    <core-drawer-header drawer ng-controller="OffCanvasMenuController">
-        <core-toolbar class="top-toolbar">
-            <strong flex>{{ user.full_name }}</strong>
-        </core-toolbar>
+<core-drawer-panel forceNarrow="false">
+    <core-drawer-header drawer ng-controller="OffCanvasMenuController" class="off-canvas">
+        <div class="person-header">
+            <punkt-person abbr="LH" name="Luuk Holleman" image="http://media-cache-ec0.pinimg.com/avatars/luukholleman_1392631495_140.jpg"></punkt-person>
+            <span>
+                Luuk Holleman
+            </span>
+        </div>
 
         <ul>
             <li ng-repeat="team in user.teams">
-                <span ng-click="goto('team/' + team.id + '/update')">{{ team.name }}</span>
+                <span ng-click="goto('team/' + team.id + '/update')" ng-style="{'color': '#' + team.color }">{{ team.name }}</span>
             </li>
         </ul>
     </core-drawer-header>
@@ -52,7 +73,7 @@
             <core-toolbar class="top-toolbar">
                 <paper-icon-button icon="menu" core-drawer-toggle>
                 </paper-icon-button>
-                <div flex>Punktlich</div>
+                <div flex>Punktlich.</div>
                     <paper-fab class="add" icon="add" title="Create meeting" role="button" aria-label="Create meeting" ng-click="goto('^.create')" style="background-color: #03A9F4;"></paper-fab>
             </core-toolbar>
             <timeline-container id="timeline" style="width: 100%" vertical layout>
