@@ -34,23 +34,6 @@
         padding-top: 170px;
     }
 
-    .off-canvas {
-        background-color: #FAFAFA;
-        width: 355px;
-    }
-
-    .person-header {
-        padding: 20px;
-    }
-
-    .person-header punkt-person {
-        display: flex;
-    }
-
-    .person-header h1 {
-        margin: 0px;
-        display: flex;
-    }
 </style>
 <core-drawer-panel forceNarrow="true">
     <core-drawer-header drawer ng-controller="OffCanvasMenuController" class="off-canvas">
@@ -60,10 +43,24 @@
                 Luuk Holleman
             </span>
         </div>
-
+        <div class="line"></div>
         <ul>
             <li ng-repeat="team in user.teams">
-                <span ng-click="goto('team/' + team.id + '/update')" ng-style="{'color': '#' + team.color }">{{ team.name }}</span>
+                <span ng-style="{'color' : '#' + team.color}">O</span>
+                <span ng-click="goto('team/' + team.id + '/update')">
+                    {{ team.name }}
+                </span>
+            </li>
+        </ul>
+        <div class="line"></div>
+        <ul>
+            <li>
+                <core-icon icon="settings-applications"></core-icon>
+                <span>Settings</span>
+            </li>
+            <li>
+                <core-icon icon="exit-to-app"></core-icon>
+                <span>Sign out</span>
             </li>
         </ul>
     </core-drawer-header>
