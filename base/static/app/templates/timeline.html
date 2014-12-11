@@ -39,7 +39,7 @@
 
     <timeline-container id="timeline" style="width: 100%" vertical layout>
         <timeline-node ng-repeat="meeting in meetings | filter:visible=true" color="{{ meeting.color }}"
-                       date="{{ meeting.date }}"></timeline-node>
+                       date="{{ meeting.date }}" data-meetingid="{{ meeting.id }}"></timeline-node>
     </timeline-container>
 </div>
 <div class="timeline-view" ui-view></div>

@@ -5,6 +5,13 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
         meeting.color = 'pink';
         meeting.date = new Date(meeting.date_and_time).getTime() / 1000;
 
+
+        for (var idx = 0; idx < $scope.meetings.length; idx++) {
+            if (meeting.date < $scope.meetings[idx].date) {
+                $scope.meetings.splice(idx, 0, meeting);
+                return;
+            }
+        }
         $scope.meetings.push(meeting);
     };
 
@@ -13,7 +20,7 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
         meeting.date = new Date(meeting.date_and_time).getTime() / 1000;
     };
 
-    function addMeetings(meetings) {
+    function setMeetings(meetings) {
         meetings.forEach(function (meeting) {
             var found = $scope.meetings.filter(function (m) {
                 return m.id == meeting.id
@@ -24,11 +31,22 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
             else {
                 updateMeeting(found[0]);
             }
-        })
+        });
+
+        $scope.meetings.filter(function (meeting) {
+            return meetings.filter(function (m) {
+                    return m.id == meeting.id
+                }).length == 0;
+        }).forEach(function (meeting) {
+            var idx = $scope.meetings.indexOf(meeting);
+            $scope.meetings.splice(idx, 1);
+        });
+
+
     }
 
     function getMeetingsForTimeSpan(from, to) {
-        MeetingService.getMeetingsForTimeSpan(from, to, addMeetings);
+        MeetingService.getMeetingsForTimeSpan(from, to, setMeetings);
 
         $rootScope.$emit('timelineViewPortChanged', $scope.meetings);
     }
@@ -45,19 +63,31 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
         return new Date(year, month - 1, day, h, m, s).getTime() / 1000;
     };
 
-    document.getElementById('timeline').addEventListener('timeline-request-nodes', function (event) {
+    var timeline = document.getElementById('timeline');
+    var pageElement = document.querySelector('#page');
+
+    timeline.addEventListener('timeline-request-nodes', function (event) {
         getMeetingsForTimeSpan(event.detail.start, event.detail.end);
     });
 
-    var el = document.querySelector('#page');
-    var raw = angular.element(el);
-    raw.bind('scroll', function () {
-        if (el.scrollTop > 300 - 170) {
-            document.getElementById('timeline').condensed = true;
-            document.querySelector('.timeline-view').classList.add('condensed')
-        } else if (el.scrollTop == 0) {
-            document.getElementById('timeline').condensed = false;
-            document.querySelector('.timeline-view').classList.remove('condensed')
+    timeline.addEventListener('node-opened', function (event) {
+        var element = document.getElementById('meeting-' + event.detail.node.getAttribute('data-meetingid'));
+        element.detailsVisible = true;
+
+        var position = element.offsetTop;
+        while (element = element.offsetParent) {
+            position += element.offsetTop;
+        }
+        pageElement.scrollTop = position - (timeline.condensed ? 180 : 300);
+    });
+
+    angular.element(pageElement).bind('scroll', function () {
+        if (pageElement.scrollTop > 300 - 170) {
+            timeline.condensed = true;
+            document.querySelector('.timeline-view').classList.add('condensed');
+        } else if (pageElement.scrollTop == 0) {
+            timeline.condensed = false;
+            document.querySelector('.timeline-view').classList.remove('condensed');
         }
     });
 });
