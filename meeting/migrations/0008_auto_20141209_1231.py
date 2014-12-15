@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='agenda',
             name='file',
-            field=models.FileField(upload_to=b'agendas', validators=[meeting.validators.validate_file_pdf]),
+            field=models.FileField(upload_to=b'agendas'),
             preserve_default=True,
         ),
     ]

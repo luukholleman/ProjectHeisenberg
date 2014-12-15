@@ -40,7 +40,7 @@ angular.module('punktlichDep').factory('AuthenticationService', function ($rootS
     return {
         login: login,
         setToken: setToken,
-        resetToken: resetToken
+        resetToken: resetToken,
         getAuthenticatedUser: getAuthenticatedUser,
         leaveTeam: leaveTeam
     };
