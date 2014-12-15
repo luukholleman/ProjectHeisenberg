@@ -1,4 +1,4 @@
-angular.module('punktlichDep').service('LocalizationService', function ($rootScope, $timeout, $window, $http) {
+angular.module('punktlichDep').service('LocalizationService', function ($rootScope, $state, $timeout, $window, $http) {
     var DEFAULT_LOCALE = 'en-us';
     var LOCALE_URL = '/static/app/locale/{0}.json';
     var ALLOW_CACHE = false;
@@ -6,28 +6,34 @@ angular.module('punktlichDep').service('LocalizationService', function ($rootSco
     var defaultLanguage = $window.navigator.userLanguage || $window.navigator.language;
     var dictionary = {};
     var isLoading = false;
+    var isLoaded = false;
 
     function getAvailableLocalisations() {
-        return ['en-us']; //hardcoded for now
+        return {
+            'en-us': 'English(US)'
+        };
     }
 
     function localize(name) {
-        if (!isLoading) {
+        if (!isLoading && !isLoaded) {
             loadLocale(defaultLanguage);//for now, load default locale
-
-            return null;
         }
 
-        return dictionary[name] || name;
+        return isLoaded ? (dictionary[name] || name) : null;
     }
 
     function onSuccess(data) {
         dictionary = data;
-        $rootScope.$broadcast('localizationResourcesUpdated');
+        isLoaded = true;
+        isLoading = false;
+
+        $rootScope.$emit('localizationResourcesUpdated');
+        $state.reload();
     };
 
     function loadLocale(key) {
         isLoading = true;
+
         $http({method: "GET", url: LOCALE_URL.replace('{0}', key), cache: ALLOW_CACHE})
             .success(onSuccess)
             .error(function () {
@@ -47,8 +53,12 @@ angular.module('punktlichDep').service('LocalizationService', function ($rootSco
         loadLocale: loadLocale
     };
 
-}).filter('localize', function () {
-    return function (input, service) {
-        return service.localize(input)
+}).filter('localize', function (LocalizationService) {
+    return function (input) {
+        return LocalizationService.localize(input)
     };
-});
+}).filter('l', function ($filter) {
+    return function (input) {
+        return $filter('localize')(input);
+    }
+})

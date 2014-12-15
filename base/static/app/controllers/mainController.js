@@ -1,4 +1,4 @@
-angular.module('punktlichDep').controller('MainController', function ($scope, $location, FlashMessageService, AuthenticationService, $state, LocalizationService) {
+angular.module('punktlichDep').controller('MainController', function ($scope, $location, FlashMessageService, AuthenticationService, $state) {
     var authToken = localStorage.getItem('authentication-token');
 
     if (authToken != null) {
@@ -16,6 +16,4 @@ angular.module('punktlichDep').controller('MainController', function ($scope, $l
 
         $state.go(route);
     };
-
-    $scope.localization=LocalizationService;
 });
