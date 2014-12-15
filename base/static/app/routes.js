@@ -134,7 +134,7 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                 }
             }).
             state('teams.update', {
-                url: '/:id/update',
+                url: '/:teamid/update',
                 views: {
                     '@teams': {
                         templateUrl: appPath + 'templates/team/form.html',

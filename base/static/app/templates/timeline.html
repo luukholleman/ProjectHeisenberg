@@ -55,7 +55,7 @@
         <ul>
             <li ng-repeat="team in user.teams">
                 <span ng-style="{'color' : '#' + team.color}">O</span>
-                <span ng-click="goto('team/' + team.id + '/update')">
+                <span ng-click="goto('teams.update', {teamid: team.id})">
                     {{ team.name }}
                 </span>
             </li>
