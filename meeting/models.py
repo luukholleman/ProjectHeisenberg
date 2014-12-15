@@ -33,8 +33,8 @@ class RenameFileMixin(models.Model):
         # Only update when we're creating
         if self.pk is None:
             self.file_name = file_name
+            self.file.name = hashlib.sha1(str(uuid.uuid4())).hexdigest() + file_extension
 
-        self.file.name = hashlib.sha1(str(uuid.uuid4())).hexdigest() + file_extension
         super(RenameFileMixin, self).save()
 
     class Meta:

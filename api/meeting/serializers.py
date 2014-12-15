@@ -11,7 +11,7 @@ class AgendaSerializer(serializers.ModelSerializer):
     file = serializers.FileField(use_url=False, allow_empty_file=False,
                                  validators=[MimetypeValidator(allowed_mimetypes=['application/pdf',
                                                                                   'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])])
-    file_name = serializers.CharField(required=False, read_only=False)
+    file_name = serializers.CharField(required=False, read_only=False, allow_blank=True)
     created_by = UserSerializer(read_only=True)
     download_url = serializers.SerializerMethodField()
 
