@@ -25,7 +25,7 @@ class MeetingViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['GET'])
     def agendas(self, request, pk=None):
         meeting = self.get_object()
-        return Response(AgendaSerializer(meeting.agendas.all(), many=True).data)
+        return Response(AgendaSerializer(meeting.agendas.order_by('-uploaded_at').all(), many=True).data)
 
     @detail_route(methods=['GET'])
     def minutes(self, request, pk=None):
@@ -38,7 +38,7 @@ class MeetingViewSet(viewsets.ModelViewSet):
         return Response(AttachmentSerializer(meeting.minutes.all(), many=True).data)
 
     @detail_route(methods=['POST'])
-    def agenda(self, request, pk=None):
+    def agendas(self, request, pk=None):
         serializer = AgendaSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         agenda = serializer.save()
