@@ -81,7 +81,7 @@
         <dt>Owner</dt>
         <dd>{{ agendas[0].created_by.full_name }}</dd>
         <dt>Created</dt>
-        <dd>{{ agendas[0].uploaded_at }}</dd>
+        <dd>{{ agendas[0].uploaded_at | humanReadableDate }}</dd>
     </dl>
 
     <hr class="spacing"/>
@@ -90,6 +90,6 @@
         <punkt-file ng-repeat="agenda in agendas"
                     ng-click="download(agenda.download_url)" type="subject"
                     groupColorTint="#B0BEC5" name="Agenda"
-                    owner="{{ agenda.uploaded_at }}"></punkt-file>
+                    owner="{{ agenda.uploaded_at | humanReadableDate }}"></punkt-file>
     </div>
 </div>

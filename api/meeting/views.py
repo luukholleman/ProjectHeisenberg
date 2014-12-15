@@ -60,6 +60,9 @@ class MeetingAgendaApiView(ListCreateAPIView, UpdateAPIView):
 
     def perform_create(self, serializer):
         agenda = serializer.save()
+        agenda.created_by = self.request.user
+        agenda.save()
+        
         meeting = self.get_meeting()
         meeting.agendas.add(agenda)
 
