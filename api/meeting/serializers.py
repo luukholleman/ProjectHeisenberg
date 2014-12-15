@@ -58,7 +58,6 @@ class MeetingSerializer(serializers.ModelSerializer):
     location = serializers.CharField(required=False)
     address = serializers.CharField(required=False)
     date_and_time = serializers.DateTimeField(required=True)
-    agendas = AgendaSerializer(many=True, read_only=True)
 
     def update(self, meeting, validated_attrs):
         invitations = meeting.meetinginvitation_set.all()
