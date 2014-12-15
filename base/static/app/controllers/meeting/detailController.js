@@ -5,7 +5,6 @@ angular.module('punktlichDep').controller('MeetingDetailController', function ($
         $scope.meeting = meeting;
         $scope.agendas = meeting.getAgendaRevisions();
         $scope.invited = $scope.meeting.getInvited();
-
     }, function () {
         FlashMessageService.setMessage('Meeting could not be found');
         $scope.goto('meetings.list');
