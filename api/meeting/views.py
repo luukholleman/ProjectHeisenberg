@@ -22,7 +22,7 @@ class MeetingViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['GET'])
     def invited(self, request, pk=None):
         meeting = self.get_object()
-        return Response(MeetingInvitationSerializer(meeting.meetinginvitation_set.all(), many=True).data)
+        return Response(MeetingInvitationSerializer(meeting.meetinginvitation_set.order_by('state').all(), many=True).data)
 
     @detail_route(methods=['GET'])
     def minutes(self, request, pk=None):
