@@ -1,5 +1,5 @@
 angular.module('punktlichDep').controller('TeamUpdateController', function ($scope, TeamService, Restangular, $stateParams, TeamModel, AuthenticationService, ValidationService) {
-    TeamService.get($stateParams.id).get().then(function (data) {
+    TeamService.get($stateParams.teamid).get().then(function (data) {
         $scope.team = data;
         getMembers();
     });
