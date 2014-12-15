@@ -1,7 +1,5 @@
 from django.core.management import BaseCommand
-from faker import Faker
-from authentication.models import User
-from meeting.models import Meeting, MeetingInvitation
+from meeting.models import MeetingInvitation
 from autofixture import AutoFixture
 
 
