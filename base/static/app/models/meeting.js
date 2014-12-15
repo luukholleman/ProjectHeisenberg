@@ -10,7 +10,7 @@ angular.module('punktlichDep').factory('MeetingModel', function (Restangular) {
         };
 
         meeting.humanReadableDate = function () {
-            return meeting.future() ? 'Starts' : 'Started' + ' ' + meeting.date_and_time_moment.fromNow();
+            return (meeting.future() ? 'Starts' : 'Started') + ' ' + meeting.date_and_time_moment.fromNow();
         };
 
         function createRevision(agenda) {

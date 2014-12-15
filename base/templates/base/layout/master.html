@@ -148,13 +148,10 @@
 <script src="{{ STATIC_URL }}app/services/teamService.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}app/factories/teamFactory.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}app/factories/userFactory.js" type="text/javascript"></script>
-<base href="/">
-<div id="page">
-    {% verbatim %}
-    <paper-toast text="{{ flash.getMessage() }}"></paper-toast>
-    {% endverbatim %}
+{% verbatim %}
+<paper-toast text="{{ flash.getMessage() }}"></paper-toast>
+{% endverbatim %}
 
-    <div id="page" fit vertical layout ui-view></div>
-</div>
+<div fit vertical layout ui-view></div>
 </body>
 </html>
