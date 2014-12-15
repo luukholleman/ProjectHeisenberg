@@ -10,7 +10,7 @@ angular.module('punktlichDep').controller('TeamUpdateController', function ($sco
             ValidationService.showErrors(form, errors.data)
         });
 
-        $scope.$emit('teams.update');
+        $scope.$emit('teams.update', $scope.team);
     };
 
     $scope.leave = function () {
