@@ -1,0 +1,23 @@
+<link rel="import" href="../bower/polymer/polymer.html">
+<link rel="import" href="../bower/paper-dropdown/paper-dropdown.html">
+<link rel="import" href="../bower/core-menu/core-menu.html">
+<polymer-element name="punkt-dropdown">
+        <template>
+            <content select="paper-button"></content>
+            <paper-dropdown id="dropdown">
+            <core-menu>
+                <content select="core-item"></content>
+            </core-menu>
+            </paper-dropdown>
+        </template>
+    <script>
+        Polymer('punkt-dropdown', {
+            tapped: function () {
+                    this.$.dropdown.toggle();
+            },
+            eventDelegates: {
+                'tap': 'tapped'
+            }
+        });
+    </script>
+</polymer-element>

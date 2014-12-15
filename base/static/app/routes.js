@@ -16,6 +16,17 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                     }
                 }
             }).
+            state('logout', {
+                url: '/logout',
+                views: {
+                    '@': {
+                        controller: function (AuthenticationService, $scope) {
+                            AuthenticationService.resetToken();
+                            $scope.goto('login');
+                        }
+                    }
+                }
+            }).
             state('register', {
                 url: '/register',
                 views: {
@@ -65,7 +76,7 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                 }
             }).
             state('meeting-detail', {
-                url: '/meeting/:id',
+                url: '/meeting/:meetingid',
                 views: {
                     '@': {
                         templateUrl: appPath + 'templates/meeting/detail.html',
@@ -73,8 +84,35 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                     }
                 }
             }).
+            state('meeting-detail.agenda-detail', {
+                url: '/agenda/:agendaid',
+                views: {
+                    'right-sidebar@meeting-detail': {
+                        templateUrl: appPath + 'templates/meeting/agenda.html',
+                        controller: 'FileDetailController'
+                    }
+                }
+            }).
+            state('meeting-detail.minutes-detail', {
+                url: '/minutes/:minutesid',
+                views: {
+                    'right-sidebar@meeting-detail': {
+                        templateUrl: appPath + 'templates/meeting/agenda.html',//todo
+                        controller: 'FileDetailController'
+                    }
+                }
+            }).
+            state('meeting-detail.attachement-detail', {
+                url: '/attachments/:attachmentid',
+                views: {
+                    'right-sidebar@meeting-detail': {
+                        templateUrl: appPath + 'templates/meeting/agenda.html',//todo
+                        controller: 'AttachementDetailController'
+                    }
+                }
+            }).
             state('meetings.update', {
-                url: '/meeting/:id/update',
+                url: '/meeting/:meetingid/update',
                 views: {
                     '@meetings': {
                         templateUrl: appPath + 'templates/meeting/form.html',

@@ -1,13 +1,14 @@
-from rexec import FileWrapper
 from django.http import Http404, HttpResponse
 from django.utils.dateparse import parse_datetime
 from django.utils.encoding import smart_str
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
+from api.authentication.serializers import UserSerializer
 from api.meeting.serializers import MeetingSerializer, AgendaSerializer, AttachmentSerializer, MinuteSerializer
 from meeting.models import Meeting, Agenda
-from rest_framework import status, permissions
+from rest_framework import status, permissions, generics
+
 
 class MeetingViewSet(viewsets.ModelViewSet):
     serializer_class = MeetingSerializer
@@ -15,6 +16,11 @@ class MeetingViewSet(viewsets.ModelViewSet):
 
     _from_date = None
     _to_date = None
+
+    @detail_route(methods=['GET'])
+    def invited(self, request, pk=None):
+        meeting = self.get_object()
+        return Response(UserSerializer(meeting.meetinginvitation_set.all(), many=True).data)
 
     @detail_route(methods=['GET'])
     def agendas(self, request, pk=None):
@@ -37,6 +43,8 @@ class MeetingViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         agenda = serializer.save()
 
+        agenda.created_by = request.user
+
         meeting = self.get_object()
         meeting.agendas.add(agenda)
 
@@ -57,17 +65,3 @@ class MeetingViewSet(viewsets.ModelViewSet):
             return Meeting.objects.all()
 
         return Meeting.objects.filter(date_and_time__range=[self._from_date, self._to_date])
-
-
-class AgendaViewSet(viewsets.ModelViewSet):
-    serializer_class = AgendaSerializer
-    permission_classes = (permissions.IsAuthenticated,)
-    queryset = Agenda.objects.all()
-
-    @detail_route(methods=['get'])
-    def download(self, request, pk=None):
-        agenda = self.get_object()
-        response = HttpResponse(agenda.file, content_type='application/pdf')
-        response['Content-Disposition'] = 'inline; filename=%s' % smart_str(agenda.file)
-        response['X-Sendfile'] = smart_str(agenda.file)
-        return response

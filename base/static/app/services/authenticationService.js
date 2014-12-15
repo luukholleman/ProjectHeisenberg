@@ -11,14 +11,19 @@ angular.module('punktlichDep').factory('AuthenticationService', function ($http)
         });
     }
 
-    function setToken(token)
-    {
+    function setToken(token) {
         localStorage.setItem('authentication-token', token);
         $http.defaults.headers.common['Authorization'] = 'Token ' + token;
     }
 
-    return{
+    function resetToken() {
+        localStorage.removeItem('authentication-token');
+        delete $http.defaults.headers.common['Authorization'];
+    }
+
+    return {
         login: login,
-        setToken: setToken
+        setToken: setToken,
+        resetToken: resetToken
     };
 });

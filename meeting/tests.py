@@ -5,7 +5,6 @@ from django.core.files import File
 from django.test import TestCase
 import mock
 from meeting.models import Meeting
-from meeting.validators import validate_file_pdf
 
 
 class MeetingTestCase(TestCase):

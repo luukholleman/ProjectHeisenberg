@@ -1,11 +1,4 @@
-<style>
-    .bg {
-        background-color: #ececec;
-        z-index: -1;
-    }
-</style>
 <div vertical layout center>
-    <div class="bg" dummy fit></div>
     <form-box ng-show="!hasRegistered">
         <h2>Register</h2>
 
@@ -26,7 +19,8 @@
                 <input is="core-input" required name="password_repeat" type="password" ng-model="password_repeat"/>
             </paper-input-decorator>
         </form>
-        <paper-button style="background: #009688; color:white" raised ng-click="register(registerform, user)">Register</paper-button>
+
+        <paper-button style="background: #009688; color:white" raised ng-click="register(registerform, user)">register</paper-button>
         <paper-button style="color: #009688" ng-click="goto('login')">login</paper-button>
     </form-box>
 

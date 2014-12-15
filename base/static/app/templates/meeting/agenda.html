@@ -1,0 +1,87 @@
+<style>
+    .file-details {
+        font-weight: 100;
+        padding-top: 15px;
+    }
+
+    .file-detail-heading core-icon {
+        width: 48px;
+        height: 48px;
+        vertical-align: top;
+    }
+
+    .file-detail-heading h2 {
+        display: inline;
+        font-size: 23px;
+        line-height: 48px;
+        font-weight: 100;
+    }
+
+    .file-details > dt {
+        display: inline-block;
+        float: left;
+        text-align: left;
+        width: 100px;
+        clear: left;
+        margin: 5px auto;
+        padding: 0;
+    }
+
+    .file-details > dd {
+        display: inline-block;
+        float: left;
+        text-align: left;
+        width: 200px;
+        margin: 5px auto;
+        padding: 0;
+    }
+
+    .file-detail-heading paper-icon-button {
+        float: right;
+        width: 24px;
+        height: 24px;
+        padding: 12px;
+        color: #acacac;
+    }
+
+    paper-button.download {
+        width: 100%;
+    }
+
+    .revisions punkt-file {
+        margin: 5px 0;
+        width: 100%;
+    }
+</style>
+
+<div ng-show="meeting && meeting.hasAgenda">
+    <div class="file-detail-heading">
+
+        <core-icon icon="subject" role="img"></core-icon>
+        <h2>Agenda</h2>
+        <paper-icon-button icon="close" title="Close" role="button" ng-click="goto('^')"></paper-icon-button>
+    </div>
+
+    <hr class="spacing"/>
+    <paper-button class="download" style="background-color: #E91E63; color: white;"
+                  ng-click="download(meeting.latestAgenda.download_url)" raised>Download
+    </paper-button>
+
+    <dl class="file-details">
+        <dt>Name</dt>
+        <dd>{{ meeting.latestAgenda.name }}</dd>
+        <dt>Owner</dt>
+        <dd>{{ meeting.latestAgenda.owner.full_name }}</dd>
+        <dt>Created</dt>
+        <dd>{{ meeting.latestAgenda.humanReadableDate() }}</dd>
+    </dl>
+
+    <hr class="spacing"/>
+
+    <div class="revisions" vertical center layout>
+        <punkt-file ng-repeat="agenda in meeting.agendaRevisions"
+                    ng-click="download(meeting.latestAgenda.download_url)" type="subject"
+                    groupColorTint="#B0BEC5" name="Agenda"
+                    owner="{{ agenda.humanReadableDate() }}"></punkt-file>
+    </div>
+</div>

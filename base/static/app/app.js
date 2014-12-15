@@ -8,7 +8,12 @@ angular.module('punktlich').config(function ($httpProvider, $locationProvider, R
     $locationProvider.hashPrefix('!');
     RestangularProvider.setBaseUrl('api/v1/');
 
+    $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+    $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+
     cfpLoadingBarProvider.includeSpinner = false;
+
+    $httpProvider.interceptors.push('AccessInterceptor');
 });
 
 angular.module('punktlichDep', [

@@ -1,4 +1,5 @@
 import hashlib
+import os
 import uuid
 from django.db import models
 from authentication.models import User
@@ -6,7 +7,19 @@ from validators import MimetypeValidator
 
 
 class File(models.Model):
-    upload_at = models.DateTimeField(auto_now=True)
+    uploaded_at = models.DateTimeField(auto_now=True)
+    file_name = models.CharField(max_length=200, null=True)
+    created_by = models.ForeignKey(User, null=True)
+
+    def has_access(self, user):
+        """ Check if the user has access to this file """
+
+        #TODO: add group checks
+        return True
+
+    def get_extension(self):
+        name, extension = os.path.splitext(self.file.name)
+        return extension
 
     class Meta:
         abstract = True
@@ -15,7 +28,9 @@ class File(models.Model):
 class RenameFileMixin(models.Model):
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
-        self.file.name = hashlib.sha1(str(uuid.uuid4())).hexdigest() + '.pdf'
+        file_name, file_extension = os.path.splitext(self.file.name)
+        self.file_name = file_name
+        self.file.name = hashlib.sha1(str(uuid.uuid4())).hexdigest() + file_extension
         super(RenameFileMixin, self).save()
 
     class Meta:
@@ -23,15 +38,15 @@ class RenameFileMixin(models.Model):
 
 
 class Agenda(File, RenameFileMixin):
-    file = models.FileField(upload_to='agendas')
+    file = models.FileField(upload_to='meeting/agendas')
 
 
 class Minute(File, RenameFileMixin):
-    file = models.FileField(upload_to='minutes')
+    file = models.FileField(upload_to='meeting/minutes')
 
 
 class Attachment(File, RenameFileMixin):
-    file = models.FileField(upload_to='attachments')
+    file = models.FileField(upload_to='meeting/attachments')
 
 
 class Meeting(models.Model):
