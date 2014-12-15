@@ -13,6 +13,34 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+            name='Agenda',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('uploaded_at', models.DateTimeField(auto_now=True)),
+                ('file_name', models.CharField(max_length=200, null=True)),
+                ('file', models.FileField(upload_to=b'meeting/agendas')),
+                ('created_by', models.ForeignKey(to=settings.AUTH_USER_MODEL, null=True)),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Attachment',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('uploaded_at', models.DateTimeField(auto_now=True)),
+                ('file_name', models.CharField(max_length=200, null=True)),
+                ('file', models.FileField(upload_to=b'meeting/attachments')),
+                ('created_by', models.ForeignKey(to=settings.AUTH_USER_MODEL, null=True)),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
             name='Meeting',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -21,6 +49,7 @@ class Migration(migrations.Migration):
                 ('location', models.CharField(max_length=90, null=True)),
                 ('address', models.CharField(max_length=200, null=True)),
                 ('date_and_time', models.DateTimeField()),
+                ('agendas', models.ManyToManyField(to='meeting.Agenda')),
                 ('creator', models.ForeignKey(related_name='creator_user', to=settings.AUTH_USER_MODEL, null=True)),
             ],
             options={
@@ -28,11 +57,11 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
-            name='MeetingUser',
+            name='MeetingInvitation',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('user_state', models.CharField(default=False, max_length=20, choices=[(0, b'Unknown'), (1, b'Present'), (2, b'Maybe'), (3, b'Reject')])),
-                ('present_at', models.DateTimeField()),
+                ('state', models.IntegerField(default=0, max_length=1, choices=[(0, b'Unknown'), (1, b'Present'), (2, b'Maybe'), (3, b'Reject')])),
+                ('present_at', models.DateTimeField(null=True)),
                 ('meeting', models.ForeignKey(to='meeting.Meeting')),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
@@ -40,10 +69,24 @@ class Migration(migrations.Migration):
             },
             bases=(models.Model,),
         ),
+        migrations.CreateModel(
+            name='Minute',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('uploaded_at', models.DateTimeField(auto_now=True)),
+                ('file_name', models.CharField(max_length=200, null=True)),
+                ('file', models.FileField(upload_to=b'meeting/minutes')),
+                ('created_by', models.ForeignKey(to=settings.AUTH_USER_MODEL, null=True)),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
         migrations.AddField(
             model_name='meeting',
-            name='participants',
-            field=models.ManyToManyField(related_name='participant_user', through='meeting.MeetingUser', to=settings.AUTH_USER_MODEL),
+            name='minutes',
+            field=models.ManyToManyField(to='meeting.Minute'),
             preserve_default=True,
         ),
     ]
