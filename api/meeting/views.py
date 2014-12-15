@@ -6,7 +6,8 @@ from rest_framework.decorators import detail_route, list_route
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView, get_object_or_404, UpdateAPIView
 from rest_framework.response import Response
 from api.authentication.serializers import UserSerializer
-from api.meeting.serializers import MeetingSerializer, AgendaSerializer, AttachmentSerializer, MinuteSerializer
+from api.meeting.serializers import MeetingSerializer, AgendaSerializer, AttachmentSerializer, MinuteSerializer, \
+    MeetingInvitationSerializer
 from meeting.models import Meeting, Agenda
 from rest_framework import status, permissions, generics
 
@@ -21,7 +22,7 @@ class MeetingViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['GET'])
     def invited(self, request, pk=None):
         meeting = self.get_object()
-        return Response(UserSerializer(meeting.meetinginvitation_set.all(), many=True).data)
+        return Response(MeetingInvitationSerializer(meeting.meetinginvitation_set.all(), many=True).data)
 
     @detail_route(methods=['GET'])
     def minutes(self, request, pk=None):
@@ -43,7 +44,7 @@ class MeetingViewSet(viewsets.ModelViewSet):
         return super(MeetingViewSet, self).list(request)
 
     def get_queryset(self):
-        #TODO: only list meetings the user has access to
+        # TODO: only list meetings the user has access to
         if self._from_date is None or self._to_date is None:
             return Meeting.objects.all()
 

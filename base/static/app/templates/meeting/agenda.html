@@ -52,9 +52,14 @@
         margin: 5px 0;
         width: 100%;
     }
+
+    .file-name {
+        padding:0px;
+        margin:0px;
+    }
 </style>
 
-<div ng-show="meeting && meeting.hasAgenda">
+<div ng-show="meeting">
     <div class="file-detail-heading">
 
         <core-icon icon="subject" role="img"></core-icon>
@@ -64,24 +69,27 @@
 
     <hr class="spacing"/>
     <paper-button class="download" style="background-color: #E91E63; color: white;"
-                  ng-click="download(meeting.latestAgenda.download_url)" raised>Download
+                  ng-click="download(agendas[0].download_url)" raised>Download
     </paper-button>
-
     <dl class="file-details">
         <dt>Name</dt>
-        <dd>{{ meeting.latestAgenda.name }}</dd>
+        <dd>
+            <paper-input-decorator class="file-name">
+                <input is="core-input" value="{{ agendas[0].file_name }}"  ng-blur="saveFilename(agendas[0].file_name)" name="password_repeat" ng-model="agendas[0].file_name" />
+            </paper-input-decorator>
+        </dd>
         <dt>Owner</dt>
-        <dd>{{ meeting.latestAgenda.owner.full_name }}</dd>
+        <dd>{{ agendas[0].created_by.full_name }}</dd>
         <dt>Created</dt>
-        <dd>{{ meeting.latestAgenda.humanReadableDate() }}</dd>
+        <dd>{{ agendas[0].uploaded_at }}</dd>
     </dl>
 
     <hr class="spacing"/>
 
     <div class="revisions" vertical center layout>
-        <punkt-file ng-repeat="agenda in meeting.agendaRevisions"
-                    ng-click="download(meeting.latestAgenda.download_url)" type="subject"
+        <punkt-file ng-repeat="agenda in agendas"
+                    ng-click="download(agenda.download_url)" type="subject"
                     groupColorTint="#B0BEC5" name="Agenda"
-                    owner="{{ agenda.humanReadableDate() }}"></punkt-file>
+                    owner="{{ agenda.uploaded_at }}"></punkt-file>
     </div>
 </div>

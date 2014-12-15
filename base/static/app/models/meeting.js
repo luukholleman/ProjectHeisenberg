@@ -2,6 +2,8 @@ angular.module('punktlichDep').factory('MeetingModel', function (Restangular) {
 
     Restangular.extendModel('meetings', function (meeting) {
 
+        meeting.agendas = [];
+
         //@todo maybe we should create somehing generic to parse dates
         meeting.date_and_time_moment = moment(new Date(meeting.date_and_time));
 
@@ -25,30 +27,22 @@ angular.module('punktlichDep').factory('MeetingModel', function (Restangular) {
             };
         };
 
-        meeting.hasAgenda = meeting.agendas && meeting.agendas.length > 0;
-        meeting.latestAgenda = meeting.hasAgenda ? createRevision(meeting.agendas[meeting.agendas.length - 1]) : null;
+        //meeting.hasAgenda = meeting.agendas && meeting.agendas.length > 0;
+        //meeting.latestAgenda = meeting.hasAgenda ? createRevision(meeting.agendas[meeting.agendas.length - 1]) : null;
 
-        meeting.agendaRevisions = _.map(meeting.agendas, function(agenda){
-            return createRevision(agenda);
-        }).reverse();
+        meeting.getAgendaRevisions = function() {
+            return meeting.all('agendas').getList().$object;
+        };
+
+        meeting.getInvited = function() {
+            return meeting.all('invited').getList().$object;
+        };
 
         meeting.postFile = function (type, file, success, error) {
             var formData = new FormData();
             formData.append('file', file);
             meeting.withHttpConfig({transformRequest: angular.identity})
-                .customPOST(formData, 'agenda', undefined, {'Content-Type': undefined}).then(success, error);
-        };
-
-        meeting.postAgenda = function (file, success, error) {
-            postFile('agenda', file, success, error);
-        };
-
-        meeting.postMinute = function (file, success, error) {
-            postFile('minute', file, success, error);
-        };
-
-        meeting.postAttachment = function (file, success, error) {
-            postFile('attachment', file, success, error);
+                .customPOST(formData, type, undefined, {'Content-Type': undefined}).then(success, error);
         };
 
         return meeting;

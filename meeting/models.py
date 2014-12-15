@@ -29,7 +29,11 @@ class RenameFileMixin(models.Model):
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         file_name, file_extension = os.path.splitext(self.file.name)
-        self.file_name = file_name
+
+        # Only update when we're creating
+        if self.pk is None:
+            self.file_name = file_name
+
         self.file.name = hashlib.sha1(str(uuid.uuid4())).hexdigest() + file_extension
         super(RenameFileMixin, self).save()
 
