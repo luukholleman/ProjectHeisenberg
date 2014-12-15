@@ -44,6 +44,7 @@ class MeetingViewSet(viewsets.ModelViewSet):
         agenda = serializer.save()
 
         agenda.created_by = request.user
+        agenda.save()
 
         meeting = self.get_object()
         meeting.agendas.add(agenda)
