@@ -1,6 +1,6 @@
 <div vertical layout center>
     <punkt-card ng-repeat="meeting in meetings"
-                header="{{ meeting.name }}"
+                header="{{ meeting.name | limit:32 }}"
                 subheader="{{ meeting.humanReadableDate() }}"
                 location="{{ meeting.location }}"
                 invitations="{{ meeting.invitations }}"
@@ -9,7 +9,11 @@
                 id="meeting-{{ meeting.id }}"
                 status="1">
         <div class="info">
-            <p>{{ meeting.description }}</p>
+            <p>
+                {{ meeting.description | limit:256 }}
+                <a href="#moreinfo" ng-show="{{ meeting.description && meeting.description.length > 256 }}"
+                   ng-click="goto('meeting-detail', {meetingid: meeting.id})">More...</a>
+            </p>
 
             <div vertical layout style="margin-bottom: 20px" class="">
                 <div horizontal layout>
@@ -36,7 +40,8 @@
                     </div>
 
                     <div horizontal layout>
-                        <punkt-person ng-repeat="user in users" abbr="{{ user.initials }}" name="{{ user.full_name }}" image
+                        <punkt-person ng-repeat="user in users" abbr="{{ user.initials }}" name="{{ user.full_name }}"
+                                      image
                                       status="1"></punkt-person>
                         <!--
                         <punkt-person abbr="DH" name="Daan Houweling" image="" status="1"></punkt-person>
@@ -63,7 +68,8 @@
         </div>
 
         <!-- @todo: move style to css/sass -->
-        <paper-button ng-click="goto('meeting-detail', {meetingid: meeting.id})" style="color: #009688" class="button btn-default">open meeting
+        <paper-button ng-click="goto('meeting-detail', {meetingid: meeting.id})" style="color: #009688"
+                      class="button btn-default">open meeting
         </paper-button>
     </punkt-card>
 </div>
