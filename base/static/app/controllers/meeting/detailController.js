@@ -1,23 +1,25 @@
 angular.module('punktlichDep').controller('MeetingDetailController', function ($scope, $http, $sce, Restangular, FlashMessageService, $stateParams, $rootScope, MeetingService) {
     $scope.users = [];
 
-    $scope.fetchMeeting = function () {
-        MeetingService.get($stateParams.meetingid).get().then(function (meeting) {
-            $scope.meeting = meeting;
-        }, function () {
+    function fetchMeeting () {
+        var request = MeetingService.get($stateParams.meetingid).get();
+
+        $scope.meeting = request.$object;
+
+        request .then(null, function () {
             FlashMessageService.setMessage('Meeting could not be found');
             $scope.goto('meetings.list');
         });
     };
 
-    $scope.fetchMeeting();
+    fetchMeeting();
 
     var fileElement = document.querySelector('.file-upload');
+    var fileType = 'agenda';
 
     $scope.fileSelected = function (e) {
-        var type = fileElement.getAttribute('file-type');
-        $scope.meeting.postFile(type, e.files[0], function (success) {
-            $scope.fetchMeeting();
+        $scope.meeting.postFile(fileType, e.files[0], function (success) {
+            fetchMeeting();
             FlashMessageService.setMessage('Your file has been uploaded');
         }, function (error) {
             FlashMessageService.setMessage(error.data.file[0], false);
@@ -25,17 +27,17 @@ angular.module('punktlichDep').controller('MeetingDetailController', function ($
     };
 
     $scope.uploadAgenda = function (file) {
-        fileElement.setAttribute('file-type', 'agenda');
+        fileType = 'agenda';
         fileElement.click();
     };
 
     $scope.uploadAttachment = function () {
-        fileElement.setAttribute('file-type', 'attachment');
+        fileType = 'attachment';
         fileElement.click();
     };
 
     $scope.uploadMinute = function () {
-        fileElement.setAttribute('file-type', 'minute');
+        fileType = 'minute';
         fileElement.click();
     };
 });
