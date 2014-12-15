@@ -1,23 +1,17 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework.authtoken.serializers import AuthTokenSerializer as BaseAuthTokenSerializer
-from authentication.models import User
+from api.team.serializers import TeamSerializer
+from authentication.models import User, Color
 from django.utils.translation import ugettext_lazy as _
 
 
 class UserSerializer(serializers.ModelSerializer):
-    initials = serializers.SerializerMethodField()
-    full_name = serializers.SerializerMethodField()
-
-    def get_full_name(self, user):
-        return user.get_full_name()
-
-    def get_initials(self, user):
-        return user.get_initials()
+    teams = serializers.PrimaryKeyRelatedField(many=True, read_only=True, source='team_set')
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'password', 'full_name', 'initials')
+        fields = ('id', 'email', 'first_name', 'last_name', 'password', 'full_name', 'initials', 'teams')
         write_only_fields = ('password',)
 
 
@@ -44,3 +38,10 @@ class AuthTokenSerializer(BaseAuthTokenSerializer):
         else:
             msg = _('Must include "username" and "password"')
             raise serializers.ValidationError(msg)
+
+class ColorSerializer(serializers.ModelSerializer):
+    color = serializers.CharField()
+
+    class Meta:
+        model = Color
+        fields = ('color',)

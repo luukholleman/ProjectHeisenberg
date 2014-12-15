@@ -33,15 +33,19 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-    def get_full_name(self):
+    @property
+    def full_name(self):
         """
         Returns the first_name plus the last_name, with a space in between.
         """
         full_name = '%s %s' % (self.first_name, self.last_name)
         return full_name.strip()
 
-    def get_short_name(self):
-        "Returns the short name for the user."
+    @property
+    def short_name(self):
+        """
+        Returns the short name for the user.
+        """
         return self.first_name
 
     def activate(self):
@@ -57,9 +61,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.activation_token = hashlib.sha1(self.email).hexdigest()
         self.activation_expire = datetime.now() + time_span
 
-    def get_initials(self):
-        "Returns the first letters of the first and last name of the user in uppercase."
-        initials = self.first_name[0]
+    @property
+    def initials(self):
+        """
+        Returns the first letters of the first and last name of the user in uppercase.
+        """
+        initials = ""
+        if self.first_name is not None:
+            initials += self.first_name[0]
         if self.last_name is not None:
             initials += self.last_name[0]
         return initials.upper()
@@ -70,3 +79,12 @@ class User(AbstractBaseUser, PermissionsMixin):
             self.set_activation(expire_days=7)
 
         return super(User, self).save(*args, **kwargs)
+
+
+class Color(models.Model):
+    color = models.CharField(max_length=6, blank=True)
+
+
+class UserColor(models.Model):
+    user = models.ForeignKey(User)
+    color = models.ForeignKey(Color)

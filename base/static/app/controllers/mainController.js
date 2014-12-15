@@ -3,6 +3,15 @@ angular.module('punktlichDep').controller('MainController', function ($scope, $r
 
     if (authToken != null) {
         AuthenticationService.setToken(authToken);
+
+        AuthenticationService.getAuthenticatedUser(function(user){
+            $rootScope.user = user;
+        }, function(){
+            if(window.location.pathname != '/login' && window.location.pathname != '/register') {
+                window.location = '/login';
+            }
+        });
+
     } else {
         if(window.location.pathname != '/login' && window.location.pathname != '/register') {
             window.location = '/login';

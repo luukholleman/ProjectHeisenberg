@@ -1,3 +1,3 @@
-angular.module('punktlichDep').factory('UserModel', function ($resource) {
-    return $resource(apiBase + 'users/:id');
+angular.module('punktlichDep').factory('UserModel', function(Restangular, TeamModel){
+    return Restangular.service('users');
 });

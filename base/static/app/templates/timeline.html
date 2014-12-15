@@ -3,12 +3,19 @@
         position: fixed;
         top: 0;
         width: 100%;
-        z-index: 100;
         background: white;
 
         /*height: 290px;*/
 
         box-shadow: 0 0 15px 0 rgba(0, 0, 0, .2);
+    }
+
+    [drawer] {
+        background-color: white;
+    }
+
+    [main] {
+        min-height: 0%;
     }
 
     .top-toolbar {
@@ -17,29 +24,75 @@
     }
 
     .timeline-view {
-        transition: margin-top .2s ease-in-out;
-        -webkit-transition: margin-top .2s ease-in-out;
-        margin-top: 290px; /*225+64*/
+        transition: padding-top .2s ease-in-out;
+        -webkit-transition: padding-top .2s ease-in-out;
         padding: 20px 0;
+        padding-top: 310px;
     }
 
     .timeline-view.condensed {
-        margin-top: 170px;
+        padding-top: 170px;
     }
-</style>
-<div class="top-sticker">
-    <div>
-        <core-toolbar class="top-toolbar">
-            <paper-icon-button icon="arrow-back" ng-click="goto('meetings.list')" ng-show="onHome"></paper-icon-button>
-            <strong flex>Punktlich.</strong>
-            <paper-fab icon="add" title="Create meeting" role="button" aria-label="Create meeting"
-                       ng-click="goto('^.create')" style="background-color: #03A9F4;"></paper-fab>
-        </core-toolbar>
-    </div>
 
-    <timeline-container id="timeline" style="width: 100%" vertical layout>
-        <timeline-node ng-repeat="meeting in meetings | filter:visible=true" color="{{ meeting.color }}"
-                       date="{{ meeting.date }}" data-meetingid="{{ meeting.id }}"></timeline-node>
-    </timeline-container>
+</style>
+<core-drawer-panel forceNarrow="true">
+    <core-drawer-header drawer ng-controller="OffCanvasMenuController" class="off-canvas">
+        <div class="person-header">
+            <punkt-person abbr="LH" name="Luuk Holleman"
+                          image="http://media-cache-ec0.pinimg.com/avatars/luukholleman_1392631495_140.jpg"></punkt-person>
+            <span>
+                Luuk Holleman
+            </span>
+        </div>
+        <div class="line"></div>
+        <ul>
+            <li>
+                <core-icon icon="home"></core-icon>
+                <span ng-click="goto('meetings.list')">Home</span>
+            </li>
+        </ul>
+        <div class="line"></div>
+        <ul>
+            <li ng-repeat="team in user.teams">
+                <span ng-style="{'color' : '#' + team.color}">O</span>
+                <span ng-click="goto('team/' + team.id + '/update')">
+                    {{ team.name }}
+                </span>
+            </li>
+        </ul>
+        <div class="line"></div>
+        <ul>
+            <li>
+                <core-icon icon="settings-applications"></core-icon>
+                <span>Settings</span>
+            </li>
+            <li>
+                <core-icon icon="exit-to-app"></core-icon>
+                <span>Sign out</span>
+            </li>
+        </ul>
+    </core-drawer-header>
+    <div main class="content">
+        <div class="timeline-view" ui-view></div>
+        <div class="top-sticker">
+            <core-toolbar class="top-toolbar">
+                <paper-icon-button icon="menu" core-drawer-toggle>
+                </paper-icon-button>
+                <div flex>Punktlich.</div>
+                <paper-fab class="add" icon="add" title="Create meeting" role="button" aria-label="Create meeting"
+                           ng-click="goto('^.create')" style="background-color: #03A9F4;"></paper-fab>
+            </core-toolbar>
+            <timeline-container id="timeline" style="width: 100%" vertical layout>
+                <timeline-node ng-repeat="meeting in meetings | filter:visible=true" color="{{ meeting.color }}"
+                               date="{{ meeting.date }}"></timeline-node>
+            </timeline-container>
+        </div>
+    </div>
+</core-drawer-panel>
+
+<timeline-container id="timeline" style="width: 100%" vertical layout>
+    <timeline-node ng-repeat="meeting in meetings | filter:visible=true" color="{{ meeting.color }}"
+                   date="{{ meeting.date }}" data-meetingid="{{ meeting.id }}"></timeline-node>
+</timeline-container>
 </div>
 <div class="timeline-view" ui-view></div>
