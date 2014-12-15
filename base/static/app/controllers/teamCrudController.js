@@ -9,6 +9,8 @@ angular.module('punktlichDep').controller('TeamUpdateController', function ($sco
         }, function (errors) {
             //ValidationService.showErrors(form, errors.data)
         });
+
+        $scope.$emit('teams.update', $scope.team);
     };
 
     $scope.leave = function () {

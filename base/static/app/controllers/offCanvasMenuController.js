@@ -1,8 +1,5 @@
-angular.module('punktlichDep').controller('OffCanvasMenuController', function ($scope, $rootScope, AuthenticationService) {
-    $scope.$watch('user', function(){
-        if($scope.user == undefined)
-            return;
-
+angular.module('punktlichDep').controller('OffCanvasMenuController', function ($scope, $rootScope) {
+    function setTeams() {
         $rootScope.user.getTeams(function(teams){
 
             $scope.user.teams = teams;
@@ -14,5 +11,16 @@ angular.module('punktlichDep').controller('OffCanvasMenuController', function ($
                 });
             });
         });
+    }
+
+    $scope.$watch('user', function(){
+        if($scope.user == undefined)
+            return;
+
+        setTeams();
+    });
+
+    $scope.$on('teams.update', function(){
+        setTeams();
     });
 });

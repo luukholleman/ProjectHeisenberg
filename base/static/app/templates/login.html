@@ -2,13 +2,15 @@
     <form-box>
         <h2>Login</h2>
 
-        <form name="loginform">
+        <form name="loginform", ng-submit="login(loginform, email, password)">
             <paper-input-decorator floatingLabel label="Email">
                 <input is="core-input" required type="email" name="email" ng-model="email"/>
             </paper-input-decorator>
             <paper-input-decorator floatingLabel label="Password">
                 <input is="core-input" required name="password" type="password" ng-model="password"/>
             </paper-input-decorator>
+
+            <input type="submit" hidden/>
         </form>
         <paper-button style="background: #009688; color:white" raised ng-click="login(loginform, email, password)">Login</paper-button>
         <paper-button style="color: #009688" ng-click="goto('register')">register</paper-button>

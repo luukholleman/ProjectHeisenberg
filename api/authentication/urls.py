@@ -7,7 +7,7 @@ router.register(r'users', UserViewSet, base_name='api.v1.user')
 
 urlpatterns = [
     url(r'activate', ActivateUser.as_view()),
-    url(r'get-authenticated-user$', AuthenticatedUser.as_view(), name='api.v1.get-authenticated-user'),
+    url(r'authenticated$', AuthenticatedUser.as_view(), name='api.v1.authenticated'),
     url(r'login$', 'api.authentication.views.obtain_auth_token', name='api.v1.login'),
     url(r'', include(router.urls)),
 ]
