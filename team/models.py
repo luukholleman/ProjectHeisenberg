@@ -3,6 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from authentication.models import User, UserColor
 from meeting.models import Meeting
 
+
 class Team(models.Model):
     name = models.CharField(max_length=255, blank=False)
     description = models.CharField(max_length=4096, blank=True)
