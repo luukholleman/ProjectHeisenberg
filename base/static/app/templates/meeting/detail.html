@@ -89,18 +89,22 @@
         </h4>
 
         <div horizontal layout>
-            <punkt-file ng-show="meeting && meeting.hasAgenda" type="subject"
+            <punkt-file ng-hide="agendas.length == 0" type="subject"
                         ng-click="goto('meeting-detail.agenda-detail')"
                         groupColorTint="#B0BEC5" name="Agenda"
-                        owner="{{ meeting.latestAgenda.humanReadableDate() }}"></punkt-file>
+                        owner="{{ agendas[0].created_by.full_name }}"></punkt-file>
             <punkt-file type="subject"
                         groupColorTint="#B0BEC5" name="Minutes" owner="Fake data"></punkt-file>
         </div>
         <h4 class="heading">
             Participants
         </h4>
-        <punkt-person ng-repeat="user in users" abbr="{{ user.initials }}" name="{{ user.full_name }}" image
-                      status="1"></punkt-person>
+
+        <div horizontal layout>
+            <punkt-person ng-repeat="invitation in invited" abbr="{{ invitation.user.initials }}"
+                          name="{{ invitation.user.full_name }}" image
+                          status="{{ invitation.state }}"></punkt-person>
+        </div>
     </div>
 
     <div vertical layout class="sidebar right" ui-view="right-sidebar">

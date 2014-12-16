@@ -1,43 +1,43 @@
 angular.module('punktlichDep').controller('MeetingDetailController', function ($scope, $http, $sce, Restangular, FlashMessageService, $stateParams, $rootScope, MeetingService) {
     $scope.users = [];
 
-    function fetchMeeting () {
-        var request = MeetingService.get($stateParams.meetingid).get();
-
-        $scope.meeting = request.$object;
-
-        request .then(null, function () {
-            FlashMessageService.setMessage('Meeting could not be found');
-            $scope.goto('meetings.list');
-        });
-    };
-
-    fetchMeeting();
+    MeetingService.get($stateParams.meetingid).get().then(function(meeting) {
+        $scope.meeting = meeting;
+        $scope.agendas = meeting.getAgendaRevisions();
+        $scope.invited = $scope.meeting.getInvited();
+    }, function () {
+        FlashMessageService.setMessage('Meeting could not be found');
+        $scope.goto('meetings.list');
+    });
 
     var fileElement = document.querySelector('.file-upload');
-    var fileType = 'agenda';
+    var fileType = 'agendas';
 
     $scope.fileSelected = function (e) {
         $scope.meeting.postFile(fileType, e.files[0], function (success) {
-            fetchMeeting();
+            $scope.agendas = $scope.meeting.getAgendaRevisions();
             FlashMessageService.setMessage('Your file has been uploaded');
         }, function (error) {
             FlashMessageService.setMessage(error.data.file[0], false);
         });
     };
 
-    $scope.uploadAgenda = function (file) {
-        fileType = 'agenda';
+    $scope.uploadAgenda = function () {
+        fileType = 'agendas';
         fileElement.click();
     };
 
     $scope.uploadAttachment = function () {
-        fileType = 'attachment';
+        fileType = 'attachments';
         fileElement.click();
     };
 
     $scope.uploadMinute = function () {
-        fileType = 'minute';
+        fileType = 'minutes';
         fileElement.click();
+    };
+
+    $scope.saveFilename = function(name) {
+        $scope.agendas[0].patch({file_name: name});
     };
 });
