@@ -81,6 +81,15 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
         pageElement.scrollTop = position - (timeline.condensed ? 180 : 300);
     });
 
+    $scope.loadMeetingData = function(meeting) {
+        meeting.all('invited').getList().then(function(invited) {
+            meeting.invited = invited;
+        });
+        meeting.all('agendas').getList().then(function(agendas) {
+            meeting.agendas = agendas;
+        });
+    };
+
     angular.element(pageElement).bind('scroll', function () {
         if (pageElement.scrollTop > 300 - 170) {
             timeline.condensed = true;

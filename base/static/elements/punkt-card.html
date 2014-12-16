@@ -137,7 +137,11 @@
     <script>
         Polymer('punkt-card', {
             detailsVisible: false,
+
             toggleDetails: function (e, detail, sender) {
+                if (!this.detailsVisible) {
+                    this.fire('open-card', {visible: this.detailsVisible});
+                }
                 this.detailsVisible = !this.detailsVisible;
             }
         });
