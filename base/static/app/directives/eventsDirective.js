@@ -1,15 +1,14 @@
 angular.module('punktlichDep').directive('ngEvents', function ($parse, $rootScope) {
     return {
         restrict: 'A',
-        compile: function ($element, attr) {
+        compile: function ($element, attrs) {
             return function ngEventHandler(scope, element) {
-                attr['ngEvents'].split(' ').forEach(function (evname) {
-                    var directive = 'on' + function (string) {
-                            return string.charAt(0).toUpperCase() + string.slice(1);
-                        }(evname);
-                    var fn = $parse(attr[directive], null, true);
 
-                    element.on(evname, function (event) {
+                attrs['ngEvents'].split(' ').forEach(function (eventName) {
+                    var directive = attrs.$normalize('on-' + eventName);
+                    var fn = $parse(attrs[directive], null, true);
+
+                    element.on(eventName, function (event) {
                         var callback = function () {
                             fn(scope, {$event: event});
                         };
