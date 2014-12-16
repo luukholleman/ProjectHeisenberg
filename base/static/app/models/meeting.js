@@ -1,18 +1,6 @@
 angular.module('punktlichDep').factory('MeetingModel', function (Restangular) {
 
     Restangular.extendModel('meetings', function (meeting) {
-
-        //@todo maybe we should create somehing generic to parse dates
-        meeting.date_and_time_moment = moment(new Date(meeting.date_and_time));
-
-        meeting.future = function () {
-            return meeting.date_and_time_moment.isAfter(moment());
-        };
-
-        meeting.humanReadableDate = function () {
-            return (meeting.future() ? 'Starts' : 'Started') + ' ' + meeting.date_and_time_moment.fromNow();
-        };
-
         function createRevision(agenda) {
             return {
                 file: agenda.file,
