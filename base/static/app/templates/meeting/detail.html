@@ -3,7 +3,7 @@
         background-color: #EEEEEE;
     }
 
-    punkt-person {
+    punkt-circle {
         padding: 10px;
     }
 
@@ -104,9 +104,9 @@
         </h4>
 
         <div horizontal layout>
-            <punkt-person ng-repeat="invitation in invited" abbr="{{ invitation.user.initials }}"
-                          name="{{ invitation.user.full_name }}" image
-                          status="{{ invitation.state }}"></punkt-person>
+            <punkt-circle ng-repeat="invitation in invited" abbr="{{ invitation.user.initials }}"
+                          name="{{ invitation.user.full_name }}"
+                          status="{{ invitation.state }}"></punkt-circle>
         </div>
     </div>
 
