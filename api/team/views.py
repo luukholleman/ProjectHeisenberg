@@ -1,10 +1,13 @@
 from django.http import Http404
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import detail_route
-from rest_framework.generics import UpdateAPIView, ListCreateAPIView, get_object_or_404, DestroyAPIView
+from rest_framework.generics import UpdateAPIView, ListCreateAPIView, get_object_or_404, DestroyAPIView, \
+    RetrieveUpdateDestroyAPIView, ListAPIView, GenericAPIView
+from rest_framework.mixins import ListModelMixin, DestroyModelMixin, RetrieveModelMixin
 from rest_framework.response import Response
 from api.authentication.serializers import ColorSerializer, UserSerializer
 from api.team.serializers import TeamSerializer
+from authentication.models import User
 from team.models import Team
 
 
@@ -46,14 +49,30 @@ class TeamViewSet(viewsets.ModelViewSet):
         return Team.objects.all()
 
 
-class TeamMemberApiView(ListCreateAPIView, UpdateAPIView, DestroyAPIView):
+class TeamMemberListApiView(ListAPIView):
     serializer_class = UserSerializer
+    # todo fix permissions
     permission_classes = (permissions.AllowAny, )
 
     def get_team(self):
         return get_object_or_404(Team, pk=self.kwargs['teamId'])
 
     def get_queryset(self):
-        if 'pk' not in self.kwargs:
-            return self.get_team().invitations
-        return super(TeamMemberApiView, self).get_queryset()
+        return self.get_team().invitations
+
+
+class TeamMemberApiView(RetrieveUpdateDestroyAPIView):
+    serializer_class = UserSerializer
+    # todo fix permissions
+    permission_classes = (permissions.AllowAny, )
+
+    def get_team(self):
+        return get_object_or_404(Team, pk=self.kwargs['teamId'])
+
+    def get_queryset(self):
+        return self.get_team().invitations
+
+    def destroy(self, request, *args, **kwargs):
+        member = get_object_or_404(User, pk=self.kwargs['pk'])
+        self.get_team().invitations.remove(member)
+        return Response(status=status.HTTP_204_NO_CONTENT)
