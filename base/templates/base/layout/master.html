@@ -78,7 +78,7 @@
     <link rel="import" href="{{ STATIC_URL }}bower/paper-icon-button/paper-icon-button.html">
     <link rel="import" href="{{ STATIC_URL }}bower/paper-dropdown/paper-dropdown.html">
     <link rel="import" href="{{ STATIC_URL }}bower/paper-dropdown-menu/paper-dropdown-menu.html">
-    <link rel="import" href="{{ STATIC_URL }}bower/paper-item/paper-item.html">
+    <link rel="import" href="{{ STATIC_URL }}bower/paper-item/paper-item.html2">
 
     <link rel="import" href="{{ STATIC_URL }}elements/form-box.html">
     <link rel="import" href="{{ STATIC_URL }}elements/punkt-filter-box.html">
@@ -195,22 +195,6 @@
             100% { font-size: 90px; }
         }
 
-        @-moz-keyframes pulse {
-            40% { font-size: 90px; }
-            55% { font-size: 120px; }
-            70% { font-size: 90px; }
-            85% { font-size: 120px; }
-            100% { font-size: 90px; }
-        }
-
-        @-o-keyframes pulse {
-            40% { font-size: 90px; }
-            55% { font-size: 120px; }
-            70% { font-size: 90px; }
-            85% { font-size: 120px; }
-            100% { font-size: 90px; }
-        }
-
         @keyframes pulse {
             40% { font-size: 90px; }
             55% { font-size: 120px; }
@@ -222,8 +206,6 @@
         .splashscreen h1 {
             font-size: 90px;
             -webkit-animation: pulse 2s infinite; /* Safari 4+ */
-            -moz-animation:    pulse 2s infinite; /* Fx 5+ */
-            -o-animation:      pulse 2s infinite; /* Opera 12+ */
             animation:         pulse 2s infinite; /* IE 10+, Fx 29+ */
         }
     </style>
