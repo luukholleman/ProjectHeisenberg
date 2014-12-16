@@ -16,7 +16,8 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                     }
                 },
                 data: {
-                    authenticationRequired: false
+                    authenticationRequired: false,
+                    authenticationProhibited: true
                 }
             }).
             state('logout', {
@@ -42,7 +43,8 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                     }
                 },
                 data: {
-                    authenticationRequired: false
+                    authenticationRequired: false,
+                    authenticationProhibited: true
                 }
             }).
             state('activate.token', {
