@@ -1,20 +1,20 @@
 from django.http import Http404
 from rest_framework import viewsets, permissions, status
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import detail_route, list_route
 from rest_framework.generics import UpdateAPIView, ListCreateAPIView, get_object_or_404, DestroyAPIView, \
     RetrieveUpdateDestroyAPIView, ListAPIView, GenericAPIView
 from rest_framework.mixins import ListModelMixin, DestroyModelMixin, RetrieveModelMixin
 from rest_framework.response import Response
 from api.authentication.serializers import ColorSerializer, UserSerializer
 from api.team.serializers import TeamSerializer
-from authentication.models import User
+from authentication.models import User, UserColor, Color
 from team.models import Team
 
 
 class TeamViewSet(viewsets.ModelViewSet):
     serializer_class = TeamSerializer
     # todo add logged in permission here
-    permission_classes = []
+    permission_classes = (permissions.IsAuthenticated,)
 
     @detail_route(methods=['GET', 'DELETE'])
     def members(self, request, pk=None, *args, **kwargs):
@@ -28,6 +28,17 @@ class TeamViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         return super(TeamViewSet, self).list(request)
+
+    @list_route()
+    def colors(self, request, pk=None):
+        teams = Team.objects.filter(user_color__user_id=request.user.pk)
+        user_colors = UserColor.objects.filter(team__in=teams)
+
+        team_colors = []
+        for user_color in user_colors:
+            team_colors.append({user_color.team_set.get().id: user_color.color.color})
+
+        return Response(team_colors)
 
     @detail_route(methods=['GET'])
     def color(self, request, pk=None):

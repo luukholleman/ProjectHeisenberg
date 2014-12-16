@@ -3,7 +3,6 @@ angular.module('punktlichDep').directive('ngEvents', function ($parse, $rootScop
         restrict: 'A',
         compile: function ($element, attrs) {
             return function ngEventHandler(scope, element) {
-
                 attrs['ngEvents'].split(' ').forEach(function (eventName) {
                     var directive = attrs.$normalize('on-' + eventName);
                     var fn = $parse(attrs[directive], null, true);
