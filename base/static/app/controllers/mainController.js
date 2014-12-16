@@ -30,4 +30,6 @@ angular.module('punktlichDep').controller('MainController', function ($scope, $r
         $scope.onHome = $location.path() === '/';
         $state.go(route, params);
     };
+
+    $scope.getFlashMessage = FlashMessageService.getMessage;
 });
