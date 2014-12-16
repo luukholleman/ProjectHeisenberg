@@ -65,10 +65,10 @@ class MeetingSerializer(serializers.ModelSerializer):
             invitation.delete()
 
         invitations = validated_attrs.pop('meetinginvitation_set')
-        self.save_inviations(meeting, invitations)
+        self.save_invitations(meeting, invitations)
         return meeting
 
-    def save_inviations(self, meeting, invitations):
+    def save_invitations(self, meeting, invitations):
         for invitation in invitations:
             meeting.meetinginvitation_set.create(
                 user=invitation['user'],
@@ -84,7 +84,7 @@ class MeetingSerializer(serializers.ModelSerializer):
             address=validated_attrs['address'],
         )
 
-        self.save_inviations(meeting, meeting_invitations)
+        self.save_invitations(meeting, meeting_invitations)
         return meeting
 
     class Meta:
