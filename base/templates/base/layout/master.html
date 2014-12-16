@@ -229,8 +229,9 @@
             } else {
                 link.onload = function () {
                     if (--waiting == 0) {
-                        hideSplash();
-                        console.log('splash')
+                        setTimeout(function(){
+                            hideSplash();
+                        }, 500);
                     }
                 };
             }
