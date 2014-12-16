@@ -78,7 +78,7 @@
     </core-submenu>
     <div flex vertical layout class="content">
         <div class="info-container">
-            <p class="muted-info">{{ meeting.humanReadableDate() }}</p>
+            <p class="muted-info">{{ meeting.date_and_time | humanReadableDate:true }}</p>
 
             <p>
                 {{ meeting.description }}
