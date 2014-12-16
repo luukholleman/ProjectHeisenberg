@@ -162,7 +162,7 @@
             height: 100%;
             background-color: #fafafa;
             opacity: 1;
-            transition: opacity .2s linear;
+            transition: opacity .5s linear;
         }
 
         .splashscreen.fade-out {
@@ -210,6 +210,7 @@
                 link.onload = function () {
                     if (--waiting == 0) {
                         hideSplash();
+                        console.log('splash')
                     }
                 };
             }
@@ -219,6 +220,13 @@
 </head>
 <body ng-app="punktlich" ng-controller="MainController" fullbleed vertical layout>
 <div class="splashscreen">
+    <noscript>
+        <p>
+            <strong>Sorry!</strong>
+            You need to enable JavaScript to use Punktlich.
+            Here are the <a href="http://www.activatejavascript.org/" target="_blank">instructions how to enable JavaScript in your web browser</a>.
+        </p>
+    </noscript>
     <div>
         <img src="{{ STATIC_URL }}img/loading.gif" alt="Loading"/><br/> Loading...
     </div>
