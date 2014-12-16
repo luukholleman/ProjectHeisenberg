@@ -1,4 +1,4 @@
-angular.module('punktlichDep').controller('TeamUpdateController', function ($scope, $rootScope, TeamService, Restangular, $stateParams, TeamModel, AuthenticationService, ValidationService) {
+angular.module('punktlichDep').controller('TeamUpdateController', function ($scope, $rootScope, TeamService, Restangular, $stateParams, ValidationService) {
     TeamService.get($stateParams.teamid).get().then(function (data) {
         $scope.team = data;
         getMembers();
@@ -6,15 +6,15 @@ angular.module('punktlichDep').controller('TeamUpdateController', function ($sco
 
     $scope.save = function (form) {
         TeamService.update($scope.team, function () {
+            $rootScope.$broadcast('teams.update', $scope.team);
         }, function (errors) {
             //ValidationService.showErrors(form, errors.data)
         });
-
-        $scope.$emit('teams.update', $scope.team);
     };
 
     $scope.leave = function () {
         TeamService.leave($scope.team, $rootScope.user, function () {
+            $rootScope.$broadcast('teams.leave', $scope.team);
         }, function (errors) {
             //ValidationService.showErrors(null, errors.data)
         });

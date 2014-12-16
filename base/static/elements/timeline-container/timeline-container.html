@@ -50,6 +50,7 @@
             FREQUENCY_DAY_FULL: 3,
             FREQUENCY_DAY_HALF: 4,
             FREQUENCY_DAY_QUARTER: 5,
+            FREQUENCY_DAY_EIGHTH: 6,
             /*
              * **********************************
              * Public properties
@@ -315,6 +316,8 @@
              */
             isDayLabelVisible: function (frequency, label) {
                 switch (frequency) {
+                    case this.FREQUENCY_DAY_EIGHTH:
+                        return !(label.day % 7);
                     case this.FREQUENCY_DAY_QUARTER:
                         return !(label.day % 4);
                     case this.FREQUENCY_DAY_HALF:
@@ -399,8 +402,11 @@
                 if (width < 16) {
                     return this.FREQUENCY_MONTH_HALF;
                 }
-                if (width < 90) {
+                if (width < 35) {
                     return this.FREQUENCY_MONTH_FULL;
+                }
+                if (width < 80) {
+                    return this.FREQUENCY_DAY_EIGHTH;
                 }
                 if (width < 150) {
                     return this.FREQUENCY_DAY_QUARTER;

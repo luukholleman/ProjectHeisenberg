@@ -10,14 +10,8 @@ angular.module('punktlichDep').controller('MeetingUpdateController', function ($
     });
 
     $scope.save = function (form) {
-        MeetingService.update($scope.meeting, function () {
-
-        }, function (errors) {
+        MeetingService.update($scope.meeting, null, function (errors) {
             ValidationService.showErrors(form, errors.data)
         });
     };
-
-    box.addEventListener('core-activate', function () {
-        $scope.$apply();
-    });
 });

@@ -1,33 +1,41 @@
-angular.module('punktlichDep').controller('MainController', function ($scope, $rootScope, $location, FlashMessageService, AuthenticationService, $state) {
-    var authToken = localStorage.getItem('authentication-token');
-
-    if (authToken != null) {
-        AuthenticationService.setToken(authToken);
-
-        AuthenticationService.getAuthenticatedUser(function(user){
-            $rootScope.user = user;
-        }, function(){
-            if(window.location.pathname != '/login' && window.location.pathname != '/register') {
-                window.location = '/login';
+angular.module('punktlichDep').controller('MainController', function ($scope, $rootScope, $state, $location, FlashMessageService, AuthenticationService) {
+    function checkAuth() {
+        function checkStateAuthentication() {
+            if (!$state.current.data || typeof $state.current.data.authenticationRequired === 'undefined' || $state.current.data.authenticationRequired) {
+                console.log('auth');
+                $state.go('login');
             }
-        });
-
-    } else {
-        if(window.location.pathname != '/login' && window.location.pathname != '/register') {
-            window.location = '/login';
         }
-    }
+        function checkStateAntiAuthentication() {
+            if ($state.current.data && $state.current.data.authenticationProhibited) {
+                console.log('anti auth');
+                $state.go('meetings.list');
+            }
+        }
 
-    $scope.flash = FlashMessageService;
+        var authToken = localStorage.getItem('authentication-token');
+        if (authToken != null) {
+            AuthenticationService.setToken(authToken);
+            AuthenticationService.getAuthenticatedUser(function (user) {
+                $rootScope.user = user;
+                checkStateAntiAuthentication();
+            }, checkStateAuthentication);
 
-    $rootScope.$on('unauthorizedRequest', function() {
+        } else {
+            checkStateAuthentication();
+        }
+    };
+
+    $scope.$on('$stateChangeSuccess', checkAuth);
+    $scope.$on('unauthorizedRequest', function () {
         AuthenticationService.resetToken();
         $scope.goto('login');
     });
 
     $scope.goto = function (route, params) {
         $scope.onHome = $location.path() === '/';
-
         $state.go(route, params);
     };
+
+    $scope.getFlashMessage = FlashMessageService.getMessage;
 });
