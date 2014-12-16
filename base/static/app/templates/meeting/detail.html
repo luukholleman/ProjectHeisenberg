@@ -92,9 +92,12 @@
             <punkt-file ng-hide="agendas.length == 0" type="subject"
                         ng-click="goto('meeting-detail.agenda-detail')"
                         groupColorTint="#B0BEC5" name="Agenda"
-                        owner="{{ agendas[0].created_by.full_name }}"></punkt-file>
-            <punkt-file type="subject"
-                        groupColorTint="#B0BEC5" name="Minutes" owner="Fake data"></punkt-file>
+                        owner="{{ agendas[0].uploaded_at | humanReadableDate }}"></punkt-file>
+
+            <punkt-file ng-hide="minutes.length == 0" type="subject"
+                        ng-click="goto('meeting-detail.minutes-detail')"
+                        groupColorTint="#B0BEC5" name="Minutes"
+                        owner="{{ minutes[0].uploaded_at | humanReadableDate }}"></punkt-file>
         </div>
         <h4 class="heading">
             Participants

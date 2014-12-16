@@ -68,3 +68,21 @@ class MeetingAgendaApiView(ListCreateAPIView, UpdateAPIView):
 
     def get_queryset(self):
         return self.get_meeting().agendas.order_by('-uploaded_at')
+
+class MeetingMinutesApiView(ListCreateAPIView, UpdateAPIView):
+    serializer_class = MinuteSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_meeting(self):
+        return get_object_or_404(Meeting, pk=self.kwargs['meetingId'])
+
+    def perform_create(self, serializer):
+        minutes = serializer.save()
+        minutes.created_by = self.request.user
+        minutes.save()
+
+        meeting = self.get_meeting()
+        meeting.minutes.add(minutes)
+
+    def get_queryset(self):
+        return self.get_meeting().minutes.order_by('-uploaded_at')
