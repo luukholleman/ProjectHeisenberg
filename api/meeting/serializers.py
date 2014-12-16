@@ -1,7 +1,6 @@
 from django.core.urlresolvers import reverse
 from rest_framework import serializers
 from api.authentication.serializers import UserSerializer
-from authentication.models import User
 from meeting.models import Meeting, MeetingInvitation, Agenda
 from meeting.validators import MimetypeValidator
 
@@ -59,34 +58,6 @@ class MeetingSerializer(serializers.ModelSerializer):
     address = serializers.CharField(required=False)
     date_and_time = serializers.DateTimeField(required=True)
 
-    def update(self, meeting, validated_attrs):
-        invitations = meeting.meetinginvitation_set.all()
-        for invitation in invitations:
-            invitation.delete()
-
-        invitations = validated_attrs.pop('meetinginvitation_set')
-        self.save_invitations(meeting, invitations)
-        return meeting
-
-    def save_invitations(self, meeting, invitations):
-        for invitation in invitations:
-            meeting.meetinginvitation_set.create(
-                user=invitation['user'],
-            )
-
-    def create(self, validated_attrs):
-        meeting_invitations = validated_attrs.pop('meetinginvitation_set')
-
-        meeting = Meeting.objects.create(
-            name=validated_attrs['name'],
-            date_and_time=validated_attrs['date_and_time'],
-            location=validated_attrs['location'],
-            address=validated_attrs['address'],
-        )
-
-        self.save_invitations(meeting, meeting_invitations)
-        return meeting
-
     class Meta:
         model = Meeting
-        fields = ('id', 'name', 'description', 'location', 'address', 'date_and_time', 'agendas')
+        fields = ('id', 'name', 'description', 'location', 'address', 'date_and_time')

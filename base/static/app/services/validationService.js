@@ -35,11 +35,10 @@ angular.module('punktlichDep').factory('ValidationService', function (FlashMessa
             });
         }
 
-        for(var x in form)
-        {
-            if(form[x + '_repeat'] == undefined) continue;
-            if(form[x].$modelValue !== form[x + '_repeat'].$modelValue) {
-                setError(form, form[x + '_repeat'].$name, validationMessages.repeat.replace('{0}',x));
+        for (var x in form) {
+            if (form[x + '_repeat'] == undefined) continue;
+            if (form[x].$modelValue !== form[x + '_repeat'].$modelValue) {
+                setError(form, form[x + '_repeat'].$name, validationMessages.repeat.replace('{0}', x));
                 isValid = false;
             }
         }
@@ -49,16 +48,22 @@ angular.module('punktlichDep').factory('ValidationService', function (FlashMessa
     function showErrors(form, errors) {
         resetValidation(form);
 
-        if(!errors) {
+        if (!errors) {
             return;
         }
 
         var data = errors.data || errors;
+
+        if (typeof data === "string") {
+            FlashMessageService.setMessage(data.indexOf('<!DOCTYPE html>') > 0 ? 'Internal server error.' : data);
+            return;
+        }
+
         for (var field in data) {
             setError(form, field, data[field]);
         }
 
-        if(data.non_field_errors){
+        if (data.non_field_errors) {
             FlashMessageService.setMessage(data.non_field_errors.join(), false);
         }
     }
