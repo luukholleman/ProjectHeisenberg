@@ -160,7 +160,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #fafafa;
+            background-color: #009688;
             opacity: 1;
             transition: opacity .5s linear;
         }
@@ -175,8 +175,6 @@
             left: 50%;
             width: 150px;
             margin: -75px;
-            background: rgba(0, 0, 0, .4);
-            border-radius: 8px;
             text-align: center;
             padding: 25px 0;
             line-height: 35px;
@@ -187,6 +185,46 @@
         .splashscreen img {
             width: 50px;
             height: 50px;
+        }
+
+        @-webkit-keyframes pulse {
+            0% { font-size: 90px; }
+            15% { font-size: 120px; }
+            30% { font-size: 90px; }
+            45% { font-size: 120px; }
+            60% { font-size: 90px; }
+        }
+
+        @-moz-keyframes pulse {
+            0% { font-size: 90px; }
+            15% { font-size: 120px; }
+            30% { font-size: 90px; }
+            45% { font-size: 120px; }
+            60% { font-size: 90px; }
+        }
+
+        @-o-keyframes pulse {
+            0% { font-size: 90px; }
+            15% { font-size: 120px; }
+            30% { font-size: 90px; }
+            45% { font-size: 120px; }
+            60% { font-size: 90px; }
+        }
+
+        @keyframes pulse {
+            0% { font-size: 90px; }
+            15% { font-size: 120px; }
+            30% { font-size: 90px; }
+            45% { font-size: 120px; }
+            60% { font-size: 90px; }
+        }
+
+        .splashscreen h1 {
+            font-size: 90px;
+            -webkit-animation: pulse 2s infinite; /* Safari 4+ */
+            -moz-animation:    pulse 2s infinite; /* Fx 5+ */
+            -o-animation:      pulse 2s infinite; /* Opera 12+ */
+            animation:         pulse 2s infinite; /* IE 10+, Fx 29+ */
         }
     </style>
     <script>
@@ -228,7 +266,7 @@
         </p>
     </noscript>
     <div>
-        <img src="{{ STATIC_URL }}img/loading.gif" alt="Loading"/><br/> Loading...
+        <h1>P.</h1>
     </div>
 </div>
 
