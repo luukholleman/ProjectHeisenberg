@@ -34,12 +34,14 @@ class UserViewSet(viewsets.ModelViewSet):
                   from_email=None,
                   message=None)
 
+
 @permission_classes((IsSelf,))
 class AuthenticatedUser(RetrieveAPIView):
     serializer_class = UserSerializer
 
     def get_object(self, queryset=None):
         return self.request.user
+
 
 class ObtainAuthToken(BaseObtainAuthToken):
     serializer_class = AuthTokenSerializer
