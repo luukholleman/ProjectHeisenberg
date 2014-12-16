@@ -66,6 +66,7 @@ ProjectHeisenberg/local_settings.py
 
 # Media
 /media/*
+!/media/.gitkeep
 
 # Database
 db.sqlite3
