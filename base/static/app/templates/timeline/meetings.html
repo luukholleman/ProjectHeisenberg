@@ -19,11 +19,11 @@
                     <punkt-file ng-hide="meeting.agendas.length == 0" type="subject"
                                 ng-click="goto('meeting-detail.agenda-detail', {meetingid: meeting.id})"
                                 groupColorTint="#F06292" name="Agenda"
-                                owner="{{ meeting.agendas[0].created_by.full_name }}"></punkt-file>
-                    <punkt-file ng-show="true" type="subject"
-                                ng-click="goto('meeting-detail.minutes-detail', {meetingid: meeting.id})"
+                                owner="{{ meeting.agendas[0].uploaded_at | humanReadableDate }}"></punkt-file>
+                    <punkt-file ng-hide="meeting.minutes.length == 0" type="subject"
+                                ng-click="goto('meeting-detail.agenda-detail', {meetingid: meeting.id})"
                                 groupColorTint="#F06292" name="Minutes"
-                                owner="Fake data"></punkt-file>
+                                owner="{{ meeting.minutes[0].uploaded_at | humanReadableDate }}"></punkt-file>
                     <div vertical layout center>
                         <!--
                         <paper-button style="margin-top: 5px; color: #F06292" class="colored">+ 6 attachments
