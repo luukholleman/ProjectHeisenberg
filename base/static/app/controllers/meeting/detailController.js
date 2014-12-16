@@ -4,7 +4,9 @@ angular.module('punktlichDep').controller('MeetingDetailController', function ($
     MeetingService.get($stateParams.meetingid).get().then(function(meeting) {
         $scope.meeting = meeting;
         $scope.agendas = meeting.getAgendaRevisions();
+        $scope.minutes = meeting.getMinutesRevisions();
         $scope.invited = $scope.meeting.getInvited();
+
     }, function () {
         FlashMessageService.setMessage('Meeting could not be found');
         $scope.goto('meetings.list');
@@ -14,10 +16,14 @@ angular.module('punktlichDep').controller('MeetingDetailController', function ($
     var fileType = 'agendas';
 
     $scope.fileSelected = function (e) {
+        console.log('upload', fileType);
         $scope.meeting.postFile(fileType, e.files[0], function (success) {
+            fileElement.value = null;
             $scope.agendas = $scope.meeting.getAgendaRevisions();
+            $scope.minutes = $scope.meeting.getMinutesRevisions();
             FlashMessageService.setMessage('Your file has been uploaded');
         }, function (error) {
+            fileElement.value = null;
             FlashMessageService.setMessage(error.data.file[0], false);
         });
     };

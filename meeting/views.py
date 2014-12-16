@@ -2,7 +2,7 @@ from django.http import HttpResponseNotFound, HttpResponse
 from django.shortcuts import render
 from django.utils.encoding import smart_str
 from django.views.generic.detail import BaseDetailView
-from meeting.models import Agenda
+from meeting.models import Agenda, Minute
 
 
 class DownloadMeetingFileView(BaseDetailView):
@@ -16,6 +16,8 @@ class DownloadMeetingFileView(BaseDetailView):
 
         if file_type == 'agenda':
             return Agenda.objects.get(pk=pk)
+        if file_type == 'minute':
+            return Minute.objects.get(pk=pk)
 
     def get(self, request, *args, **kwargs):
         """ Check if the user has access to this file then force download """
