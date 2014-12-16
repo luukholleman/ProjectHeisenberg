@@ -14,6 +14,9 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                         templateUrl: appPath + 'templates/login.html',
                         controller: 'AuthenticationController'
                     }
+                },
+                data: {
+                    authenticationRequired: false
                 }
             }).
             state('logout', {
@@ -25,6 +28,9 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                             $scope.goto('login');
                         }
                     }
+                },
+                data: {
+                    authenticationRequired: false
                 }
             }).
             state('register', {
@@ -34,6 +40,9 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                         templateUrl: appPath + 'templates/register.html',
                         controller: 'AuthenticationController'
                     }
+                },
+                data: {
+                    authenticationRequired: false
                 }
             }).
             state('activate.token', {
@@ -43,6 +52,9 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                         templateUrl: appPath + 'templates/activate.html',
                         controller: 'ActivationController'
                     }
+                },
+                data: {
+                    authenticationRequired: false
                 }
             }).
 
@@ -75,6 +87,19 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                     }
                 }
             }).
+            state('meetings.update', {
+                url: '/meeting/:meetingid/update',
+                views: {
+                    '@meetings': {
+                        templateUrl: appPath + 'templates/meeting/form.html',
+                        controller: 'MeetingUpdateController'
+                    }
+                }
+            }).
+
+            /*
+             * Meeting detail
+             */
             state('meeting-detail', {
                 url: '/meeting/:meetingid',
                 views: {
@@ -108,15 +133,6 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                     'right-sidebar@meeting-detail': {
                         templateUrl: appPath + 'templates/meeting/agenda.html',//todo
                         controller: 'AttachementDetailController'
-                    }
-                }
-            }).
-            state('meetings.update', {
-                url: '/meeting/:meetingid/update',
-                views: {
-                    '@meetings': {
-                        templateUrl: appPath + 'templates/meeting/form.html',
-                        controller: 'MeetingUpdateController'
                     }
                 }
             }).
