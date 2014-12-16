@@ -41,15 +41,6 @@ class AuthenticatedUser(RetrieveAPIView):
     def get_object(self, queryset=None):
         return self.request.user
 
-    @detail_route(methods=['GET'])
-    def teams(self, request, pk=None):
-        return Response(TeamSerializer(request.user.team_set.get()).data)
-
-    @detail_route(methods=['DELETE'])
-    def teams(self, request, pk=None):
-        return Response(TeamSerializer(request.user.team_set.get()).data)
-
-
 class ObtainAuthToken(BaseObtainAuthToken):
     serializer_class = AuthTokenSerializer
 

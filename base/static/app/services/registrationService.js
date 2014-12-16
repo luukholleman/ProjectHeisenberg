@@ -1,5 +1,8 @@
 angular.module('punktlichDep').factory('RegistrationService', function (UserModel) {
     function register(userData, success, error) {
+
+        UserModel.post(userData).then(success, error);
+       /*
         var user = new UserModel(userData);
 
         user.username = user.first_name + user.last_name;//@TODO: remove this
@@ -9,6 +12,7 @@ angular.module('punktlichDep').factory('RegistrationService', function (UserMode
         }, function (response) {
             error(response.data);
         });
+        */
     }
 
     return {

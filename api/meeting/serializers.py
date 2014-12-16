@@ -11,7 +11,7 @@ class AgendaSerializer(serializers.ModelSerializer):
     file = serializers.FileField(use_url=False, allow_empty_file=False,
                                  validators=[MimetypeValidator(allowed_mimetypes=['application/pdf',
                                                                                   'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])])
-    file_name = serializers.CharField(required=False, read_only=True)
+    file_name = serializers.CharField(required=False, read_only=False, allow_blank=True)
     created_by = UserSerializer(read_only=True)
     download_url = serializers.SerializerMethodField()
 
@@ -43,7 +43,7 @@ class AttachmentSerializer(serializers.ModelSerializer):
 
 
 class MeetingInvitationSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), read_only=False)
+    user = UserSerializer(read_only=True)
     present_at = serializers.DateTimeField(read_only=True)
     state = serializers.ChoiceField(MeetingInvitation.CHOICES, read_only=True)
 
@@ -58,7 +58,6 @@ class MeetingSerializer(serializers.ModelSerializer):
     location = serializers.CharField(required=False)
     address = serializers.CharField(required=False)
     date_and_time = serializers.DateTimeField(required=True)
-    agendas = AgendaSerializer(many=True, read_only=True)
 
     def update(self, meeting, validated_attrs):
         invitations = meeting.meetinginvitation_set.all()

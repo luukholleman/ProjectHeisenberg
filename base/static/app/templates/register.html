@@ -2,7 +2,7 @@
     <form-box ng-show="!hasRegistered">
         <h2>Register</h2>
 
-        <form name="registerform">
+        <form name="registerform" ng-submit="register(registerform, user)">
             <paper-input-decorator floatingLabel label="Name">
                 <input is="core-input" type="text" name="first_name" ng-model="user.first_name"/>
             </paper-input-decorator>
@@ -18,6 +18,8 @@
             <paper-input-decorator floatingLabel label="Repeat password">
                 <input is="core-input" required name="password_repeat" type="password" ng-model="password_repeat"/>
             </paper-input-decorator>
+
+            <input type="submit" hidden/>
         </form>
 
         <paper-button style="background: #009688; color:white" raised ng-click="register(registerform, user)">register</paper-button>
@@ -29,6 +31,6 @@
         <p>
             Hey, you! Check your email!
         </p>
-        <paper-button raised ng-click="goto('login')">login</paper-button>
+        <paper-button raised class="primary" ng-click="goto('login')">login</paper-button>
     </form-box>
 </div>

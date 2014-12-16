@@ -17,7 +17,7 @@ angular.module('punktlichDep').factory('AuthenticationService', function ($rootS
     };
 
     function getAuthenticatedUser(success, error) {
-        UserModel.one().customGET('get-authenticated-user').then(function (user) {
+        UserModel.one().customGET('authenticated').then(function (user) {
             success(user)
         }, function (data) {
             error(data);

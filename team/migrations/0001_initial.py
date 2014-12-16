@@ -8,9 +8,9 @@ from django.conf import settings
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('authentication', '0004_color_usercolor'),
+        ('authentication', '0001_initial'),
+        ('meeting', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('meeting', '0008_auto_20141209_1231'),
     ]
 
     operations = [
