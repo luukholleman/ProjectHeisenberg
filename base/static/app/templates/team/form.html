@@ -10,7 +10,7 @@
                 class="warning">Leave team</paper-button>
         </div>
 
-        <form name="teamForm">
+        <form name="teamForm" ng-submit="save(teamForm)">
             <paper-input-decorator floatingLabel label="Team Name">
                 <input is="core-input" type="text" name="TeamName" ng-model="team.name"/>
             </paper-input-decorator>

@@ -22,18 +22,8 @@ angular.module('punktlichDep').controller('MeetingDetailController', function ($
         });
     };
 
-    $scope.uploadAgenda = function () {
-        fileType = 'agendas';
-        fileElement.click();
-    };
-
-    $scope.uploadAttachment = function () {
-        fileType = 'attachments';
-        fileElement.click();
-    };
-
-    $scope.uploadMinute = function () {
-        fileType = 'minutes';
+    $scope.upload = function (type) {
+        fileType = type;
         fileElement.click();
     };
 

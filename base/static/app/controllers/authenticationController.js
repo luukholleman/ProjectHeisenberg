@@ -18,7 +18,7 @@ angular.module('punktlichDep').controller('AuthenticationController', function (
         if (!valid) return;
 
         RegistrationService.register(user, function () {
-            $scope.flash.setMessage('You are registered successfully!');
+            FlashMessageService.setMessage('You are registered successfully!');
             $scope.hasRegistered = true;
         }, function (errors) {
             ValidationService.showErrors(form, errors)
