@@ -49,16 +49,17 @@ angular.module('punktlichDep').factory('ValidationService', function (FlashMessa
     function showErrors(form, errors) {
         resetValidation(form);
 
-        if(!errors || !errors.data) {
+        if(!errors) {
             return;
         }
 
-        for (var field in errors.data) {
-            setError(form, field, errors.data[field]);
+        var data = errors.data || errors;
+        for (var field in data) {
+            setError(form, field, data[field]);
         }
 
-        if(errors.data['non_field_errors']){
-            FlashMessageService.setMessage(errors.data['non_field_errors'].join(), false);
+        if(data.non_field_errors){
+            FlashMessageService.setMessage(data.non_field_errors.join(), false);
         }
     }
 
