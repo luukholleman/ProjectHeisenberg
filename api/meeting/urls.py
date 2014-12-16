@@ -1,7 +1,6 @@
 from django.conf.urls import patterns, include, url
 from rest_framework import routers
-from api.meeting.views import MeetingViewSet
-from api.meeting.views import MeetingAgendaApiView
+from api.meeting.views import MeetingViewSet, MeetingAgendaApiView
 
 router = routers.DefaultRouter(trailing_slash=False)
 

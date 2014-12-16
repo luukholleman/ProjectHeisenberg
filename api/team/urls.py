@@ -1,8 +1,13 @@
+from django.conf.urls import patterns, include, url
 from rest_framework import routers
-from api.team.views import TeamViewSet
+from api.team.views import TeamViewSet, TeamMemberApiView
 
 router = routers.DefaultRouter(trailing_slash=False)
 
 router.register(r'teams', TeamViewSet, base_name='api.v1.team')
 
-urlpatterns = router.urls
+urlpatterns = [
+    url(r'^teams/(?P<teamId>\d+)/members$', TeamMemberApiView.as_view(), name='team-member'),
+    url(r'^teams/(?P<teamId>\d+)/members/(?P<pk>\d+)$', TeamMemberApiView.as_view(), name='team-member'),
+    url(r'^', include(router.urls))
+]
