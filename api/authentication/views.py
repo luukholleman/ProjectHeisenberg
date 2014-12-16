@@ -34,11 +34,6 @@ class UserViewSet(viewsets.ModelViewSet):
                   from_email=None,
                   message=None)
 
-    @detail_route(methods=['GET'])
-    def teams(self, request, pk=None):
-        return Response(TeamSerializer(request.user.team_set.all(), many=True).data)
-
-
 @permission_classes((IsSelf,))
 class AuthenticatedUser(RetrieveAPIView):
     serializer_class = UserSerializer

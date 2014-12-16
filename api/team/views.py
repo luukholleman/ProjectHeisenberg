@@ -12,8 +12,8 @@ class TeamViewSet(viewsets.ModelViewSet):
     # todo add logged in permission here
     permission_classes = []
 
-    @detail_route(methods=['GET'])
-    def members(self, request, pk=None):
+    @detail_route(methods=['GET', 'DELETE'])
+    def members(self, request, pk=None, *args, **kwargs):
         team = self.get_object()
         return Response(UserSerializer(team.invitations.all(), many=True).data)
 

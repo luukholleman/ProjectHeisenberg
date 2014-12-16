@@ -7,7 +7,15 @@ angular.module('punktlichDep').service('TeamService', function (TeamModel, UserM
 
     function update(team, success, error) {
         team.put().then(success, error);
-    }
+    };
+
+    function leave(team, user, success, error) {
+        TeamModel.one(team.id).one('members', user.id).remove().then(function (data){
+            success(data)
+        }, function (data) {
+            error(data);
+        });
+    };
 
     return {
         read: function () {
@@ -15,6 +23,7 @@ angular.module('punktlichDep').service('TeamService', function (TeamModel, UserM
         update: update,
         create: function () {
         },
+        leave: leave,
         get: function (id) {
             return TeamModel.one(id);
         }

@@ -24,14 +24,6 @@ angular.module('punktlichDep').factory('AuthenticationService', function ($rootS
         });
     };
 
-    function leaveTeam(team, success, error) {
-        $rootScope.user.one('teams', team.id).remove().then(function (user) {
-            success(user)
-        }, function (data) {
-            error(data);
-        });
-    };
-
     function resetToken() {
         localStorage.removeItem('authentication-token');
         delete $http.defaults.headers.common['Authorization'];
@@ -41,7 +33,6 @@ angular.module('punktlichDep').factory('AuthenticationService', function ($rootS
         login: login,
         setToken: setToken,
         resetToken: resetToken,
-        getAuthenticatedUser: getAuthenticatedUser,
-        leaveTeam: leaveTeam
+        getAuthenticatedUser: getAuthenticatedUser
     };
 });
