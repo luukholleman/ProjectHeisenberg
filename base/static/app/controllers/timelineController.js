@@ -88,6 +88,9 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
         meeting.all('agendas').getList().then(function(agendas) {
             meeting.agendas = agendas;
         });
+        meeting.all('minutes').getList().then(function(minutes) {
+            meeting.minutes = minutes;
+        });
     };
 
     angular.element(pageElement).bind('scroll', function () {
