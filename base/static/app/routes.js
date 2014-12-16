@@ -47,11 +47,10 @@ angular.module('punktlichDep').config(['$stateProvider', '$urlRouterProvider',
                     authenticationProhibited: true
                 }
             }).
-            state('activate.token', {
+            state('activate_token', {
                 url: '/activate/:token',
                 views: {
                     '@': {
-                        templateUrl: appPath + 'templates/activate.html',
                         controller: 'ActivationController'
                     }
                 },
