@@ -5,6 +5,9 @@ angular.module('punktlichDep').factory('MeetingModel', function (Restangular) {
         meeting.getAgendaRevisions = function() {
             return meeting.all('agendas').getList().$object;
         };
+        meeting.getMinutesRevisions = function() {
+            return meeting.all('minutes').getList().$object;
+        };
 
         meeting.getInvited = function() {
             return meeting.all('invited').getList().$object;
