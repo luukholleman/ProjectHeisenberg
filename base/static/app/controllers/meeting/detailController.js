@@ -16,7 +16,6 @@ angular.module('punktlichDep').controller('MeetingDetailController', function ($
     var fileType = 'agendas';
 
     $scope.fileSelected = function (e) {
-        console.log('upload', fileType);
         $scope.meeting.postFile(fileType, e.files[0], function (success) {
             fileElement.value = null;
             $scope.agendas = $scope.meeting.getAgendaRevisions();
