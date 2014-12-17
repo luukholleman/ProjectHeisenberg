@@ -55,7 +55,7 @@
         <hr />
         <ul>
             <li ng-repeat="team in teams" horizontal layout>
-                <punkt-circle color="#{{ team.color }}" width="28" height="28"></punkt-circle>
+                <punkt-circle color="{{ team.color }}" width="28" height="28"></punkt-circle>
                 <span ng-click="goto('puntlich.teams.update', {teamid: team.id})">
                     {{ team.name }}
                 </span>
