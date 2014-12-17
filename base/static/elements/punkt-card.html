@@ -138,11 +138,24 @@
         Polymer('punkt-card', {
             detailsVisible: false,
 
+            show: function () {
+                if (this.detailsVisible == false) {
+                    this.fire('open-card');
+                }
+
+                this.detailsVisible = true;
+            },
+
+            hide: function () {
+                this.detailsVisible = false;
+            },
+
             toggleDetails: function (e, detail, sender) {
                 if (!this.detailsVisible) {
-                    this.fire('open-card', {visible: this.detailsVisible});
+                    this.show();
+                } else {
+                    this.hide();
                 }
-                this.detailsVisible = !this.detailsVisible;
             }
         });
     </script>

@@ -78,7 +78,7 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
 
     timeline.addEventListener('node-opened', function (event) {
         var element = document.getElementById('meeting-' + event.detail.node.getAttribute('data-meetingid'));
-        element.detailsVisible = true;
+        element.show();
 
         var position = element.offsetTop;
         while (element = element.offsetParent) {
