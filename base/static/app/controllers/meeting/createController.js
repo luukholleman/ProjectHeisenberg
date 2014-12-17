@@ -1,4 +1,4 @@
-angular.module('punktlichDep').controller('MeetingCreateController', function ($scope, $location, $routeParams, Restangular, MeetingService, ValidationService, TeamModel) {
+angular.module('punktlichDep').controller('MeetingCreateController', function ($scope, $rootScope, $location, $routeParams, Restangular, MeetingService, ValidationService, TeamModel) {
     $scope.meeting = {};
 
     TeamModel.getList().then(function(teams){
@@ -15,6 +15,8 @@ angular.module('punktlichDep').controller('MeetingCreateController', function ($
 
     $scope.save = function (form) {
         MeetingService.create($scope.meeting, function (data) {
+            $rootScope.$broadcast('meetings.create', $scope.meeting);
+
             $scope.goto('^.update', {meetingid: data.id});
         }, function (errors) {
             ValidationService.showErrors(form, errors.data)
