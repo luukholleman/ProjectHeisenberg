@@ -3,8 +3,7 @@
         <h2>
             Plan a meeting
         </h2>
-
-        <form name="meetingForm" ng-submit="save(meetingForm)">
+        <form name="meetingForm" pl-submit ng-submit="save(meetingForm)">
             <div ng-hide="hideGroupDropdown">
                 <paper-dropdown-menu label="Group" id="team-dropdown" name="team">
                     <paper-dropdown class="dropdown">
@@ -14,7 +13,6 @@
                     </paper-dropdown>
                 </paper-dropdown-menu>
             </div>
-
             <paper-input-decorator floatingLabel label="Name">
                 <input is="core-input" type="text" name="name" ng-model="meeting.name"/>
             </paper-input-decorator>
@@ -32,8 +30,6 @@
             <paper-input-decorator floatingLabel label="Location">
                 <input is="core-input" required type="text" name="location" ng-model="meeting.location"/>
             </paper-input-decorator>
-
-            <input type="submit" hidden/>
         </form>
 
         <div horizontal layout reverse>

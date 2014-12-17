@@ -1,0 +1,173 @@
+@import "variables"
+@import "../bower/bourbon/dist/bourbon"
+
+*
+  padding: 0
+  margin: 0
+  position: relative
+
+\:host
+  overflow-x: hidden
+  overflow-y: auto
+  touch-action: none
+
+.container
+  white-space: nowrap
+  padding: 0
+  height: 225px
+
+.timeline
+  height: 8px
+  background: #cdcdcd
+  width: 100%
+  position: absolute
+  bottom: 64px
+
+.past
+  position: relative
+  left: 0
+  top: 0
+  background-color: #4592E6
+  height: 100%
+
+.now
+  color: $color-material-teal
+  position: absolute
+  right: 0
+  top: 0
+  margin: -90px -20px 0 0
+  font-size: 16px
+  &:after
+    content: ''
+    display: block
+    width: 2px
+    height: 70px
+    background-color: #979797
+    position: absolute
+    right: 0
+    top: 0
+    margin: 20px
+
+/*
+ * Label
+ */
+.label
+  height: 0
+  position: absolute
+  z-index: -1
+  margin-top: -50px
+  width: 200px
+  &:after
+    content: ''
+    display: block
+    width: 1px
+    background-color: #979797
+    position: absolute
+    left: 0
+    top: 7px
+    z-index: -1
+    height: 42px
+
+.label
+  em
+    margin: 0 5px
+    font-weight: 100
+    font-size: 36px
+    opacity: 0
+
+/*
+ * Label visibility / condensing
+ */
+
+.container[condensed]
+  .label
+    margin-top: -32px
+    em
+      font-size: 18px
+    &.small
+      margin-top: -26px
+      em
+        font-size: 12px
+      &:after
+        height: 22px
+    &:after
+      height: 21px
+      top: 3px
+    &.visible
+      margin-top: -70px
+      &.small
+        margin-top: -40px
+        &:after
+          height: 36px
+      &:after
+        height: 63px
+
+.label
+  &.small
+    margin-top: -52px
+    em
+      font-size: 24px
+    &:after
+      top: 5px
+      height: 44px
+  &.visible
+    margin-top: -140px
+    em
+      opacity: 1
+    &.small
+      margin-top: -80px
+      &:after
+        height: 72px
+    &:after
+      height: 125px
+
+/*
+ * Transitions
+ */
+.container
+  @include transition(height 0.2s ease-in-out)
+
+.timeline
+  @include transition(bottom 0.2s ease-in-out, height 0.2s ease-in-out)
+
+.now
+  @include transition(font-size 0.2s ease-in-out, margin 0.2s ease-in-out)
+
+.now:after
+  @include transition(margin 0.2s ease-in-out, height 0.2s ease-in-out)
+
+.label
+  @include transition(margin-top 0.2s ease-in-out)
+  &:after
+    @include transition(height 0.2s ease-in-out)
+  em
+    @include transition(font-size 0.2s ease-in-out, opacity 0.1s ease-in-out)
+
+/*
+ * Condensing
+ */
+.container[condensed]
+  height: 110px
+  .timeline
+    bottom: 32px
+    height: 4px
+  .now
+    font-size: 8px
+    margin: -50px -10px 0 0
+    &:after
+      margin: 15px 10px
+      height: 35px
+
+/*
+ * Cursors
+ */
+.container
+  cursor: ew-resize
+  cursor: -moz-grab
+  cursor: -webkit-grab
+  cursor: grab
+
+.container.grabbing
+  cursor: -moz-grabbing
+  cursor: -webkit-grabbing
+  cursor: grabbing

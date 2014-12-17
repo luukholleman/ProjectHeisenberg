@@ -1,0 +1,20 @@
+<link rel="import" href="../bower/polymer/polymer.html">
+<link rel="import" href="../bower/paper-shadow/paper-shadow.html">
+
+<polymer-element name="punkt-filter-user">
+    <template>
+        <paper-input name="user-search"></paper-input>
+        <div horizontal layout
+             class="user">
+            <paper-person></paper-person>
+        </div>
+    </template>
+    <script>
+        (function () {
+            Polymer('punkt-filter-user', {
+                ready: function () {
+                }
+            });
+        })();
+    </script>
+</polymer-element>

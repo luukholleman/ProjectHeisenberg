@@ -7,7 +7,7 @@ angular.module('punktlichDep').controller('MainController', function ($scope, $r
         }
         function checkStateAntiAuthentication() {
             if ($state.current.data && $state.current.data.authenticationProhibited) {
-                $state.go('meetings.list');
+                $state.go('punktlich.meetings.list');
             }
         }
 
@@ -30,7 +30,7 @@ angular.module('punktlichDep').controller('MainController', function ($scope, $r
         $scope.goto('punktlich.login');
     });
 
-    $scope.goto = function (route, params) {
+    $rootScope.goto = function (route, params) {
         $scope.onHome = $location.path() === '/';
         $state.go(route, params);
     };

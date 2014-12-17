@@ -1,0 +1,177 @@
+* {
+  padding: 0;
+  margin: 0;
+  position: relative; }
+
+:host {
+  overflow-x: hidden;
+  overflow-y: auto;
+  touch-action: none; }
+
+.container {
+  white-space: nowrap;
+  padding: 0;
+  height: 225px; }
+
+.timeline {
+  height: 8px;
+  background: #cdcdcd;
+  width: 100%;
+  position: absolute;
+  bottom: 64px; }
+
+.past {
+  position: relative;
+  left: 0;
+  top: 0;
+  background-color: #4592E6;
+  height: 100%; }
+
+.now {
+  color: #009688;
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: -90px -20px 0 0;
+  font-size: 16px; }
+  .now:after {
+    content: "";
+    display: block;
+    width: 2px;
+    height: 70px;
+    background-color: #979797;
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 20px; }
+
+/* Label
+ */
+.label {
+  height: 0;
+  position: absolute;
+  z-index: -1;
+  margin-top: -50px;
+  width: 200px; }
+  .label:after {
+    content: "";
+    display: block;
+    width: 1px;
+    background-color: #979797;
+    position: absolute;
+    left: 0;
+    top: 7px;
+    z-index: -1;
+    height: 42px; }
+
+.label em {
+  margin: 0 5px;
+  font-weight: 100;
+  font-size: 36px;
+  opacity: 0; }
+
+/* Label visibility / condensing
+ */
+.container[condensed] .label {
+  margin-top: -32px; }
+  .container[condensed] .label em {
+    font-size: 18px; }
+  .container[condensed] .label.small {
+    margin-top: -26px; }
+    .container[condensed] .label.small em {
+      font-size: 12px; }
+    .container[condensed] .label.small:after {
+      height: 22px; }
+  .container[condensed] .label:after {
+    height: 21px;
+    top: 3px; }
+  .container[condensed] .label.visible {
+    margin-top: -70px; }
+    .container[condensed] .label.visible.small {
+      margin-top: -40px; }
+      .container[condensed] .label.visible.small:after {
+        height: 36px; }
+    .container[condensed] .label.visible:after {
+      height: 63px; }
+
+.label.small {
+  margin-top: -52px; }
+  .label.small em {
+    font-size: 24px; }
+  .label.small:after {
+    top: 5px;
+    height: 44px; }
+.label.visible {
+  margin-top: -140px; }
+  .label.visible em {
+    opacity: 1; }
+  .label.visible.small {
+    margin-top: -80px; }
+    .label.visible.small:after {
+      height: 72px; }
+  .label.visible:after {
+    height: 125px; }
+
+/* Transitions
+ */
+.container {
+  -webkit-transition: height 0.2s ease-in-out;
+  -moz-transition: height 0.2s ease-in-out;
+  transition: height 0.2s ease-in-out; }
+
+.timeline {
+  -webkit-transition: bottom 0.2s ease-in-out, height 0.2s ease-in-out;
+  -moz-transition: bottom 0.2s ease-in-out, height 0.2s ease-in-out;
+  transition: bottom 0.2s ease-in-out, height 0.2s ease-in-out; }
+
+.now {
+  -webkit-transition: font-size 0.2s ease-in-out, margin 0.2s ease-in-out;
+  -moz-transition: font-size 0.2s ease-in-out, margin 0.2s ease-in-out;
+  transition: font-size 0.2s ease-in-out, margin 0.2s ease-in-out; }
+
+.now:after {
+  -webkit-transition: margin 0.2s ease-in-out, height 0.2s ease-in-out;
+  -moz-transition: margin 0.2s ease-in-out, height 0.2s ease-in-out;
+  transition: margin 0.2s ease-in-out, height 0.2s ease-in-out; }
+
+.label {
+  -webkit-transition: margin-top 0.2s ease-in-out;
+  -moz-transition: margin-top 0.2s ease-in-out;
+  transition: margin-top 0.2s ease-in-out; }
+  .label:after {
+    -webkit-transition: height 0.2s ease-in-out;
+    -moz-transition: height 0.2s ease-in-out;
+    transition: height 0.2s ease-in-out; }
+  .label em {
+    -webkit-transition: font-size 0.2s ease-in-out, opacity 0.1s ease-in-out;
+    -moz-transition: font-size 0.2s ease-in-out, opacity 0.1s ease-in-out;
+    transition: font-size 0.2s ease-in-out, opacity 0.1s ease-in-out; }
+
+/* Condensing
+ */
+.container[condensed] {
+  height: 110px; }
+  .container[condensed] .timeline {
+    bottom: 32px;
+    height: 4px; }
+  .container[condensed] .now {
+    font-size: 8px;
+    margin: -50px -10px 0 0; }
+    .container[condensed] .now:after {
+      margin: 15px 10px;
+      height: 35px; }
+
+/* Cursors
+ */
+.container {
+  cursor: ew-resize;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+  cursor: grab; }
+
+.container.grabbing {
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+  cursor: grabbing; }
+
+/*# sourceMappingURL=timeline-container.css.map */
