@@ -23,7 +23,7 @@
         </form>
 
         <paper-button raised ng-click="register(registerform, user)">register</paper-button>
-        <paper-button ng-click="goto('login')">login</paper-button>
+        <paper-button ng-click="goto('punktlich.login')">login</paper-button>
     </form-box>
 
     <form-box ng-show="hasRegistered">
@@ -31,6 +31,6 @@
         <p>
             Hey, you! Check your email!
         </p>
-        <paper-button raised class="primary" ng-click="goto('login')">login</paper-button>
+        <paper-button raised class="primary" ng-click="goto('punktlich.login')">login</paper-button>
     </form-box>
 </div>

@@ -1,0 +1,147 @@
+[
+  {
+    "fields": {"color": "F44336"},
+    "model": "color.color",
+    "pk": 1
+  },
+  {
+    "fields": {"color": "B71C1C"},
+    "model": "color.color",
+    "pk": 2
+  },
+  {
+    "fields": {"color": "E91E63"},
+    "model": "color.color",
+    "pk": 3
+  },
+  {
+    "fields": {"color": "880E4F"},
+    "model": "color.color",
+    "pk": 4
+  },
+  {
+    "fields": {"color": "9C27B0"},
+    "model": "color.color",
+    "pk": 5
+  },
+  {
+    "fields": {"color": "4A148C"},
+    "model": "color.color",
+    "pk": 6
+  },
+  {
+    "fields": {"color": "673AB7"},
+    "model": "color.color",
+    "pk": 7
+  },
+  {
+    "fields": {"color": "311B92"},
+    "model": "color.color",
+    "pk": 8
+  },
+  {
+    "fields": {"color": "3F51B5"},
+    "model": "color.color",
+    "pk": 9
+  },
+  {
+    "fields": {"color": "1A237E"},
+    "model": "color.color",
+    "pk": 10
+  },
+  {
+    "fields": {"color": "2196F3"},
+    "model": "color.color",
+    "pk": 11
+  },
+  {
+    "fields": {"color": "0D47A1"},
+    "model": "color.color",
+    "pk": 12
+  },
+  {
+    "fields": {"color": "03A9F4"},
+    "model": "color.color",
+    "pk": 13
+  },
+  {
+    "fields": {"color": "01579B"},
+    "model": "color.color",
+    "pk": 14
+  },
+  {
+    "fields": {"color": "00BCD4"},
+    "model": "color.color",
+    "pk": 15
+  },
+  {
+    "fields": {"color": "006064"},
+    "model": "color.color",
+    "pk": 16
+  },
+  {
+    "fields": {"color": "009688"},
+    "model": "color.color",
+    "pk": 17
+  },
+  {
+    "fields": {"color": "004D40"},
+    "model": "color.color",
+    "pk": 18
+  },
+  {
+    "fields": {"color": "4CAF50"},
+    "model": "color.color",
+    "pk": 19
+  },
+  {
+    "fields": {"color": "1B5E20"},
+    "model": "color.color",
+    "pk": 20
+  },
+  {
+    "fields": {"color": "558B2F"},
+    "model": "color.color",
+    "pk": 21
+  },
+  {
+    "fields": {"color": "827717"},
+    "model": "color.color",
+    "pk": 22
+  },
+  {
+    "fields": {"color": "EF6C00"},
+    "model": "color.color",
+    "pk": 23
+  },
+  {
+    "fields": {"color": "E65100"},
+    "model": "color.color",
+    "pk": 24
+  },
+  {
+    "fields": {"color": "FF5722"},
+    "model": "color.color",
+    "pk": 25
+  },
+  {
+    "fields": {"color": "BF360C"},
+    "model": "color.color",
+    "pk": 26
+  },
+  {
+    "fields": {"color": "795548"},
+    "model": "color.color",
+    "pk": 27
+  },
+  {
+    "fields": {"color": "607D8B"},
+    "model": "color.color",
+    "pk": 28
+  },
+  {
+    "fields": {"color": "263238"},
+    "model": "color.color",
+    "pk": 29
+  }
+]

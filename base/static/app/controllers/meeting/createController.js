@@ -15,7 +15,7 @@ angular.module('punktlichDep').controller('MeetingCreateController', function ($
 
     $scope.save = function (form) {
         MeetingService.create($scope.meeting, function (data) {
-            $scope.goto('meetings.update', {meetingid: data.id});
+            $scope.goto('^.update', {meetingid: data.id});
         }, function (errors) {
             ValidationService.showErrors(form, errors.data)
         });

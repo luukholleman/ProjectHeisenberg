@@ -2,13 +2,11 @@ angular.module('punktlichDep').controller('MainController', function ($scope, $r
     function checkAuth() {
         function checkStateAuthentication() {
             if (!$state.current.data || typeof $state.current.data.authenticationRequired === 'undefined' || $state.current.data.authenticationRequired) {
-                console.log('auth');
-                $state.go('login');
+                $state.go('punktlich.login');
             }
         }
         function checkStateAntiAuthentication() {
             if ($state.current.data && $state.current.data.authenticationProhibited) {
-                console.log('anti auth');
                 $state.go('meetings.list');
             }
         }
@@ -29,7 +27,7 @@ angular.module('punktlichDep').controller('MainController', function ($scope, $r
     $scope.$on('$stateChangeSuccess', checkAuth);
     $scope.$on('unauthorizedRequest', function () {
         AuthenticationService.resetToken();
-        $scope.goto('login');
+        $scope.goto('punktlich.login');
     });
 
     $scope.goto = function (route, params) {

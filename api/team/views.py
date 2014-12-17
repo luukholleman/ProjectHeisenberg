@@ -29,16 +29,10 @@ class TeamViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         return super(TeamViewSet, self).list(request)
 
-    @list_route()
-    def colors(self, request, pk=None):
-        teams = Team.objects.filter(user_color__user_id=request.user.pk)
-        user_colors = UserColor.objects.filter(team__in=teams)
-
-        team_colors = []
-        for user_color in user_colors:
-            team_colors.append({user_color.team_set.get().id: user_color.color.color})
-
-        return Response(team_colors)
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
     @detail_route(methods=['GET'])
     def color(self, request, pk=None):

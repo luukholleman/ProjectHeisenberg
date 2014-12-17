@@ -12,16 +12,16 @@
             <p>
                 {{ meeting.description | limit:256 }}
                 <a href="#moreinfo" ng-show="{{ meeting.description && meeting.description.length > 256 }}"
-                   ng-click="goto('meeting-detail', {meetingid: meeting.id})">More...</a>
+                   ng-click="goto('punktlich.meeting-detail', {meetingid: meeting.id})">More...</a>
             </p>
             <div vertical layout style="margin-bottom: 20px">
                 <div horizontal layout>
                     <punkt-file ng-hide="meeting.agendas.length == 0" type="subject"
-                                ng-click="goto('meeting-detail.agenda-detail', {meetingid: meeting.id})"
+                                ng-click="goto('punktlich.meeting-detail.agenda-detail', {meetingid: meeting.id})"
                                 groupColorTint="#F06292" name="Agenda"
                                 owner="{{ meeting.agendas[0].uploaded_at | humanReadableDate }}"></punkt-file>
                     <punkt-file ng-hide="meeting.minutes.length == 0" type="subject"
-                                ng-click="goto('meeting-detail.agenda-detail', {meetingid: meeting.id})"
+                                ng-click="goto('punktlich.meeting-detail.agenda-detail', {meetingid: meeting.id})"
                                 groupColorTint="#F06292" name="Minutes"
                                 owner="{{ meeting.minutes[0].uploaded_at | humanReadableDate }}"></punkt-file>
                     <div vertical layout center>
@@ -50,8 +50,7 @@
             <hr class="spacing" style="margin: 0 -20px;" flex/>
         </div>
 
-        <!-- @todo: move style to css/sass -->
-        <paper-button ng-click="goto('meeting-detail', {meetingid: meeting.id})"
+        <paper-button ng-click="goto('punktlich.meeting-detail', {meetingid: meeting.id})"
                       class="button btn-default">open meeting
         </paper-button>
     </punkt-card>
