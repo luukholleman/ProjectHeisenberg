@@ -9,6 +9,9 @@ class TeamSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super(TeamSerializer, self).to_representation(instance)
 
+        if 'request' not in self.context:
+            return data
+
         request = self.context['request']
         teams = Team.objects.filter(pk=instance.pk, user_color__user_id=request.user.pk)
 
