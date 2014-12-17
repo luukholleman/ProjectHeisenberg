@@ -9,7 +9,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('authentication', '0001_initial'),
-        ('meeting', '0002_auto_20141217_1027'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -23,7 +22,6 @@ class Migration(migrations.Migration):
                 ('created_at', models.DateTimeField(auto_now=True)),
                 ('creator', models.ForeignKey(related_name='group_creator_set', to=settings.AUTH_USER_MODEL)),
                 ('invitations', models.ManyToManyField(to=settings.AUTH_USER_MODEL, blank=True)),
-                ('meetings', models.ManyToManyField(to='meeting.Meeting', blank=True)),
                 ('user_color', models.ManyToManyField(to='authentication.UserColor', blank=True)),
             ],
             options={
