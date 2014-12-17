@@ -1,6 +1,6 @@
 .off-canvas
   background-color: #FAFAFA
-  width: 355px
+  //width: 315px !important
 
   & .line
     width: 100%
@@ -23,12 +23,25 @@
       font-family: 'Roboto', serif
       font-weight: 100
       font-size: 22px
+      cursor: pointer
 
       & span
-        padding-top: 5px
+        position: relative
+        top: 2px
 
 .person-header
   padding: 20px
 
-.person-header punkt-person
+  & div
+    position: relative
+    width: 155px
+
+    & span
+      font-size: 20px
+      position: absolute
+      top: 55%
+      transform: translateY(-50%)
+
+.person-header punkt-circle
   display: flex
+  float: left

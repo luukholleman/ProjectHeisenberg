@@ -1,5 +1,5 @@
 <div vertical layout center>
-    <punkt-card ng-repeat="meeting in meetings"
+    <punkt-card pl-events="open-card" on-open-card="loadMeetingData(meeting)" ng-repeat="meeting in meetings"
                 header="{{ meeting.name | limit:32 }}"
                 subheader="{{ meeting.date_and_time | humanReadableDate:true }}"
                 location="{{ meeting.location }}"
@@ -12,19 +12,19 @@
             <p>
                 {{ meeting.description | limit:256 }}
                 <a href="#moreinfo" ng-show="{{ meeting.description && meeting.description.length > 256 }}"
-                   ng-click="goto('meeting-detail', {meetingid: meeting.id})">More...</a>
+                   ng-click="goto('punktlich.meeting-detail', {meetingid: meeting.id})">More...</a>
             </p>
 
-            <div vertical layout style="margin-bottom: 20px" class="">
+            <div vertical layout style="margin-bottom: 20px">
                 <div horizontal layout>
-                    <punkt-file ng-show="meeting.hasAgenda" type="subject"
-                                ng-click="goto('meeting-detail.agenda-detail', {meetingid: meeting.id})"
+                    <punkt-file ng-hide="meeting.agendas.length == 0" type="subject"
+                                ng-click="goto('punktlich.meeting-detail.agenda-detail', {meetingid: meeting.id})"
                                 groupColorTint="#F06292" name="Agenda"
-                                owner="{{ meeting.latestAgenda.owner.full_name }}"></punkt-file>
-                    <punkt-file ng-show="true" type="subject"
-                                ng-click="goto('meeting-detail.minutes-detail', {meetingid: meeting.id})"
+                                owner="{{ meeting.agendas[0].uploaded_at | humanReadableDate }}"></punkt-file>
+                    <punkt-file ng-hide="meeting.minutes.length == 0" type="subject"
+                                ng-click="goto('punktlich.meeting-detail.agenda-detail', {meetingid: meeting.id})"
                                 groupColorTint="#F06292" name="Minutes"
-                                owner="Fake data"></punkt-file>
+                                owner="{{ meeting.minutes[0].uploaded_at | humanReadableDate }}"></punkt-file>
                     <div vertical layout center>
                         <!--
                         <paper-button style="margin-top: 5px; color: #F06292" class="colored">+ 6 attachments
@@ -34,14 +34,15 @@
                 </div>
 
                 <div vertical layout
-                        ng-show="users.length > 0">
+                     ng-show="users.length > 0">
                     <div horizontal layout
                          style="margin: 20px 0 10px 0; color: #009688;">
                         <label class="punktlich-label">Participants ({{ users.length }})</label>
                     </div>
 
                     <div horizontal layout>
-                        <punkt-person ng-repeat="user in users" abbr="{{ user.initials }}" name="{{ user.full_name }}"
+                        <punkt-person ng-repeat="invitation in meeting.invited" abbr="{{ invitation.user.initials }}"
+                                      name="{{ invitation.user.full_name }}"
                                       image
                                       status="1"></punkt-person>
                     </div>
@@ -50,8 +51,7 @@
             <hr class="spacing" style="margin: 0 -20px;" flex/>
         </div>
 
-        <!-- @todo: move style to css/sass -->
-        <paper-button ng-click="goto('meeting-detail', {meetingid: meeting.id})" style="color: #009688"
+        <paper-button ng-click="goto('punktlich.meeting-detail', {meetingid: meeting.id})"
                       class="button btn-default">open meeting
         </paper-button>
     </punkt-card>

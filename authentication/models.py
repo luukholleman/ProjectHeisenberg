@@ -5,6 +5,7 @@ from django.db import models
 from django.utils import timezone as tz
 from django.utils.translation import ugettext_lazy as _
 from authentication.managers import UserManager
+from color.models import Color
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -79,10 +80,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             self.set_activation(expire_days=7)
 
         return super(User, self).save(*args, **kwargs)
-
-
-class Color(models.Model):
-    color = models.CharField(max_length=6, blank=True)
 
 
 class UserColor(models.Model):

@@ -1,11 +1,13 @@
-angular.module('punktlichDep').directive('plFile', function ($parse, $rootScope) {
+angular.module('punktlichDep').directive('plEvents', function ($parse, $rootScope) {
     return {
         restrict: 'A',
         compile: function ($element, attrs) {
             return function ngEventHandler(scope, element) {
-                var fn = $parse(attrs['ngFile'], null, true);
-                element[0].onchange = function (event) {
-                    if (event.files = element[0].files) {
+                attrs['plEvents'].split(' ').forEach(function (eventName) {
+                    var directive = attrs.$normalize('on-' + eventName);
+                    var fn = $parse(attrs[directive], null, true);
+
+                    element.on(eventName, function (event) {
                         var callback = function () {
                             fn(scope, {$event: event});
                         };
@@ -14,8 +16,8 @@ angular.module('punktlichDep').directive('plFile', function ($parse, $rootScope)
                         } else {
                             scope.$apply(callback);
                         }
-                    }
-                };
+                    });
+                });
             };
         }
     };

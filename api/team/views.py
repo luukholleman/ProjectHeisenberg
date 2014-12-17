@@ -1,20 +1,20 @@
 from django.http import Http404
 from rest_framework import viewsets, permissions, status
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import detail_route, list_route
 from rest_framework.generics import UpdateAPIView, ListCreateAPIView, get_object_or_404, DestroyAPIView, \
     RetrieveUpdateDestroyAPIView, ListAPIView, GenericAPIView
 from rest_framework.mixins import ListModelMixin, DestroyModelMixin, RetrieveModelMixin
 from rest_framework.response import Response
 from api.authentication.serializers import ColorSerializer, UserSerializer
 from api.team.serializers import TeamSerializer
-from authentication.models import User
+from authentication.models import User, UserColor, Color
 from team.models import Team
 
 
 class TeamViewSet(viewsets.ModelViewSet):
     serializer_class = TeamSerializer
     # todo add logged in permission here
-    permission_classes = []
+    permission_classes = (permissions.IsAuthenticated,)
 
     @detail_route(methods=['GET', 'DELETE'])
     def members(self, request, pk=None, *args, **kwargs):
@@ -28,6 +28,11 @@ class TeamViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         return super(TeamViewSet, self).list(request)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
     @detail_route(methods=['GET'])
     def color(self, request, pk=None):

@@ -37,30 +37,31 @@
 </style>
 <core-drawer-panel forceNarrow="true">
     <core-drawer-header drawer ng-controller="OffCanvasMenuController" class="off-canvas">
-        <div class="person-header">
-            <punkt-person abbr="LH" name="Luuk Holleman"
-                          image="http://media-cache-ec0.pinimg.com/avatars/luukholleman_1392631495_140.jpg"></punkt-person>
-            <span>
-                Luuk Holleman
-            </span>
+        <div class="person-header" horizontal layout>
+            <punkt-circle abbr="LH" color="009688"></punkt-circle>
+            <div>
+                <span>
+                    {{ user.first_name }} {{ user.last_name }}
+                </span>
+            </div>
         </div>
-        <div class="line"></div>
+        <hr />
         <ul>
             <li>
                 <core-icon icon="home"></core-icon>
-                <span ng-click="goto('meetings.list')">Home</span>
+                <span ng-click="goto('punktlich.meetings.list')">Home</span>
             </li>
         </ul>
-        <div class="line"></div>
+        <hr />
         <ul>
-            <li ng-repeat="team in teams">
-                <span ng-style="{'color' : '#' + team.color}">O</span>
-                <span ng-click="goto('teams.update', {teamid: team.id})">
+            <li ng-repeat="team in teams" horizontal layout>
+                <punkt-circle color="#{{ team.color }}" width="28" height="28"></punkt-circle>
+                <span ng-click="goto('puntlich.teams.update', {teamid: team.id})">
                     {{ team.name }}
                 </span>
             </li>
         </ul>
-        <div class="line"></div>
+        <hr />
         <ul>
             <li>
                 <core-icon icon="settings-applications"></core-icon>
@@ -68,7 +69,7 @@
             </li>
             <li>
                 <core-icon icon="exit-to-app"></core-icon>
-                <span ng-click="goto('logout')">Sign out</span>
+                <span ng-click="goto('punktlich.logout')">Sign out</span>
             </li>
         </ul>
     </core-drawer-header>

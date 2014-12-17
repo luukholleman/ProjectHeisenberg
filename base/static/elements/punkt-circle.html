@@ -1,12 +1,12 @@
 <link rel="import" href="../bower/polymer/polymer.html">
 <link rel="import" href="../bower/paper-shadow/paper-shadow.html">
 
-<polymer-element name="punkt-person" attributes="abbr name image status">
+<polymer-element name="punkt-circle" attributes="abbr name image status color width height">
     <template>
         <style>
             paper-shadow {
-                width: 56px;
-                height: 56px;
+                /*width: {{ width }}px;
+                height: {{ height }}px; @todo dit moet nu in de style tag omdat andere browsers dan chrome dit niet ondersteunen */
                 border-radius: 50%;
                 margin-right: 10px;
             }
@@ -30,11 +30,10 @@
             abbr {
                 color: #fff;
                 font-size: 26px;
+                padding-top: 3px;
             }
         </style>
-        <paper-shadow
-                vertical layout center
-                class="person" status="{{ status }}">
+        <paper-shadow style="background-color: #{{ color }}; width: {{ width }}px; height: {{ height }}px" vertical layout center class="person" status="{{ status }}">
             <div horizontal layout flex center>
                 <template if="{{ image == '' }}">
                     <abbr title="{{ name }}">
@@ -45,13 +44,18 @@
                     <img src="{{ image }}" alt="{{ name }}" style="height: 50px; border-radius: 50% ;"/>
                 </template>
             </div>
-
-                <paper-ripple fit></paper-ripple>
+            <paper-ripple fit></paper-ripple>
         </paper-shadow>
     </template>
     <script>
         (function () {
-            Polymer('punkt-person', {
+            Polymer('punkt-circle', {
+                width: 52,
+                height: 52,
+                image: '',
+                abbr: '',
+                name: '',
+                status: 0,
                 ready: function () {
 
                 }

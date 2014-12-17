@@ -63,32 +63,32 @@
     <div class="file-detail-heading">
 
         <core-icon icon="subject" role="img"></core-icon>
-        <h2>Agenda</h2>
+        <h2>Minutes</h2>
         <paper-icon-button icon="close" title="Close" role="button" ng-click="goto('^')"></paper-icon-button>
     </div>
 
     <hr class="spacing"/>
-    <paper-button class="download primary" ng-click="download(agendas[0].download_url)" raised>Download
+    <paper-button class="download primary" ng-click="download(minutes[0].download_url)" raised>Download
     </paper-button>
     <dl class="file-details">
         <dt>Name</dt>
         <dd>
             <paper-input-decorator class="file-name">
-                <input is="core-input" value="{{ agendas[0].file_name }}"  ng-blur="saveFilename(agendas[0].file_name)" name="password_repeat" ng-model="agendas[0].file_name" />
+                <input is="core-input" value="{{ minutes[0].file_name }}"  ng-blur="saveFilename(minutes[0].file_name)" name="password_repeat" ng-model="minutes[0].file_name" />
             </paper-input-decorator>
         </dd>
         <dt>Owner</dt>
-        <dd>{{ agendas[0].created_by.full_name }}</dd>
+        <dd>{{ minutes[0].created_by.full_name }}</dd>
         <dt>Created</dt>
-        <dd>{{ agendas[0].uploaded_at | humanReadableDate }}</dd>
+        <dd>{{ minutes[0].uploaded_at | humanReadableDate }}</dd>
     </dl>
 
     <hr class="spacing"/>
 
     <div class="revisions" vertical center layout>
-        <punkt-file ng-repeat="agenda in agendas"
-                    ng-click="download(agenda.download_url)" type="subject"
-                    groupColorTint="#B0BEC5" name="Agenda"
-                    owner="{{ agenda.uploaded_at | humanReadableDate }}"></punkt-file>
+        <punkt-file ng-repeat="minute in minutes"
+                    ng-click="download(minute.download_url)" type="subject"
+                    groupColorTint="#B0BEC5" name="Minutes"
+                    owner="{{ minute.uploaded_at | humanReadableDate }}"></punkt-file>
     </div>
 </div>

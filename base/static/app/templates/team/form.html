@@ -12,7 +12,7 @@
             </paper-button>
         </div>
 
-        <form name="teamForm" ng-submit="save(teamForm)">
+        <form name="teamForm" pl-submit ng-submit="save(teamForm)">
             <paper-input-decorator floatingLabel label="Team Name">
                 <input is="core-input" type="text" name="TeamName" ng-model="team.name"/>
             </paper-input-decorator>
@@ -28,19 +28,17 @@
                 <div horizontal layout center
                      class="member"
                      ng-repeat="member in members">
-                    <punkt-person
+                    <punkt-circle
                             abbr="{{ member.initials }}"
                             name="{{ member.full_name }}"
                             image=""
-                            status="0"></punkt-person>
+                            status="0"></punkt-circle>
                     <div vertical layout>
                         <h4>{{ member.full_name }}</h4>
                         <h5>Member</h5>
                     </div>
                 </div>
             </div>
-
-            <input type="submit" hidden/>
         </form>
         <form name="inviteForm" ng-submit="invite(inviteForm)">
             <paper-input-decorator floatinglabel label="Add member by email address">

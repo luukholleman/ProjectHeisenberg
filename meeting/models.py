@@ -3,10 +3,14 @@ import os
 import uuid
 from django.db import models
 from authentication.models import User
-from validators import MimetypeValidator
+from team.models import Team
 
 
-class File(models.Model):
+def get_file_path(instance, filename):
+    return '/'.join(['meeting', instance.FILE_TYPE, hashlib.sha1(str(uuid.uuid4())).hexdigest()])
+
+
+class MeetingFile(models.Model):
     uploaded_at = models.DateTimeField(auto_now=True)
     file_name = models.CharField(max_length=200, null=True)
     created_by = models.ForeignKey(User, null=True)
@@ -21,11 +25,6 @@ class File(models.Model):
         name, extension = os.path.splitext(self.file.name)
         return extension
 
-    class Meta:
-        abstract = True
-
-
-class RenameFileMixin(models.Model):
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         file_name, file_extension = os.path.splitext(self.file.name)
@@ -33,28 +32,30 @@ class RenameFileMixin(models.Model):
         # Only update when we're creating
         if self.pk is None:
             self.file_name = file_name
-            self.file.name = hashlib.sha1(str(uuid.uuid4())).hexdigest() + file_extension
-
-        super(RenameFileMixin, self).save()
+        super(MeetingFile, self).save()
 
     class Meta:
         abstract = True
 
 
-class Agenda(File, RenameFileMixin):
-    file = models.FileField(upload_to='meeting/agendas')
+class Agenda(MeetingFile):
+    FILE_TYPE = 'agenda'
+    file = models.FileField(upload_to=get_file_path)
 
 
-class Minute(File, RenameFileMixin):
-    file = models.FileField(upload_to='meeting/minutes')
+class Minute(MeetingFile):
+    FILE_TYPE = 'minute'
+    file = models.FileField(upload_to=get_file_path)
 
 
-class Attachment(File, RenameFileMixin):
-    file = models.FileField(upload_to='meeting/attachments')
+class Attachment(MeetingFile):
+    FILE_TYPE = 'attachment'
+    file = models.FileField(upload_to=get_file_path)
 
 
 class Meeting(models.Model):
     creator = models.ForeignKey(User, null=True, related_name='creator_user')
+    team = models.ForeignKey(Team)
     name = models.CharField(max_length=90)
     description = models.TextField(null=True)
     location = models.CharField(null=True, max_length=90)

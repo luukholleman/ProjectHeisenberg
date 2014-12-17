@@ -1,9 +1,4 @@
 angular.module('punktlichDep').service('TeamService', function (TeamModel, UserModel, Restangular) {
-    Restangular.extendModel('teams', function (team) {
-        //@todo maybe we should create somehing generic to parse dates
-        team.created_on_moment = moment(new Date(team.created_on));
-        return team;
-    });
 
     function destroy(team, success, error) {
         TeamModel.one(team.id).remove().then(function (data){
