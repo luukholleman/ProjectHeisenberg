@@ -9,11 +9,7 @@ angular.module('punktlichDep').service('MeetingService', function (MeetingModel)
     }
 
     function getMeetingsForTimeSpan(from, to, success, error) {
-        MeetingModel.getList({from: from, to: to}).then(function (data) {
-            success(data);
-        }, function (response) {
-            error(response);
-        });
+        MeetingModel.getList({from: from, to: to}).then(success, error);
     }
 
     return {
