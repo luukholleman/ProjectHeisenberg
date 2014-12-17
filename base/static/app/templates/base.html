@@ -47,16 +47,16 @@
         </div>
         <hr />
         <ul>
-            <li>
+            <li ng-click="goto('punktlich.meetings.list')">
                 <core-icon icon="home"></core-icon>
-                <span ng-click="goto('punktlich.meetings.list')">Home</span>
+                <span>Home</span>
             </li>
         </ul>
         <hr />
         <ul>
-            <li ng-repeat="team in teams" horizontal layout>
+            <li ng-repeat="team in teams" horizontal layout ng-click="goto('puntlich.teams.update', {teamid: team.id})">
                 <punkt-circle color="#{{ team.color }}" width="28" height="28"></punkt-circle>
-                <span ng-click="goto('puntlich.teams.update', {teamid: team.id})">
+                <span>
                     {{ team.name }}
                 </span>
             </li>
@@ -67,9 +67,9 @@
                 <core-icon icon="settings-applications"></core-icon>
                 <span>Settings</span>
             </li>
-            <li>
+            <li ng-click="goto('punktlich.logout')">
                 <core-icon icon="exit-to-app"></core-icon>
-                <span ng-click="goto('punktlich.logout')">Sign out</span>
+                <span>Sign out</span>
             </li>
         </ul>
     </core-drawer-header>
