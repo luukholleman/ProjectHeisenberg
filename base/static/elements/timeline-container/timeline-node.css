@@ -21,6 +21,7 @@
 
     -webkit-animation: popup .2s linear 0s 1 alternate;
     animation: popup .2s linear 0s 1 alternate;
+    color: white;
 }
 
 .node-container[condensed]:not([opened]) {

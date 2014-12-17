@@ -64,6 +64,12 @@ class MeetingSerializer(serializers.ModelSerializer):
     address = serializers.CharField(required=False)
     date_and_time = serializers.DateTimeField(required=True)
 
+    def to_representation(self, meeting):
+        data = super(MeetingSerializer, self).to_representation(meeting)
+        request = self.context['request']
+        data['color'] = meeting.team.get_team_color(request.user)
+        return data
+
     class Meta:
         model = Meeting
         fields = ('id', 'name', 'description', 'location', 'address', 'date_and_time', 'team')

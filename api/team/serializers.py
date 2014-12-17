@@ -6,27 +6,10 @@ from team.models import Team
 
 class TeamSerializer(serializers.ModelSerializer):
 
-    def to_representation(self, instance):
-        data = super(TeamSerializer, self).to_representation(instance)
-
-        if 'request' not in self.context:
-            return data
-
+    def to_representation(self, team):
+        data = super(TeamSerializer, self).to_representation(team)
         request = self.context['request']
-        teams = Team.objects.filter(pk=instance.pk, user_color__user_id=request.user.pk)
-
-        # set default color
-        data['color'] = '979797'
-
-        if teams is None:
-            return data
-
-        try:
-            user_color = UserColor.objects.filter(team__in=teams).get()
-            data['color'] = user_color.color.color
-        except ObjectDoesNotExist:
-            return data
-
+        data['color'] = team.get_team_color(request.user)
         return data
 
     class Meta:
