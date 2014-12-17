@@ -5,8 +5,8 @@
     <template>
         <style>
             paper-shadow {
-                width: {{ width }}px;
-                height: {{ height }}px;
+                /*width: {{ width }}px;
+                height: {{ height }}px; @todo dit moet nu in de style tag omdat andere browsers dan chrome dit niet ondersteunen */
                 border-radius: 50%;
                 margin-right: 10px;
             }
@@ -33,7 +33,7 @@
                 padding-top: 3px;
             }
         </style>
-        <paper-shadow style="background-color: #{{ color }}" vertical layout center class="person" status="{{ status }}">
+        <paper-shadow style="background-color: #{{ color }}; width: {{ width }}px; height: {{ height }}px" vertical layout center class="person" status="{{ status }}">
             <div horizontal layout flex center>
                 <template if="{{ image == '' }}">
                     <abbr title="{{ name }}">
