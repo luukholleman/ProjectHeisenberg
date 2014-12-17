@@ -2,7 +2,7 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
     $scope.meetings = [];
 
     function addMeeting(meeting) {
-        meeting.color = 'pink';
+        meeting.color = '009688';
         meeting.date = new Date(meeting.date_and_time).getTime() / 1000;
 
 
@@ -21,7 +21,7 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
         });
 
 
-        oldMeeting.color = 'pink';
+        oldMeeting.color = '009688';
         oldMeeting.date = new Date(newMeeting.date_and_time).getTime() / 1000;
 
     };
