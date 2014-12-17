@@ -17,7 +17,6 @@ angular.module('punktlichDep').controller('TeamUpdateController', function ($sco
     };
 
     $scope.invite = function () {
-        console.warn('post');
         TeamService.invite($scope.team, $scope.email, function () {
             $rootScope.$broadcast('teams.members.invited', $scope.email);
             FlashMessageService.setMessage($scope.email + ' is invited to' + $scope.team.name + '.');

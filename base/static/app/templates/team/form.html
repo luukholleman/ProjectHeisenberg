@@ -13,12 +13,19 @@
         </div>
 
         <form name="teamForm" pl-submit ng-submit="save()">
-            <paper-input-decorator floatingLabel label="Team Name">
-                <input is="core-input" type="text" name="TeamName" ng-model="team.name"/>
+            <paper-input-decorator floatingLabel label="Team Name" pl-show-label>
+                <input is="core-input"
+                       type="text"
+                       name="TeamName"
+                       ng-model="team.name"
+                       ng-init="init()" />
             </paper-input-decorator>
 
-            <paper-input-decorator floatinglabel label="Description">
-                <textarea id="t1" rows="5" name="description" ng-model="team.description"></textarea>
+            <paper-input-decorator floatinglabel label="Description" pl-show-label>
+                <textarea id="t1"
+                          rows="3"
+                          name="description"
+                          ng-model="team.description"></textarea>
             </paper-input-decorator>
 
             <span class="label">Members</span>
@@ -44,7 +51,7 @@
               ng-submit="invite()"
               pl-submit>
             <paper-input-decorator floatinglabel label="Add member by email address">
-                <input is="core-input" type="text" name="email" ng-model="email"/>
+                <input is="core-input" type="email" name="email" ng-model="email"/>
             </paper-input-decorator>
         </form>
         <div horizontal layout reverse>
