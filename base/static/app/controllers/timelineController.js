@@ -15,9 +15,15 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
         $scope.meetings.push(meeting);
     };
 
-    function updateMeeting(meeting) {
-        meeting.color = 'pink';
-        meeting.date = new Date(meeting.date_and_time).getTime() / 1000;
+    function updateMeeting(oldMeeting, newMeeting) {
+        _.forEach(_.toArray(newMeeting), function(key){
+            oldMeeting[key] = newMeeting[key];
+        });
+
+
+        oldMeeting.color = 'pink';
+        oldMeeting.date = new Date(newMeeting.date_and_time).getTime() / 1000;
+
     };
 
     function setMeetings(meetings) {
@@ -29,7 +35,7 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
                 addMeeting(meeting);
             }
             else {
-                updateMeeting(found[0]);
+                updateMeeting(found[0], meeting);
             }
         });
 
@@ -42,13 +48,13 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
             $scope.meetings.splice(idx, 1);
         });
 
-
+        timeline.render();
     }
 
     function getMeetingsForTimeSpan(from, to) {
         MeetingService.getMeetingsForTimeSpan(from, to, setMeetings);
 
-        $rootScope.$emit('timelineViewPortChanged', $scope.meetings);
+        $rootScope.$broadcast('timelineViewPortChanged', $scope.meetings);
     }
 
     $scope.toggleGroupVisible = function (color) {
@@ -102,4 +108,8 @@ angular.module('punktlichDep').controller('TimelineController', function ($scope
             document.querySelector('.timeline-view').classList.remove('condensed');
         }
     });
+
+    $scope.$onMany(['meetings.create', 'meetings.update'], function(){
+        timeline.refresh();
+    })
 });
