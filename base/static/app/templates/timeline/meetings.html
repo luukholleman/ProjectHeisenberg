@@ -17,11 +17,11 @@
 
             <div vertical layout style="margin-bottom: 20px">
                 <div horizontal layout>
-                    <punkt-file ng-hide="meeting.agendas.length == 0" type="subject"
+                    <punkt-file ng-show="meeting && meeting.agendas && meeting.agendas.length > 0" type="subject"
                                 ng-click="goto('punktlich.meeting-detail.agenda-detail', {meetingid: meeting.id})"
                                 groupColorTint="#F06292" name="Agenda"
                                 owner="{{ meeting.agendas[0].uploaded_at | humanReadableDate }}"></punkt-file>
-                    <punkt-file ng-hide="meeting.minutes.length == 0" type="subject"
+                    <punkt-file ng-show="meeting && meeting.minutes && meeting.minutes.length > 0" type="subject"
                                 ng-click="goto('punktlich.meeting-detail.agenda-detail', {meetingid: meeting.id})"
                                 groupColorTint="#F06292" name="Minutes"
                                 owner="{{ meeting.minutes[0].uploaded_at | humanReadableDate }}"></punkt-file>

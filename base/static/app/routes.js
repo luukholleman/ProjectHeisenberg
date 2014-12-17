@@ -119,7 +119,7 @@ angular.module('punktlichDep').config(function ($stateProvider, $urlRouterProvid
         state('punktlich.meeting-detail.agenda-detail', {
             url: '/agenda/:agendaid',
             views: {
-                'right-sidebar@meeting-detail': {
+                'right-sidebar@punktlich.meeting-detail': {
                     templateUrl: appPath + 'templates/meeting/agenda.html',
                     controller: 'FileDetailController'
                 }

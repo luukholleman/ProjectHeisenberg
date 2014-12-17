@@ -3,7 +3,7 @@ angular.module('punktlichDep').directive('plFile', function ($parse, $rootScope)
         restrict: 'A',
         compile: function ($element, attrs) {
             return function ngEventHandler(scope, element) {
-                var fn = $parse(attrs['ngFile'], null, true);
+                var fn = $parse(attrs['plFile'], null, true);
                 element[0].onchange = function (event) {
                     if (event.files = element[0].files) {
                         var callback = function () {
