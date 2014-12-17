@@ -30,7 +30,7 @@ angular.module('punktlichDep').controller('MainController', function ($scope, $r
         $scope.goto('punktlich.login');
     });
 
-    $scope.goto = function (route, params) {
+    $rootScope.goto = function (route, params) {
         $scope.onHome = $location.path() === '/';
         $state.go(route, params);
     };

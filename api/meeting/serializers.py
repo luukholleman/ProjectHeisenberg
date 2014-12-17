@@ -67,3 +67,9 @@ class MeetingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Meeting
         fields = ('id', 'name', 'description', 'location', 'address', 'date_and_time', 'team')
+
+    def update(self, instance, validated_attrs):
+        validated_attrs['team'] = instance.team
+
+        return super(MeetingSerializer, self).update(instance, validated_attrs)
+

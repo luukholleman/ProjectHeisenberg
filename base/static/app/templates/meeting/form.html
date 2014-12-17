@@ -4,7 +4,7 @@
             Plan a meeting
         </h2>
         <form name="meetingForm" pl-submit ng-submit="save(meetingForm)">
-            <div>
+            <div ng-hide="hideGroupDropdown">
                 <paper-dropdown-menu label="Group" id="team-dropdown" name="team">
                     <paper-dropdown class="dropdown">
                         <core-menu class="menu">
