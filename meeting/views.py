@@ -1,5 +1,4 @@
 from django.http import HttpResponseNotFound, HttpResponse
-from django.shortcuts import render
 from django.utils.encoding import smart_str
 from django.views.generic.detail import BaseDetailView
 from meeting.models import Agenda, Minute
