@@ -2,7 +2,7 @@ from django.http import Http404
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.generics import UpdateAPIView, ListCreateAPIView, get_object_or_404, DestroyAPIView, \
-    RetrieveUpdateDestroyAPIView, ListAPIView, GenericAPIView
+    RetrieveUpdateDestroyAPIView, ListAPIView, GenericAPIView, CreateAPIView
 from rest_framework.mixins import ListModelMixin, DestroyModelMixin, RetrieveModelMixin
 from rest_framework.response import Response
 from api.authentication.serializers import ColorSerializer, UserSerializer
@@ -69,7 +69,7 @@ class TeamMemberListApiView(ListAPIView):
 class TeamMemberApiView(RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
     # todo fix permissions
-    permission_classes = (permissions.AllowAny, )
+    permission_classes = (permissions.IsAuthenticated, )
 
     def get_team(self):
         return get_object_or_404(Team, pk=self.kwargs['teamId'])
@@ -81,3 +81,19 @@ class TeamMemberApiView(RetrieveUpdateDestroyAPIView):
         member = get_object_or_404(User, pk=self.kwargs['pk'])
         self.get_team().invitations.remove(member)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class InviteTeamMemberApiView(CreateAPIView):
+    permission_classes = (permissions.IsAuthenticated, )
+
+    def get_object(self):
+        return get_object_or_404(Team, pk=self.kwargs['teamId'])
+
+    def post(self, request, *args, **kwargs):
+        email = request.DATA['email']
+
+        user = get_object_or_404(User, email=email)
+        team = self.get_object()
+        team.invitations.add(user)
+
+        return Response(UserSerializer(user).data)
