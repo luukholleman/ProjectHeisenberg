@@ -3,16 +3,16 @@
         <h2>
             Plan a meeting
         </h2>
-
         <form name="meetingForm" pl-submit ng-submit="save(meetingForm)">
-            <paper-dropdown-menu label="Group">
-                <paper-dropdown class="dropdown">
-                    <core-menu class="menu">
-                        <paper-item ng-repeat="group in groups">{{ group }}</paper-item>
-                    </core-menu>
-                </paper-dropdown>
-            </paper-dropdown-menu>
-
+            <div>
+                <paper-dropdown-menu label="Group" id="team-dropdown" name="team">
+                    <paper-dropdown class="dropdown">
+                        <core-menu class="menu">
+                            <paper-item ng-repeat="team in teams" teamid="{{ team.id }}">{{ team.name }}</paper-item>
+                        </core-menu>
+                    </paper-dropdown>
+                </paper-dropdown-menu>
+            </div>
             <paper-input-decorator floatingLabel label="Name">
                 <input is="core-input" type="text" name="name" ng-model="meeting.name"/>
             </paper-input-decorator>

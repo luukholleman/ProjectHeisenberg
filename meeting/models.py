@@ -3,6 +3,7 @@ import os
 import uuid
 from django.db import models
 from authentication.models import User
+from team.models import Team
 
 
 def get_file_path(instance, filename):
@@ -54,6 +55,7 @@ class Attachment(MeetingFile):
 
 class Meeting(models.Model):
     creator = models.ForeignKey(User, null=True, related_name='creator_user')
+    team = models.ForeignKey(Team)
     name = models.CharField(max_length=90)
     description = models.TextField(null=True)
     location = models.CharField(null=True, max_length=90)

@@ -43,6 +43,11 @@ class MeetingViewSet(viewsets.ModelViewSet):
 
         return super(MeetingViewSet, self).list(request)
 
+    def perform_create(self, serializer):
+        meeting = serializer.save()
+        meeting.creator = self.request.user
+        meeting.save()
+
     def get_queryset(self):
         # TODO: only list meetings the user has access to
         if self._from_date is None or self._to_date is None:
