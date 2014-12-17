@@ -13,7 +13,6 @@ angular.module('punktlichDep').controller('OffCanvasMenuController', function ($
 
             console.log($scope.teams);
         }, function(error){
-            FlashMessageService.setMessage(error);
         });
     }
 
