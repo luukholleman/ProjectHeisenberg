@@ -37,7 +37,7 @@
   .now:after {
     content: "";
     display: block;
-    width: 1px;
+    width: 2px;
     height: 70px;
     background-color: #979797;
     position: absolute;
