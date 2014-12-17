@@ -14,7 +14,7 @@
                 <a href="#moreinfo" ng-show="{{ meeting.description && meeting.description.length > 256 }}"
                    ng-click="goto('meeting-detail', {meetingid: meeting.id})">More...</a>
             </p>
-            <div vertical layout style="margin-bottom: 20px" class="">
+            <div vertical layout style="margin-bottom: 20px">
                 <div horizontal layout>
                     <punkt-file ng-hide="meeting.agendas.length == 0" type="subject"
                                 ng-click="goto('meeting-detail.agenda-detail', {meetingid: meeting.id})"
@@ -51,7 +51,7 @@
         </div>
 
         <!-- @todo: move style to css/sass -->
-        <paper-button ng-click="goto('meeting-detail', {meetingid: meeting.id})" style="color: #009688"
+        <paper-button ng-click="goto('meeting-detail', {meetingid: meeting.id})"
                       class="button btn-default">open meeting
         </paper-button>
     </punkt-card>

@@ -22,8 +22,8 @@
             <input type="submit" hidden/>
         </form>
 
-        <paper-button style="background: #009688; color:white" raised ng-click="register(registerform, user)">register</paper-button>
-        <paper-button style="color: #009688" ng-click="goto('login')">login</paper-button>
+        <paper-button raised ng-click="register(registerform, user)">register</paper-button>
+        <paper-button ng-click="goto('login')">login</paper-button>
     </form-box>
 
     <form-box ng-show="hasRegistered">
