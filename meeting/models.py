@@ -3,6 +3,7 @@ import os
 import uuid
 from django.db import models
 from authentication.models import User
+from team.models import Team
 from validators import MimetypeValidator
 
 
@@ -55,6 +56,7 @@ class Attachment(File, RenameFileMixin):
 
 class Meeting(models.Model):
     creator = models.ForeignKey(User, null=True, related_name='creator_user')
+    team = models.ForeignKey(Team)
     name = models.CharField(max_length=90)
     description = models.TextField(null=True)
     location = models.CharField(null=True, max_length=90)
