@@ -5,7 +5,7 @@
                 location="{{ meeting.location }}"
                 invitations="{{ meeting.invitations }}"
                 abbr="P"
-                color="#E91E63"
+                color="{{ meeting.color }}"
                 id="meeting-{{ meeting.id }}"
                 status="1">
         <div class="info">
@@ -19,11 +19,11 @@
                 <div horizontal layout>
                     <punkt-file ng-show="meeting && meeting.agendas && meeting.agendas.length > 0" type="subject"
                                 ng-click="goto('punktlich.meeting-detail.agenda-detail', {meetingid: meeting.id})"
-                                groupColorTint="#F06292" name="Agenda"
+                                groupColorTint="{{ meeting.color }}" name="Agenda"
                                 owner="{{ meeting.agendas[0].uploaded_at | humanReadableDate }}"></punkt-file>
                     <punkt-file ng-show="meeting && meeting.minutes && meeting.minutes.length > 0" type="subject"
                                 ng-click="goto('punktlich.meeting-detail.agenda-detail', {meetingid: meeting.id})"
-                                groupColorTint="#F06292" name="Minutes"
+                                groupColorTint="{{ meeting.color }}" name="Minutes"
                                 owner="{{ meeting.minutes[0].uploaded_at | humanReadableDate }}"></punkt-file>
                     <div vertical layout center>
                         <!--

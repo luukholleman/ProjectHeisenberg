@@ -58,7 +58,7 @@
     }
 </style>
 
-<core-toolbar class="top-toolbar" style="background-color: #E91E63;">
+<core-toolbar class="top-toolbar" style="background-color: #{{ meeting.color }};">
     <paper-icon-button style="color:#fff" icon="arrow-back" ng-click="goto('punktlich.meetings.list')"></paper-icon-button>
     <strong flex style="color:#fff;">{{ meeting.name }}</strong>
 
@@ -91,12 +91,12 @@
         <div horizontal layout>
             <punkt-file ng-hide="agendas.length == 0" type="subject"
                         ng-click="goto('punktlich.meeting-detail.agenda-detail')"
-                        groupColorTint="#B0BEC5" name="Agenda"
+                        groupColorTint="{{ meeting.color }}" name="Agenda"
                         owner="{{ agendas[0].uploaded_at | humanReadableDate }}"></punkt-file>
 
             <punkt-file ng-hide="minutes.length == 0" type="subject"
                         ng-click="goto('punktlich.meeting-detail.minutes-detail')"
-                        groupColorTint="#B0BEC5" name="Minutes"
+                        groupColorTint="{{ meeting.color }}" name="Minutes"
                         owner="{{ minutes[0].uploaded_at | humanReadableDate }}"></punkt-file>
         </div>
         <h4 class="heading">
