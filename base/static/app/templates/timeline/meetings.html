@@ -1,5 +1,5 @@
 <div vertical layout center>
-    <punkt-card ng-events="open-card" on-open-card="loadMeetingData(meeting)" ng-repeat="meeting in meetings"
+    <punkt-card pl-events="open-card" on-open-card="loadMeetingData(meeting)" ng-repeat="meeting in meetings"
                 header="{{ meeting.name | limit:32 }}"
                 subheader="{{ meeting.date_and_time | humanReadableDate:true }}"
                 location="{{ meeting.location }}"

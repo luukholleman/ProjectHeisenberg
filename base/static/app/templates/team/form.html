@@ -10,7 +10,7 @@
                 class="warning">Leave team</paper-button>
         </div>
 
-        <form name="teamForm" ng-submit="save(teamForm)">
+        <form name="teamForm" pl-submit ng-submit="save(teamForm)">
             <paper-input-decorator floatingLabel label="Team Name">
                 <input is="core-input" type="text" name="TeamName" ng-model="team.name"/>
             </paper-input-decorator>
@@ -37,8 +37,6 @@
                     </div>
                 </div>
             </div>
-
-            <input type="submit" hidden/>
         </form>
         <div horizontal layout reverse>
                 <paper-button class="primary" raised ng-click="save(teamForm)">Save</paper-button>

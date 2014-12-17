@@ -1,11 +1,11 @@
-angular.module('punktlichDep').directive('plFile', function ($parse, $rootScope) {
+angular.module('punktlichDep').directive('plSubmit', function ($parse, $rootScope) {
     return {
         restrict: 'A',
-        compile: function ($element, attrs) {
-            return function ngEventHandler(scope, element) {
-                var fn = $parse(attrs['ngFile'], null, true);
-                element[0].onchange = function (event) {
-                    if (event.files = element[0].files) {
+        link: function (scope, element, attrs) {
+            if (attrs['ngSubmit']) {
+                var fn = $parse(attrs['ngSubmit'], null, true);
+                element[0].addEventListener('keypress', function (e) {
+                    if(e.which == 10 || e.which == 13) {
                         var callback = function () {
                             fn(scope, {$event: event});
                         };
@@ -15,8 +15,8 @@ angular.module('punktlichDep').directive('plFile', function ($parse, $rootScope)
                             scope.$apply(callback);
                         }
                     }
-                };
-            };
+                });
+            }
         }
     };
 });

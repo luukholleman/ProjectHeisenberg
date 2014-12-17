@@ -32,7 +32,7 @@ angular.module('punktlichDep').config(function ($stateProvider, $urlRouterProvid
                 '@': {
                     controller: function (AuthenticationService, $scope) {
                         AuthenticationService.resetToken();
-                        $scope.goto('puntklich.login');
+                        $scope.goto('punktlich.login');
                     }
                 }
             },
