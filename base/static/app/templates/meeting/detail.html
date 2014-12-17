@@ -115,7 +115,6 @@
     </div>
 
     <div hidden>
-        <input type="file" class="file-upload" file-model="file"
-               onchange="angular.element(this).scope().fileSelected(this)" name="agenda"/>
+        <input type="file" class="file-upload" ng-file="fileSelected($event)"  name="agenda"/>
     </div>
 </div>
