@@ -16,9 +16,19 @@ angular.module('punktlichDep').controller('TeamUpdateController', function ($sco
         $rootScope.goto('meetings.list');
     };
 
+    $scope.invite = function () {
+        console.warn('post');
+        TeamService.invite($scope.team, $scope.email, function () {
+            $rootScope.$broadcast('teams.members.invited', $scope.email);
+            FlashMessageService.setMessage($scope.email + ' is invited to' + $scope.team.name + '.');
+        }, function () {
+            FlashMessageService.setMessage($scope.email + ' could not be invited to ' + $scope.team.name + '.');
+        });
+    };
+
     $scope.leave = function () {
         TeamService.leave($scope.team, $rootScope.user, function () {
-            $rootScope.$broadcast('teams.leave', $scope.team);
+            $rootScope.$broadcast('teams.members.leave', $rootScope.user);
             FlashMessageService.setMessage('You\'ve left ' + $scope.team.name);
         }, function (errors) {
             //ValidationService.showErrors(null, errors.data)
@@ -26,7 +36,7 @@ angular.module('punktlichDep').controller('TeamUpdateController', function ($sco
         $rootScope.goto('meetings.list');
     };
 
-    $scope.save = function (form) {
+    $scope.save = function () {
         TeamService.update($scope.team, function () {
             $rootScope.$broadcast('teams.update', $scope.team);
         }, function (errors) {

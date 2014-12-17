@@ -12,7 +12,7 @@
             </paper-button>
         </div>
 
-        <form name="teamForm" pl-submit ng-submit="save(teamForm)">
+        <form name="teamForm" pl-submit ng-submit="save()">
             <paper-input-decorator floatingLabel label="Team Name">
                 <input is="core-input" type="text" name="TeamName" ng-model="team.name"/>
             </paper-input-decorator>
@@ -40,13 +40,15 @@
                 </div>
             </div>
         </form>
-        <form name="inviteForm" ng-submit="invite(inviteForm)">
+        <form name="inviteForm"
+              ng-submit="invite()"
+              pl-submit>
             <paper-input-decorator floatinglabel label="Add member by email address">
                 <input is="core-input" type="text" name="email" ng-model="email"/>
             </paper-input-decorator>
         </form>
         <div horizontal layout reverse>
-            <paper-button class="primary" raised ng-click="save(teamForm)">Save</paper-button>
+            <paper-button class="primary" raised ng-click="save()">Save</paper-button>
             <paper-button ng-click="goto('meetings.list')">Cancel</paper-button>
             <div flex></div>
             <paper-button class="warning" ng-click="toggleDialog('deleteTeamDialog');">Delete team</paper-button>

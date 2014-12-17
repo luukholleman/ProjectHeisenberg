@@ -36,4 +36,10 @@ angular.module('punktlichDep').controller('MainController', function ($scope, $r
     };
 
     $scope.getFlashMessage = FlashMessageService.getMessage;
+
+    $rootScope.$onMany = function(events, fn) {
+      for(var i = 0; i < events.length; i++) {
+         this.$on(events[i], fn);
+      }
+   }
 });
