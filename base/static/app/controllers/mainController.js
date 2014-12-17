@@ -29,7 +29,7 @@ angular.module('punktlichDep').controller('MainController', function ($scope, $r
     $scope.$on('$stateChangeSuccess', checkAuth);
     $scope.$on('unauthorizedRequest', function () {
         AuthenticationService.resetToken();
-        $scope.goto('login');
+        $scope.goto('puntklich.login');
     });
 
     $scope.goto = function (route, params) {

@@ -1,4 +1,4 @@
-angular.module('punktlichDep').service('LocalizationService', function ($rootScope, $state, $timeout, $window, $http) {
+angular.module('punktlichDep').service('LocalizationService', function ($rootScope, $timeout, $window, $http) {
     var DEFAULT_LOCALE = 'en-us';
     var LOCALE_URL = '/static/app/locale/{0}.json';
     var ALLOW_CACHE = false;
@@ -22,19 +22,22 @@ angular.module('punktlichDep').service('LocalizationService', function ($rootSco
         return isLoaded ? (dictionary[name] || name) : null;
     }
 
+    function load() {
+        return loadLocale(defaultLanguage);//for now, load default locale
+    }
+
     function onSuccess(data) {
         dictionary = data;
         isLoaded = true;
         isLoading = false;
 
         $rootScope.$emit('localizationResourcesUpdated');
-        $state.reload();
     };
 
     function loadLocale(key) {
         isLoading = true;
 
-        $http({method: "GET", url: LOCALE_URL.replace('{0}', key), cache: ALLOW_CACHE})
+        return $http({method: "GET", url: LOCALE_URL.replace('{0}', key), cache: ALLOW_CACHE})
             .success(onSuccess)
             .error(function () {
                 console.error('locale', key, 'could not be loaded, falling back to', DEFAULT_LOCALE);
@@ -50,7 +53,8 @@ angular.module('punktlichDep').service('LocalizationService', function ($rootSco
     return {
         getAvailableLocalisations: getAvailableLocalisations,
         localize: localize,
-        loadLocale: loadLocale
+        loadLocale: loadLocale,
+        load: load
     };
 
 }).filter('localize', function (LocalizationService) {

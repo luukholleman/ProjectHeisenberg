@@ -9,7 +9,7 @@ angular.module('punktlichDep').controller('MeetingDetailController', function ($
 
     }, function () {
         FlashMessageService.setMessage('Meeting could not be found');
-        $scope.goto('meetings.list');
+        $scope.goto('punktlich.meetings.list');
     });
 
     var fileElement = document.querySelector('.file-upload');
