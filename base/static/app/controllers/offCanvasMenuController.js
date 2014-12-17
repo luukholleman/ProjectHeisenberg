@@ -1,7 +1,6 @@
-angular.module('punktlichDep').controller('OffCanvasMenuController', function (ColorService, $scope, $rootScope, FlashMessageService, TeamModel) {
+angular.module('punktlichDep').controller('OffCanvasMenuController', function ($scope, $rootScope, FlashMessageService, TeamModel) {
 
     function loadTeams() {
-        ColorService.loadColors();
         TeamModel.getList().then(function(teams){
             $scope.teams = teams;
         }, function(error){

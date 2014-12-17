@@ -1,4 +1,4 @@
-angular.module('punktlichDep').factory('TeamModel', function(Restangular, ColorService) {
+angular.module('punktlichDep').factory('TeamModel', function(Restangular) {
 
     Restangular.extendModel('teams', function(team){
 
