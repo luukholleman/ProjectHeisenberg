@@ -4,7 +4,7 @@
                 subheader="{{ meeting.date_and_time | humanReadableDate:true }}"
                 location="{{ meeting.location }}"
                 invitations="{{ meeting.invitations }}"
-                abbr="P"
+                abbr="{{ meeting.team_abbr }}"
                 color="{{ meeting.color }}"
                 id="meeting-{{ meeting.id }}"
                 status="1">
