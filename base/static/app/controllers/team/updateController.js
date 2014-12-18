@@ -1,8 +1,12 @@
 angular.module('punktlichDep').controller('TeamUpdateController', function ($scope, $rootScope, TeamService, Restangular, $stateParams, ValidationService, FlashMessageService) {
-    TeamService.get($stateParams.teamid).get().then(function (data) {
-        $scope.team = data;
-        getMembers();
-    });
+    function fetchTeam() {
+        TeamService.get($stateParams.teamid).get().then(function (data) {
+            $scope.team = data;
+            getMembers();
+        });
+    };
+
+    fetchTeam();
 
     $scope.destroy = function () {
         document.querySelector('.core-overlay-backdrop').style.display = 'none';
@@ -19,7 +23,8 @@ angular.module('punktlichDep').controller('TeamUpdateController', function ($sco
     $scope.invite = function () {
         TeamService.invite($scope.team, $scope.email, function () {
             $rootScope.$broadcast('teams.members.invited', $scope.email);
-            FlashMessageService.setMessage($scope.email + ' is invited to' + $scope.team.name + '.');
+            FlashMessageService.setMessage($scope.email + ' is invited to ' + $scope.team.name + '.');
+            fetchTeam();
         }, function () {
             FlashMessageService.setMessage($scope.email + ' could not be invited to ' + $scope.team.name + '.');
         });
