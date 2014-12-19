@@ -38,7 +38,7 @@
 <core-drawer-panel forceNarrow="true">
     <core-drawer-header drawer ng-controller="OffCanvasMenuController" class="off-canvas">
         <div class="person-header" horizontal layout>
-            <punkt-circle abbr="LH" color="009688"></punkt-circle>
+            <punkt-circle abbr="{{ user.initials }}" color="009688"></punkt-circle>
             <div>
                 <span>
                     {{ user.first_name }} {{ user.last_name }}
@@ -54,7 +54,7 @@
         </ul>
         <hr />
         <ul>
-            <li ng-repeat="team in teams" ng-click="goto('puntlich.teams.update', {teamid: team.id})" horizontal layout>
+            <li ng-repeat="team in teams" ng-click="goto('punktlich.teams.update', {teamid: team.id})" horizontal layout>
                 <punkt-circle color="{{ team.color }}" width="28" height="28"></punkt-circle>
                 <span>
                     {{ team.name }}

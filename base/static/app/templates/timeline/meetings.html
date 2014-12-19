@@ -4,11 +4,10 @@
                 subheader="{{ meeting.date_and_time | humanReadableDate:true }}"
                 location="{{ meeting.location }}"
                 invitations="{{ meeting.invitations }}"
-                abbr="{{ meeting.abbreviation }}"
+                abbr="{{ meeting.team_abbr }}"
                 color="{{ meeting.color }}"
                 id="meeting-{{ meeting.id }}"
                 status="1">
-        {{ meeting }}
         <div class="info">
             <p>
                 {{ meeting.description | limit:256 }}
@@ -26,12 +25,12 @@
                                 ng-click="goto('punktlich.meeting-detail.agenda-detail', {meetingid: meeting.id})"
                                 groupColorTint="{{ meeting.color }}" name="Minutes"
                                 owner="{{ meeting.minutes[0].uploaded_at | humanReadableDate }}"></punkt-file>
-                    <!--
                     <div vertical layout center>
+                        <!--
                         <paper-button style="margin-top: 5px; color: #F06292" class="colored">+ 6 attachments
                         </paper-button>
+                        -->
                     </div>
-                    -->
                 </div>
 
                 <div vertical layout

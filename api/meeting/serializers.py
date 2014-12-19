@@ -67,6 +67,7 @@ class MeetingSerializer(serializers.ModelSerializer):
     def to_representation(self, meeting):
         data = super(MeetingSerializer, self).to_representation(meeting)
         request = self.context['request']
+        data['team_abbr'] = meeting.team.abbreviation
         data['color'] = meeting.team.get_team_color(request.user)
         return data
 
