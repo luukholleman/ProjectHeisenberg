@@ -32,18 +32,27 @@
   position: absolute;
   right: 0;
   top: 0;
-  margin: -90px -20px 0 0;
-  font-size: 16px; }
-  .now:after {
+  margin: 40px -20px 0 0;
+  font-size: 16px;
+  cursor: pointer; }
+  .now.visible:after {
     content: "";
     display: block;
     width: 2px;
-    height: 70px;
+    height: 40px;
     background-color: #979797;
     position: absolute;
     right: 0;
     top: 0;
-    margin: 20px; }
+    margin: -40px 20px; }
+  .now.left {
+    margin-right: -60px; }
+  .now.left:before {
+    content: "<"; }
+  .now.right {
+    margin-right: 10px; }
+  .now.right:after {
+    content: ">"; }
 
 /* Label
  */
@@ -125,9 +134,14 @@
   transition: bottom 0.2s ease-in-out, height 0.2s ease-in-out; }
 
 .now {
-  -webkit-transition: font-size 0.2s ease-in-out, margin 0.2s ease-in-out;
-  -moz-transition: font-size 0.2s ease-in-out, margin 0.2s ease-in-out;
-  transition: font-size 0.2s ease-in-out, margin 0.2s ease-in-out; }
+  -webkit-transition: font-size 0.2s ease-in-out, margin-top 0.2s ease-in-out;
+  -moz-transition: font-size 0.2s ease-in-out, margin-top 0.2s ease-in-out;
+  transition: font-size 0.2s ease-in-out, margin-top 0.2s ease-in-out; }
+
+.now.left, .now.right {
+  -webkit-transition: margin-right 0.2s ease-in-out;
+  -moz-transition: margin-right 0.2s ease-in-out;
+  transition: margin-right 0.2s ease-in-out; }
 
 .now:after {
   -webkit-transition: margin 0.2s ease-in-out, height 0.2s ease-in-out;

@@ -10,7 +10,7 @@
              on-mousewheel="{{ mouseWheel }}">
             <div class="timeline" id="timeline">
                 <div class="past" id="past">
-                    <div class="now" id="now">
+                    <div class="now visible" id="now" on-click="{{ moveToNow }}">
                         NOW
                     </div>
                 </div>
@@ -145,6 +145,14 @@
             getYear: function (date) {
                 return new Date(date * 1000).getFullYear();
             },
+            toggleClass: function(element, klass, toggle) {
+                if(element.classList.contains(klass) && !toggle) {
+                    element.classList.remove(klass);
+                }
+                else if(!element.classList.contains(klass) && toggle) {
+                    element.classList.add(klass);
+                }
+            },
             /*
              * **********************************
              * Private node methods
@@ -204,8 +212,13 @@
              */
             renderPast: function () {
                 var position = this.getPositionForDate(this.getNow());
-                this.$.now.style.display = position <= 0 ? 'none' : 'block';
-                this.$.past.style.width = (position < 0 ? 0 : position) + 'px';
+
+                var pastWidth = (position < 0 ? 0 : (position > this.clientWidth ? this.clientWidth : position));
+                this.$.past.style.width = pastWidth + 'px';
+
+                this.toggleClass(this.$.now, 'visible', position >= 0 && position <= this.clientWidth);
+                this.toggleClass(this.$.now, 'left', position < 0);
+                this.toggleClass(this.$.now, 'right', position > this.clientWidth);
             },
 
             /*
@@ -250,9 +263,7 @@
                     label.element.innerHTML = '<em>' + this.MONTH_NAMES[dateMonth] +
                     (dateMonth == 0 ? '<br/>' + dateYear : '') + '</em>';
 
-                    if (this.isMonthLabelVisible(frequency, label)) {
-                        label.element.classList.add('visible');
-                    }
+                    this.toggleClass(label.element, 'visible', this.isMonthLabelVisible(frequency, label));
 
                     this.$.timeline.appendChild(label.element);
                     this.monthLabels[dateYear * 12 + dateMonth] = label;
@@ -283,14 +294,7 @@
                     }
                     label.element.style.left = position + 'px';
 
-                    if (this.isMonthLabelVisible(frequency, label)) {
-                        if (!label.element.classList.contains('visible')) {
-                            label.element.classList.add('visible');
-                        }
-                    }
-                    else if (label.element.classList.contains('visible')) {
-                        label.element.classList.remove('visible');
-                    }
+                    this.toggleClass(label.element, 'visible', this.isMonthLabelVisible(frequency, label));
                 }
             },
             clearMonthLabels: function () {
@@ -347,9 +351,8 @@
                     var label = this.createLabel(date);
                     label.element.innerHTML = '<em>' + date.getDate() + '</em>';
                     label.element.classList.add('small');
-                    if (this.isDayLabelVisible(frequency, label)) {
-                        label.element.classList.add('visible');
-                    }
+
+                    this.toggleClass(label.element, 'visible', this.isDayLabelVisible(frequency, label));
 
                     label.element.style.left = this.getPositionForDate(label.date) + 'px';
                     this.$.timeline.appendChild(label.element);
@@ -364,14 +367,7 @@
                     var label = this.dayLabels[key];
                     label.element.style.left = this.getPositionForDate(label.date) + 'px';
 
-                    if (this.isDayLabelVisible(frequency, label)) {
-                        if (!label.element.classList.contains('visible')) {
-                            label.element.classList.add('visible');
-                        }
-                    }
-                    else if (label.element.classList.contains('visible')) {
-                        label.element.classList.remove('visible');
-                    }
+                    this.toggleClass(label.element, 'visible', this.isDayLabelVisible(frequency, label));
                 }
             },
             clearDayLabels: function () {

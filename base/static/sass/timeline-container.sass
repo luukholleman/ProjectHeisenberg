@@ -35,18 +35,28 @@
   position: absolute
   right: 0
   top: 0
-  margin: -90px -20px 0 0
+  margin: 40px -20px 0 0
   font-size: 16px
-  &:after
+  cursor: pointer
+  &.visible:after
     content: ''
     display: block
     width: 2px
-    height: 70px
+    height: 40px
     background-color: #979797
     position: absolute
     right: 0
     top: 0
-    margin: 20px
+    margin: -40px 20px
+  &.left
+    margin-right: -60px
+  &.left:before
+    content: '<'
+  &.right
+    margin-right: 10px
+  &.right:after
+    content: '>'
+
 
 /*
  * Label
@@ -131,7 +141,10 @@
   @include transition(bottom 0.2s ease-in-out, height 0.2s ease-in-out)
 
 .now
-  @include transition(font-size 0.2s ease-in-out, margin 0.2s ease-in-out)
+  @include transition(font-size 0.2s ease-in-out, margin-top 0.2s ease-in-out)
+
+.now.left, .now.right
+  @include transition(margin-right 0.2s ease-in-out)
 
 .now:after
   @include transition(margin 0.2s ease-in-out, height 0.2s ease-in-out)

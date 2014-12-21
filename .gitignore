@@ -70,5 +70,7 @@ ProjectHeisenberg/local_settings.py
 
 # Database
 db.sqlite3
-base/static/sass/main.css
-base/static/sass/main.css.map
+
+# SASS
+.sass-cache
+*.css.map
