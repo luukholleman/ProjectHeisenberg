@@ -1,6 +1,6 @@
   <link rel="import" href="../../bower/polymer/polymer.html">
 
-<polymer-element name="timeline-container">
+<polymer-element name="timeline-container" attributes="condensed">
     <template>
         <link rel="stylesheet" href="../../sass/timeline-container.css">
 
@@ -11,7 +11,9 @@
             <div class="timeline" id="timeline">
                 <div class="past" id="past">
                     <div class="now visible" id="now" on-click="{{ moveToNow }}">
+                        <span class="left">&lt;</span>
                         NOW
+                        <span class="right">&gt;</span>
                     </div>
                 </div>
                 <content select="timeline-node"></content>

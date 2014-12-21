@@ -48,14 +48,14 @@
     right: 0
     top: 0
     margin: -40px 20px
+  .left, .right
+    display: none
+  &.left > .left, &.right > .right
+    display: inline
   &.left
     margin-right: -60px
-  &.left:before
-    content: '<'
   &.right
     margin-right: 10px
-  &.right:after
-    content: '>'
 
 
 /*
@@ -140,11 +140,11 @@
 .timeline
   @include transition(bottom 0.2s ease-in-out, height 0.2s ease-in-out)
 
-.now
-  @include transition(font-size 0.2s ease-in-out, margin-top 0.2s ease-in-out)
-
 .now.left, .now.right
-  @include transition(margin-right 0.2s ease-in-out)
+  @include transition(font-size 0.2s ease-in-out, margin 0.2s ease-in-out)
+
+.now.visible
+  @include transition(font-size 0.2s ease-in-out, margin-top 0.2s ease-in-out)
 
 .now:after
   @include transition(margin 0.2s ease-in-out, height 0.2s ease-in-out)
@@ -166,10 +166,14 @@
     height: 4px
   .now
     font-size: 8px
-    margin: -50px -10px 0 0
-    &:after
-      margin: 15px 10px
-      height: 35px
+    margin: 20px -10px 0 0
+    &.visible:after
+      margin: -20px 10px
+      height: 20px
+    &.left
+      margin-right: -30px
+    &.right
+      margin-right: 5px
 
 /*
  * Cursors
