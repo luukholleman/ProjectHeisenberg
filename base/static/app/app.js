@@ -12,6 +12,7 @@ angular.module('punktlich').config(function ($httpProvider, $locationProvider, R
     $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
 
     cfpLoadingBarProvider.includeSpinner = false;
+    cfpLoadingBarProvider.loadingBarTemplate = "<paper-spinner active class='spinner'></paper-spinner>";
 
     $httpProvider.interceptors.push('AccessInterceptor');
 });
