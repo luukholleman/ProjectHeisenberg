@@ -9,6 +9,10 @@ angular.module('punktlichDep').factory('MeetingModel', function (Restangular) {
             return meeting.all('minutes').getList().$object;
         };
 
+        meeting.getAttachments = function() {
+            return meeting.all('attachments').getList().$object;
+        };
+
         meeting.getInvited = function() {
             return meeting.all('invited').getList().$object;
         };

@@ -74,7 +74,7 @@
         <dt>Name</dt>
         <dd>
             <paper-input-decorator class="file-name">
-                <input is="core-input" value="{{ minutes[0].file_name }}"  ng-blur="saveFilename(minutes[0].file_name)" name="password_repeat" ng-model="minutes[0].file_name" />
+                <input is="core-input" value="{{ minutes[0].file_name }}"  ng-blur="saveFilename(minutes[0].file_name)" ng-model="minutes[0].file_name" />
             </paper-input-decorator>
         </dd>
         <dt>Owner</dt>
@@ -88,7 +88,7 @@
     <div class="revisions" vertical center layout>
         <punkt-file ng-repeat="minute in minutes"
                     ng-click="download(minute.download_url)" type="subject"
-                    groupColorTint="#B0BEC5" name="Minutes"
+                    groupColorTint="979797" name="Minutes"
                     owner="{{ minute.uploaded_at | humanReadableDate }}"></punkt-file>
     </div>
 </div>

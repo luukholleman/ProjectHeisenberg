@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from rest_framework import serializers
 from api.authentication.serializers import UserSerializer
-from meeting.models import Meeting, MeetingInvitation, Agenda, Minute
+from meeting.models import Meeting, MeetingInvitation, Agenda, Minute, Attachment
 from meeting.validators import MimetypeValidator
 
 
@@ -40,11 +40,18 @@ class MinuteSerializer(serializers.ModelSerializer):
 
 class AttachmentSerializer(serializers.ModelSerializer):
     file = serializers.FileField(allow_empty_file=False,
-                                 validators=[MimetypeValidator(allowed_mimetypes=['application/pdf'])])
+                                 validators=[MimetypeValidator(allowed_mimetypes=['application/pdf',
+                                                                                  'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])])
+    file_name = serializers.CharField(required=False, read_only=False, allow_blank=True)
+    created_by = UserSerializer(read_only=True)
+    download_url = serializers.SerializerMethodField()
+
+    def get_download_url(self, attachment):
+        return reverse('download_file', kwargs={'pk': attachment.pk, 'type': 'attachment'})
 
     class Meta:
-        model = Agenda
-        fields = ('file',)
+        model = Attachment
+        fields = ('id', 'file', 'uploaded_at', 'file_name', 'created_by', 'download_url')
 
 
 class MeetingInvitationSerializer(serializers.ModelSerializer):

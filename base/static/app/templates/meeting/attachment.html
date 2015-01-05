@@ -48,47 +48,33 @@
         width: 100%;
     }
 
-    .revisions punkt-file {
-        margin: 5px 0;
-        width: 100%;
-    }
-
     .file-name {
         padding:0px;
         margin:0px;
     }
 </style>
-
-<div ng-show="meeting">
+{{ attachment | json }}
+<div ng-show="attachment">
     <div class="file-detail-heading">
 
         <core-icon icon="subject" role="img"></core-icon>
-        <h2>Agenda</h2>
+        <h2>{{ attachment.file_name | limit:15 }}</h2>
         <paper-icon-button icon="close" title="Close" role="button" ng-click="goto('^')"></paper-icon-button>
     </div>
 
     <hr class="spacing"/>
-    <paper-button class="download primary" ng-click="download(agendas[0].download_url)" raised>Download
+    <paper-button class="download primary" ng-click="download(attachment.download_url)" raised>Download
     </paper-button>
     <dl class="file-details">
         <dt>Name</dt>
         <dd>
             <paper-input-decorator class="file-name">
-                <input is="core-input" value="{{ agendas[0].file_name }}"  ng-blur="saveFilename(agendas[0].file_name)" ng-model="agendas[0].file_name" />
+                <input is="core-input" value="{{ attachment.file_name }}"  ng-blur="saveFilename(attachment.file_name)" ng-model="attachment.file_name" />
             </paper-input-decorator>
         </dd>
         <dt>Owner</dt>
-        <dd>{{ agendas[0].created_by.full_name }}</dd>
+        <dd>{{ attachment.created_by.full_name }}</dd>
         <dt>Created</dt>
-        <dd>{{ agendas[0].uploaded_at | humanReadableDate }}</dd>
+        <dd>{{ attachment.uploaded_at | humanReadableDate }}</dd>
     </dl>
-
-    <hr class="spacing"/>
-
-    <div class="revisions" vertical center layout>
-        <punkt-file ng-repeat="agenda in agendas"
-                    ng-click="download(agenda.download_url)" type="subject"
-                    groupColorTint="{{ meeting.color }}" name="Agenda"
-                    owner="{{ agenda.uploaded_at | humanReadableDate }}"></punkt-file>
-    </div>
 </div>

@@ -63,6 +63,7 @@ class Meeting(models.Model):
     date_and_time = models.DateTimeField()
     agendas = models.ManyToManyField(Agenda)
     minutes = models.ManyToManyField(Minute)
+    attachments = models.ManyToManyField(Attachment)
 
     def __str__(self):
         return self.name
