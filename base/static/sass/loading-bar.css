@@ -1,0 +1,14 @@
+.spinner {
+  position: relative;
+  top: 100px;
+  left: 50%;
+  margin-left: -25px;
+  z-index: 100;
+  width: 30px;
+  height: 30px;
+  background: #fafafa;
+  border-radius: 50%;
+  padding: 10px;
+  box-shadow: 0 0 3px #979797; }
+
+/*# sourceMappingURL=loading-bar.css.map */
