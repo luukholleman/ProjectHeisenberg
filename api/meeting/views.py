@@ -54,7 +54,7 @@ class MeetingViewSet(viewsets.ModelViewSet):
         return Meeting.objects.filter(date_and_time__range=[self._from_date, self._to_date])
 
 
-class MeetingAgendaApiView(ListCreateAPIView, UpdateAPIView):
+class MeetingAgendaApiListView(ListCreateAPIView):
     serializer_class = AgendaSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -72,7 +72,17 @@ class MeetingAgendaApiView(ListCreateAPIView, UpdateAPIView):
     def get_queryset(self):
         return self.get_meeting().agendas.order_by('-uploaded_at')
 
-class MeetingMinutesApiView(ListCreateAPIView, UpdateAPIView):
+class MeetingAgendaApiView(RetrieveAPIView, UpdateAPIView):
+    serializer_class = AgendaSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_meeting(self):
+        return get_object_or_404(Meeting, pk=self.kwargs['meetingId'])
+
+    def get_queryset(self):
+        return self.get_meeting().agendas.order_by('-uploaded_at')
+
+class MeetingMinutesApiListView(ListCreateAPIView):
     serializer_class = MinuteSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -90,7 +100,17 @@ class MeetingMinutesApiView(ListCreateAPIView, UpdateAPIView):
     def get_queryset(self):
         return self.get_meeting().minutes.order_by('-uploaded_at')
 
-class MeetingAttachmentsApiView(ListCreateAPIView, UpdateAPIView, RetrieveAPIView):
+class MeetingMinutesApiView(RetrieveAPIView, UpdateAPIView):
+    serializer_class = MinuteSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_meeting(self):
+        return get_object_or_404(Meeting, pk=self.kwargs['meetingId'])
+
+    def get_queryset(self):
+        return self.get_meeting().minutes.order_by('-uploaded_at')
+
+class MeetingAttachmentsApiListView(ListCreateAPIView):
     serializer_class = AttachmentSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -104,6 +124,16 @@ class MeetingAttachmentsApiView(ListCreateAPIView, UpdateAPIView, RetrieveAPIVie
 
         meeting = self.get_meeting()
         meeting.attachments.add(attachment)
+
+    def get_queryset(self):
+        return self.get_meeting().attachments.order_by('-uploaded_at')
+
+class MeetingAttachmentsApiView(RetrieveAPIView, UpdateAPIView):
+    serializer_class = AttachmentSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_meeting(self):
+        return get_object_or_404(Meeting, pk=self.kwargs['meetingId'])
 
     def get_queryset(self):
         return self.get_meeting().attachments.order_by('-uploaded_at')

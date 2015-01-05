@@ -1,11 +1,16 @@
-angular.module('punktlichDep').controller('AttachmentDetailController', function ($scope, $controller, $stateParams, $window) {
-    $controller('FileDetailController',{$scope: $scope});
+angular.module('punktlichDep').controller('AttachmentDetailController', function ($scope, $stateParams, $window) {
+    if ($scope.meeting)
+        $scope.attachment = $scope.meeting.one('attachments', $stateParams.attachmentid).get().$object;
+    else
+        $scope.$on('meeting.loaded', function (event, data) {
+            $scope.attachment = data.meeting.one('attachments', $stateParams.attachmentid).get().$object;
+        });
 
+    $scope.download = function(path) {
+        $window.open(path);
+    };
 
-    $scope.$on('meeting.loaded', function(event, data){
-        $scope.attachment = data.meeting.one('attachments', $stateParams.attachmentid).get().$object;
-        console.log('loaded!!!', data.meeting);
-    });
-    //$scope.attachment = _.findWhere($scope.attachments, {id: $stateParams.attachmentid});
-    //console.log('att', $scope.attachments, $scope.attachment, $stateParams.attachmentid);
+    $scope.saveFilename = function(name) {
+        $scope.attachment.patch({file_name: name});
+    };
 });

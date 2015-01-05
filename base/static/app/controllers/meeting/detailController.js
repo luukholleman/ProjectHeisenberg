@@ -34,8 +34,4 @@ angular.module('punktlichDep').controller('MeetingDetailController', function ($
         fileType = type;
         fileElement.click();
     };
-
-    $scope.saveFilename = function(name) {
-        $scope.agendas[0].patch({file_name: name});
-    };
 });
