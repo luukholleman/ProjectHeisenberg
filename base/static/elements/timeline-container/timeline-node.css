@@ -3,11 +3,11 @@
     margin: 0;
     padding: 0;
     position: absolute;
+    left: 0;
     top: 50%;
 }
 
 .node-container {
-    margin: 0;
     padding: 0;
     width: 48px;
     height: 48px;
@@ -24,6 +24,23 @@
     color: white;
 }
 
+.node-container .node-dot {
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    margin: 18px;
+    position: absolute;
+    border-radius: 50%;
+    font-size: 14px;
+
+    background-color: #d50000;
+    color: white;
+    top: -50%;
+    right: -50%;
+    -webkit-transition: -webkit-transform .3s ease-in-out, background-color .3s ease-in-out, color .3s ease-in-out, width .3s ease-in-out, height .3s ease-in-out, margin .3s ease-in-out, font-size .3s ease-in-out;
+    transition: transform .3s ease-in-out, background-color .3s ease-in-out, color .3s ease-in-out, width .3s ease-in-out, height .3s ease-in-out, margin .3s ease-in-out, font-size .3s ease-in-out;
+}
+
 .node-container[condensed]:not([opened]) {
     color: rgba(0, 0, 0, 0);
 }
@@ -35,10 +52,24 @@
     font-size: 8px;
 }
 
+.node-container[condensed] .node-dot {
+    padding: 0;
+    width: 12px;
+    height: 12px;
+    margin: 9px;
+    font-size: 8px;
+
+}
+
 .node-container[opened] {
     -webkit-transform: scale(1.5);
     transform: scale(1.5);
     z-index: 10;
+}
+
+.node-container[clustered] {
+    display: none;
+    visibility: hidden;
 }
 
 @-webkit-keyframes popup {

@@ -1,4 +1,4 @@
-  <link rel="import" href="../../bower/polymer/polymer.html">
+<link rel="import" href="../../bower/polymer/polymer.html">
 
 <polymer-element name="timeline-container" attributes="condensed">
     <template>
@@ -16,11 +16,18 @@
                         <span class="right">&gt;</span>
                     </div>
                 </div>
-                <content select="timeline-node"></content>
+                <div style="position: absolute;top:0;left:0;margin:0;padding:0;width:100%;height:10px"
+                     id="labels"></div>
+                <div style="position: absolute;top:0;left:0;margin:0;padding:0;width:100%;height:10px"
+                     id="clusters"></div>
+                <div style="position: absolute;top:0;left:0;margin:0;padding:0;width:100%;height:10px" id="nodes">
+                    <content select="timeline-node"></content>
+                </div>
             </div>
         </div>
     </template>
 
+    <script src="../../bower/underscore/underscore.js"></script>
     <script>
         //@todo: move shim
         window.requestAnimFrame = (function () {
@@ -39,13 +46,14 @@
              * Constants
              * **********************************
              */
-            DAY: 1 * 24 * 60 * 60,
+            DAY: 24 * 60 * 60,
             LABEL_MONTH_BUFFER: 40,
             LABEL_DAY_BUFFER: 2,
             MONTH_NAMES: ["January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"],
 
-            GRAVITY: 9.18,
+            CLUSTERS_ENABLED: true,
+            GRAVITY: 9.18,//@todo
             FREQUENCY_YEAR: 0,
             FREQUENCY_MONTH_HALF: 1,
             FREQUENCY_MONTH_FULL: 2,
@@ -66,6 +74,7 @@
              * **********************************
              */
             nodes: [],
+            clusters: [],
             timeSpan: {start: 0, end: 0},
             lastTrackX: 0,
             isTracking: false,
@@ -77,7 +86,6 @@
             moveVelocity: 0,
             moveLastFrame: 0,
             lastMove: 0,
-
             /*
              * **********************************
              * Public methods
@@ -96,7 +104,7 @@
                 this.moveTo(this.getNow());
             },
 
-            refresh: function() {
+            refresh: function () {
                 this.requestNodes();
             },
 
@@ -147,11 +155,11 @@
             getYear: function (date) {
                 return new Date(date * 1000).getFullYear();
             },
-            toggleClass: function(element, klass, toggle) {
-                if(element.classList.contains(klass) && !toggle) {
+            toggleClass: function (element, klass, toggle) {
+                if (element.classList.contains(klass) && !toggle) {
                     element.classList.remove(klass);
                 }
-                else if(!element.classList.contains(klass) && toggle) {
+                else if (!element.classList.contains(klass) && toggle) {
                     element.classList.add(klass);
                 }
             },
@@ -169,6 +177,12 @@
                 node.condensed = this.condensed;
 
                 this.render();
+
+                /*
+                 * @todo Make more efficient.
+                 * When a set of nodes are added separately, this function, therefore render() is called a number
+                 * of times. It would be better to set a timeout of ~50ms before rendering again.
+                 */
             },
             nodeRemoved: function (node) {
                 /*
@@ -177,17 +191,30 @@
                 var index = this.nodes.indexOf(node);
 
                 if (index !== -1) {
+                    /*
+                     * Node is registered in container.
+                     */
+
+                    this.removeNodeFromClusters(node);
+
                     delete this.nodes[index];
                 }
             },
             nodeOpened: function (node) {
-                if (node.opened) {
+                /*
+                 * Called when a node was clicked.
+                 */
+                if (node.opened || node.clustered) {
                     return;
                 }
 
-                this.nodes.forEach(function (cnode) {
-                    cnode.opened = false;
-                });
+                this.nodes.forEach(function (openNode) {
+                    openNode.opened = false;
+                }, this);
+
+                this.clusters.forEach(function (openCluster) {
+                    openCluster.element.opened = false;
+                }, this);
 
                 node.opened = true;
 
@@ -202,6 +229,7 @@
 
             renderNodes: function () {
                 this.nodes.forEach(function (node) {
+                    if (node.clustered) return;
                     var position = this.getPositionForDate(node.date);
                     node.style.left = position + 'px';
                 }, this);
@@ -222,15 +250,223 @@
                 this.toggleClass(this.$.now, 'left', position < 0);
                 this.toggleClass(this.$.now, 'right', position > this.clientWidth);
             },
-
             /*
              * **********************************
              * Private clustering methods
              * **********************************
              */
+            clusterOpened: function (clusterNode) {
 
-            //@todo
+                console.log('node', clusterNode);
 
+                if (!clusterNode || !clusterNode.srcElement) return;
+
+                var cluster = _.find(this.clusters, function(iter){
+                    console.log(iter.element, clusterNode.srcElement);
+                    return iter.element == clusterNode.srcElement;
+                }, this);
+
+                console.log(this.clusters, this.clusters.length ,cluster);
+                if(!cluster){console.log('errr');return;}
+
+                cluster.nodes.forEach(function (node) {
+                    console.log('opened', node);
+                    this.fire('node-opened', {node: node});
+                }, this);
+
+
+                this.nodes.forEach(function (openNode) {
+                    openNode.opened = false;
+                }, this);
+
+                this.clusters.forEach(function (openCluster) {
+                    openCluster.opened = false;
+                }, this);
+
+                cluster.element.opened = true;
+            },
+            addNodeToCluster: function (node, cluster) {
+                if (!node) return;
+
+                node.clustered = true;
+
+                cluster.nodes.push(node);
+
+                var avgDate = _.reduce(cluster.nodes, function (memo, node) {
+                            return memo + node.date;
+                        }, 0) / cluster.nodes.length;
+
+                cluster.date = avgDate;
+                cluster.element.count = cluster.nodes.length;
+            },
+            createCluster: function () {
+                var element = document.createElement('TIMELINE-NODE');
+                element.color = '009688';//@todo: this shouldn't be inline. Define or read from somewhere more awesome?
+                element.condensed = this.condensed;
+
+                var timeline = this;
+                element.addEventListener('tap', function(node){timeline.clusterOpened(node);});
+                this.$.clusters.appendChild(element);
+                var cluster = {
+                    element: element,
+                    nodes: [],
+                    date: this.getNow()
+                };
+
+                this.clusters.push(cluster);
+                return cluster;
+            },
+            deleteCluster: function (cluster) {
+                /*
+                 * Removes cluster from array.
+                 * !!! Does not handle removing of nodes !!!
+                 */
+                console.log([this.$.clusters]);
+                this.$.clusters.removeChild(cluster.element);
+                var index = this.clusters.indexOf(cluster);
+
+                if (index >= 0) {
+                    delete this.clusters[index];
+                }
+            },
+            getMaxClusterableDateOffset: function () {
+                var nodeWidth = this.condensed ? 24 : 48;
+
+                var secondsPerPixel = this.getMass();
+
+                return nodeWidth * secondsPerPixel;
+            },
+            updateClusters: function () {
+                var maxOffset = this.getMaxClusterableDateOffset();
+
+                for (var i = 0; i < this.clusters.length; i++) {
+                    var cluster = this.clusters[i];
+                    if (!cluster) continue;
+
+                    for (var j = 0; j < cluster.nodes.length; j++) {
+                        var node = cluster.nodes[j];
+                        if (!node) continue;
+
+                        if (Math.abs(node.date - cluster.date) > maxOffset) {
+                            this.removeNodeFromCluster(node, cluster);
+                            j--;
+                        }
+                    }
+
+                    if (cluster.nodes.length == 1 && cluster.nodes[0]) {
+                        this.removeNodeFromCluster(cluster.nodes[0], cluster);
+                    }
+
+                    if (cluster.nodes.length == 0 || (cluster.nodes.length == 1 && !cluster.nodes[0])) {
+                        this.deleteCluster(cluster);
+                        i--;
+                    }
+                }
+            },
+            createClusters: function () {
+                var maxOffset = this.getMaxClusterableDateOffset();
+
+                /*
+                 * Add nodes to existing clusters or create clusters by combining with other nodes
+                 */
+                for (var i = 0; i < this.nodes.length; i++) {
+                    var node = this.nodes[i];
+                    if (!node || node.clustered) continue;
+
+                    /*
+                     * Combine with other clusters.
+                     */
+                    for (var j = 0; j < this.clusters.length; j++) {
+                        var cluster = this.clusters[j];
+                        if (!cluster) continue;
+
+                        if (Math.abs(node.date - cluster.date) < maxOffset) {
+                            console.log('[timeline] cluster+node', cluster, node);
+                            this.addNodeToCluster(node, cluster);
+                            break;
+                        }
+                    }
+
+                    if (node.clustered) continue;
+
+                    /*
+                     * Create clusters with other nodes.
+                     */
+                    for (var j = i + 1; j < this.nodes.length; j++) {
+                        var otherNode = this.nodes[j];
+                        if (!otherNode || otherNode.clustered) continue;
+
+                        if (Math.abs(node.date - otherNode.date) < maxOffset) {
+                            var cluster = this.createCluster();
+                            console.log('[timeline] node+node', node, otherNode);
+                            this.addNodeToCluster(node, cluster);
+                            this.addNodeToCluster(otherNode, cluster);
+
+                            break;
+                        }
+                    }
+                }
+
+                /*
+                 * Combine existing clusters.
+                 */
+                for (var i = 0; i < this.clusters.length; i++) {
+                    var cluster = this.clusters[i];
+                    if (!cluster) continue;
+
+                    for (var j = i + 1; j < this.clusters.length; j++) {
+                        var otherCluster = this.clusters[j];
+                        if (!otherCluster) continue;
+
+                        if (Math.abs(cluster.date - otherCluster.date) < maxOffset) {
+                            console.log('[timeline] cluster+cluster', cluster, otherCluster);
+                            otherCluster.nodes.forEach(function (node) {
+                                console.log('[timeline] merge', node);
+                                this.addNodeToCluster(node, cluster);
+                            }, this);
+
+                            this.deleteCluster(otherCluster);
+                            break;
+                        }
+                    }
+                }
+            },
+            renderClusters: function () {
+                if (!this.CLUSTERS_ENABLED) return;
+
+                this.updateClusters();
+                this.createClusters();
+
+                this.clusters.forEach(function (cluster) {
+                    var position = this.getPositionForDate(cluster.date);
+                    cluster.element.style.left = position + 'px';
+                }, this);
+            },
+            removeNodeFromCluster: function (node, cluster) {
+                if (!node || !node.clustered) return;
+
+                node.clustered = false;
+
+                //@todo: USE UNDERSCORE WHEN REMOVE, because, awesome.
+                cluster.nodes = _.without(cluster.nodes, node);
+
+                var avgDate = _.reduce(cluster.nodes, function (memo, node) {
+                            return memo + node.date;
+                        }, 0) / cluster.nodes.length;
+
+                cluster.date = avgDate;
+                cluster.element.count = cluster.nodes.length;
+            },
+            removeNodeFromClusters: function (node) {
+                if (!node || !node.clustered) return;
+
+                this.clusters.forEach(function (cluster) {
+                    if (_.contains(cluster.nodes, node)) {
+                        this.removeNodeFromCluster(node, cluster);
+                        return true;
+                    }
+                }, this);
+            },
             /*
              * **********************************
              * Private month label methods
@@ -267,7 +503,7 @@
 
                     this.toggleClass(label.element, 'visible', this.isMonthLabelVisible(frequency, label));
 
-                    this.$.timeline.appendChild(label.element);
+                    this.$.labels.appendChild(label.element);
                     this.monthLabels[dateYear * 12 + dateMonth] = label;
 
                     dateYear += Math.floor(++dateMonth / 12);
@@ -313,7 +549,7 @@
 
                     if (dateYear < startYear || dateYear == startYear && dateMonth < startMonth ||
                             dateYear > endYear || dateYear == endYear && dateMonth > endMonth) {
-                        this.$.timeline.removeChild(this.monthLabels[key].element);
+                        this.$.labels.removeChild(this.monthLabels[key].element);
                         delete this.monthLabels[key];
                     }
                 }
@@ -357,7 +593,7 @@
                     this.toggleClass(label.element, 'visible', this.isDayLabelVisible(frequency, label));
 
                     label.element.style.left = this.getPositionForDate(label.date) + 'px';
-                    this.$.timeline.appendChild(label.element);
+                    this.$.labels.appendChild(label.element);
 
                     this.dayLabels[date.getTime()] = label;
 
@@ -378,14 +614,14 @@
 
                 for (var key in this.dayLabels) {
                     if (key < start || key > end) {
-                        this.$.timeline.removeChild(this.dayLabels[key].element);
+                        this.$.labels.removeChild(this.dayLabels[key].element);
                         delete this.dayLabels[key];
                     }
                 }
             },
             deleteDayLabels: function () {
                 for (var key in this.dayLabels) {
-                    this.$.timeline.removeChild(this.dayLabels[key].element);
+                    this.$.labels.removeChild(this.dayLabels[key].element);
                     delete this.dayLabels[key];
                 }
             },
@@ -592,6 +828,7 @@
 
                 this.requestRender(function () {
                     var keepMoving = false;//this.processMovement();
+                    this.renderClusters();
                     this.renderPast();
                     this.renderNodes();
                     this.renderLabels();
@@ -678,6 +915,9 @@
                 this.nodes.forEach(function (node) {
                     node.condensed = this.condensed;
                 }, this);
+                this.clusters.forEach(function (cluster) {
+                    cluster.element.condensed = this.condensed;
+                }, this);
             },
 
             /*
@@ -696,8 +936,8 @@
                 this.timeSpan.start = this.getNow() - 7 * this.DAY;
                 this.timeSpan.end = this.getNow() + 14 * this.DAY;
 
-                _.each(this.$.timeline.querySelector('.label'), function(element) {
-                    this.$.timeline.removeChild(element);
+                _.each(this.$.labels.querySelector('.label'), function (element) {
+                    this.$.labels.removeChild(element);
                 });
 
                 this.dayLabels = {};

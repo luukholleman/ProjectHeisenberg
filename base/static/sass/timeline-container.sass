@@ -4,7 +4,6 @@
 *
   padding: 0
   margin: 0
-  position: relative
 
 \:host
   overflow-x: hidden
@@ -65,8 +64,8 @@
   height: 0
   position: absolute
   z-index: -1
-  margin-top: -50px
   width: 200px
+  margin-top: -50px
   &:after
     content: ''
     display: block
@@ -76,9 +75,7 @@
     left: 0
     top: 7px
     z-index: -1
-    height: 42px
-
-.label
+    height: 50px
   em
     margin: 0 5px
     font-weight: 100
@@ -92,44 +89,45 @@
 .container[condensed]
   .label
     margin-top: -32px
+    &:after
+      height: 32px
+      top: 3px
     em
       font-size: 18px
     &.small
       margin-top: -26px
+      &:after
+        height: 26px
       em
         font-size: 12px
-      &:after
-        height: 22px
-    &:after
-      height: 21px
-      top: 3px
     &.visible
       margin-top: -70px
+      &:after
+        height: 70px
       &.small
         margin-top: -40px
         &:after
-          height: 36px
-      &:after
-        height: 63px
+          height: 40px
 
 .label
   &.small
     margin-top: -52px
-    em
-      font-size: 24px
     &:after
       top: 5px
-      height: 44px
+      height: 52px
+    em
+      font-size: 24px
   &.visible
     margin-top: -140px
+    &:after
+      height: 140px
     em
       opacity: 1
     &.small
       margin-top: -80px
       &:after
-        height: 72px
-    &:after
-      height: 125px
+        height: 80px
+
 
 /*
  * Transitions
