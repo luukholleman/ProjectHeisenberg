@@ -88,7 +88,7 @@
             Files
         </h4>
 
-        <div horizontal layout>
+        <div horizontal layout wrap>
             <punkt-file ng-hide="agendas.length == 0" type="subject"
                         ng-click="goto('punktlich.meeting-detail.agenda-detail')"
                         groupColorTint="{{ meeting.color }}" name="Agenda"
@@ -98,6 +98,10 @@
                         ng-click="goto('punktlich.meeting-detail.minutes-detail')"
                         groupColorTint="{{ meeting.color }}" name="Minutes"
                         owner="{{ minutes[0].uploaded_at | humanReadableDate }}"></punkt-file>
+            <punkt-file ng-repeat="attachment in attachments" type="subject"
+                        ng-click="goto('punktlich.meeting-detail.attachment-detail', {attachmentid: attachment.id})"
+                        groupColorTint="{{ meeting.color }}" name="{{ attachment.file_name }}"
+                        owner="{{ attachment.uploaded_at | humanReadableDate }}"></punkt-file>
         </div>
         <h4 class="heading">
             Participants

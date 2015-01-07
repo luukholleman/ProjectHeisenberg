@@ -22,14 +22,12 @@
                                 groupColorTint="{{ meeting.color }}" name="Agenda"
                                 owner="{{ meeting.agendas[0].uploaded_at | humanReadableDate }}"></punkt-file>
                     <punkt-file ng-show="meeting && meeting.minutes && meeting.minutes.length > 0" type="subject"
-                                ng-click="goto('punktlich.meeting-detail.agenda-detail', {meetingid: meeting.id})"
+                                ng-click="goto('punktlich.meeting-detail.minutes-detail', {meetingid: meeting.id})"
                                 groupColorTint="{{ meeting.color }}" name="Minutes"
                                 owner="{{ meeting.minutes[0].uploaded_at | humanReadableDate }}"></punkt-file>
-                    <div vertical layout center>
-                        <!--
-                        <paper-button style="margin-top: 5px; color: #F06292" class="colored">+ 6 attachments
+                    <div vertical layout center ng-show="meeting && meeting.attachments && meeting.attachments.length">
+                        <paper-button style="margin-top: 5px; color: #F06292" class="colored">+ {{ meeting.attachments.length }} attachments
                         </paper-button>
-                        -->
                     </div>
                 </div>
 

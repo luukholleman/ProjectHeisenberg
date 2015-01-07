@@ -15,5 +15,5 @@ if DEBUG:
 SITE_URL = ''
 
 # Media
-MEDIA_ROOT = ''
-MEDIA_URL = ''
+MEDIA_ROOT = '<absolute path to media dir>'
+MEDIA_URL = '<url to media dir>'
