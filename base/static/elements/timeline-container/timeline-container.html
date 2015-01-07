@@ -256,21 +256,15 @@
              * **********************************
              */
             clusterOpened: function (clusterNode) {
-
-                console.log('node', clusterNode);
-
                 if (!clusterNode || !clusterNode.srcElement) return;
 
                 var cluster = _.find(this.clusters, function(iter){
-                    console.log(iter.element, clusterNode.srcElement);
                     return iter.element == clusterNode.srcElement;
                 }, this);
 
-                console.log(this.clusters, this.clusters.length ,cluster);
-                if(!cluster){console.log('errr');return;}
+                if(!cluster)return;
 
                 cluster.nodes.forEach(function (node) {
-                    console.log('opened', node);
                     this.fire('node-opened', {node: node});
                 }, this);
 
@@ -321,7 +315,6 @@
                  * Removes cluster from array.
                  * !!! Does not handle removing of nodes !!!
                  */
-                console.log([this.$.clusters]);
                 this.$.clusters.removeChild(cluster.element);
                 var index = this.clusters.indexOf(cluster);
 
@@ -381,7 +374,6 @@
                         if (!cluster) continue;
 
                         if (Math.abs(node.date - cluster.date) < maxOffset) {
-                            console.log('[timeline] cluster+node', cluster, node);
                             this.addNodeToCluster(node, cluster);
                             break;
                         }
@@ -398,7 +390,6 @@
 
                         if (Math.abs(node.date - otherNode.date) < maxOffset) {
                             var cluster = this.createCluster();
-                            console.log('[timeline] node+node', node, otherNode);
                             this.addNodeToCluster(node, cluster);
                             this.addNodeToCluster(otherNode, cluster);
 
@@ -419,9 +410,7 @@
                         if (!otherCluster) continue;
 
                         if (Math.abs(cluster.date - otherCluster.date) < maxOffset) {
-                            console.log('[timeline] cluster+cluster', cluster, otherCluster);
                             otherCluster.nodes.forEach(function (node) {
-                                console.log('[timeline] merge', node);
                                 this.addNodeToCluster(node, cluster);
                             }, this);
 

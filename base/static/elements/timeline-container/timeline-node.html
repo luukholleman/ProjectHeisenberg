@@ -39,38 +39,29 @@
              * Fields
              * **********************************
              */
+            timeline: null,
             day: '',
             /*
              * **********************************
              * Private methods
              * **********************************
              */
-            getTimeLine: function () {
-                var node = this.parentNode;
-                while (node && node.nodeName != 'TIMELINE-CONTAINER') node = node.parentNode;
-
-                return node;
-            },
             attached: function () {
-                var timeline = this.getTimeLine();
-                if (timeline) timeline.nodeAdded(this);
+                this.timeline = this.parentNode;
+                while (this.timeline && this.timeline.nodeName != 'TIMELINE-CONTAINER') this.timeline = this.timeline.parentNode;
 
+                if (this.timeline) this.timeline.nodeAdded(this);
             },
             detached: function () {
-                var timeline = this.getTimeLine();
-                if (timeline) timeline.nodeRemoved(this);
-
+                if (this.timeline) this.timeline.nodeRemoved(this);
             },
             dateChanged: function () {
                 this.day = new Date(this.date * 1000).getDate();
 
-                var timeline = this.getTimeLine();
-                if (timeline) timeline.nodeAttributeChanged(this);
-
+                if (this.timeline) this.timeline.nodeAttributeChanged(this);
             },
             tapped: function () {
-                var timeline = this.getTimeLine();
-                if (timeline) timeline.nodeOpened(this);
+                if (this.timeline) this.timeline.nodeOpened(this);
             }
         });
     </script>
