@@ -32,17 +32,17 @@
                 </div>
 
                 <div vertical layout
-                     ng-show="users.length > 0">
+                     ng-show="meeting.invited.length > 0">
                     <div horizontal layout
                          style="margin: 20px 0 10px 0; color: #009688;">
-                        <label class="punktlich-label">Participants ({{ users.length }})</label>
+                        <label class="punktlich-label">Participants ({{ meeting.invited.length }})</label>
                     </div>
 
                     <div horizontal layout>
-                        <punkt-person ng-repeat="invitation in meeting.invited" abbr="{{ invitation.user.initials }}"
+                        <punkt-circle ng-repeat="invitation in meeting.invited" abbr="{{ invitation.user.initials }}"
                                       name="{{ invitation.user.full_name }}"
                                       image
-                                      status="1"></punkt-person>
+                                      status="1"></punkt-circle>
                     </div>
                 </div>
             </div>
