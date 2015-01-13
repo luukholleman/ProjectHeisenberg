@@ -42,7 +42,7 @@
                         <punkt-circle ng-repeat="invitation in meeting.invited" abbr="{{ invitation.user.initials }}"
                                       name="{{ invitation.user.full_name }}"
                                       image
-                                      status="1"></punkt-circle>
+                                      status="{{ invitation.state }}"></punkt-circle>
                     </div>
                 </div>
             </div>
